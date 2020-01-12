@@ -5,6 +5,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -153,7 +154,7 @@ public class LegacyJournalComment extends PanacheEntityBase {
         .hash(id, uuid, date, body, author, email, website, spamP, submitterIp, submitterUserAgent);
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "entry_id", referencedColumnName = "id", nullable = false)
   public LegacyJournalEntry getJournalEntry() {
     return journalEntry;

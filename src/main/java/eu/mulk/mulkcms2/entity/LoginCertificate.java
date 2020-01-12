@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -60,7 +61,7 @@ public class LoginCertificate extends PanacheEntityBase {
     return result;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
   public User getUser() {
     return user;

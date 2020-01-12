@@ -5,6 +5,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -61,7 +62,7 @@ public class ArticleRevisionCharacteristic extends PanacheEntityBase {
     return Objects.hash(characteristic, value);
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "revision", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
   public ArticleRevision getArticleRevision() {
     return articleRevision;

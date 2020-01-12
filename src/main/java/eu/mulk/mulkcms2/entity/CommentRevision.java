@@ -8,6 +8,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -138,7 +139,7 @@ public class CommentRevision extends PanacheEntityBase {
         .hash(id, date, content, format, status, articleRevision, submitterIp, submitterUserAgent);
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "comment", referencedColumnName = "id", nullable = false)
   public Comment getComment() {
     return comment;
@@ -148,7 +149,7 @@ public class CommentRevision extends PanacheEntityBase {
     this.comment = comment;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "author", referencedColumnName = "id")
   public User getUser() {
     return user;

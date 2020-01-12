@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -126,7 +127,7 @@ public class ArticleRevision extends PanacheEntityBase {
     return Objects.hash(id, date, title, content, format, status, globalId);
   }
 
-  @OneToMany(mappedBy = "articleRevision")
+  @OneToMany(mappedBy = "articleRevision", fetch = FetchType.LAZY)
   public Collection<ArticleRevisionCharacteristic> getCharacteristics() {
     return characteristics;
   }
@@ -136,7 +137,7 @@ public class ArticleRevision extends PanacheEntityBase {
     this.characteristics = characteristics;
   }
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "article_revision_parenthood",
       joinColumns = @JoinColumn(name = "parent"),
       inverseJoinColumns = @JoinColumn(name = "child")
@@ -158,7 +159,7 @@ public class ArticleRevision extends PanacheEntityBase {
     this.parents = parents;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "article", referencedColumnName = "id", nullable = false)
   public Article getArticle() {
     return article;
@@ -168,7 +169,7 @@ public class ArticleRevision extends PanacheEntityBase {
     this.article = article;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "author", referencedColumnName = "id")
   public User getAuthors() {
     return authors;

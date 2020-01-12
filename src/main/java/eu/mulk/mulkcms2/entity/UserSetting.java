@@ -5,6 +5,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -70,7 +71,7 @@ public class UserSetting extends PanacheEntityBase {
     return Objects.hash(userId, setting, value);
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
   public User getUser() {
     return user;

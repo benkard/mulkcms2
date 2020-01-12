@@ -4,6 +4,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -58,7 +59,7 @@ public class JournalEntry extends PanacheEntityBase {
     return Objects.hash(journalId, index);
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "journal", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
   public Journal getJournal() {
     return journal;
@@ -68,7 +69,7 @@ public class JournalEntry extends PanacheEntityBase {
     this.journal = journal;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "article", referencedColumnName = "id", nullable = false)
   public Article getArticle() {
     return article;

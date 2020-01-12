@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -98,7 +99,7 @@ public class User extends PanacheEntityBase {
     return Objects.hash(id, name, status, email, website);
   }
 
-  @OneToMany(mappedBy = "authors")
+  @OneToMany(mappedBy = "authors", fetch = FetchType.LAZY)
   public Collection<ArticleRevision> getArticleRevisions() {
     return articleRevisions;
   }
@@ -107,7 +108,7 @@ public class User extends PanacheEntityBase {
     this.articleRevisions = articleRevisions;
   }
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<CommentRevision> getCommentRevisions() {
     return commentRevisions;
   }
@@ -116,7 +117,7 @@ public class User extends PanacheEntityBase {
     this.commentRevisions = commentRevisions;
   }
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<LoginCertificate> getLoginCertificates() {
     return loginCertificates;
   }
@@ -125,7 +126,7 @@ public class User extends PanacheEntityBase {
     this.loginCertificates = loginCertificates;
   }
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<OpenId> getOpenids() {
     return openids;
   }
@@ -134,7 +135,7 @@ public class User extends PanacheEntityBase {
     this.openids = openids;
   }
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<Password> getPasswords() {
     return passwords;
   }
@@ -143,7 +144,7 @@ public class User extends PanacheEntityBase {
     this.passwords = passwords;
   }
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserPermission> getUserPermissions() {
     return userPermissions;
   }
@@ -152,7 +153,7 @@ public class User extends PanacheEntityBase {
     this.userPermissions = userPermissions;
   }
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserSetting> getUserSettings() {
     return userSettings;
   }

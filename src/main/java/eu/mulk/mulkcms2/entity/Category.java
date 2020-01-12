@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -59,7 +60,7 @@ public class Category extends PanacheEntityBase {
     return Objects.hash(id, name);
   }
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "category_inclusions",
       joinColumns = @JoinColumn(name = "category"),
       inverseJoinColumns = @JoinColumn(name = "supercategory")
@@ -72,7 +73,7 @@ public class Category extends PanacheEntityBase {
     this.supercategories = supercategories;
   }
 
-  @ManyToMany(mappedBy = "supercategories")
+  @ManyToMany(mappedBy = "supercategories", fetch = FetchType.LAZY)
   public Set<Category> getSubcategories() {
     return subcategories;
   }

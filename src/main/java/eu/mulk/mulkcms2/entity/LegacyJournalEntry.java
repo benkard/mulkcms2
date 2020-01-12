@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -118,7 +119,7 @@ public class LegacyJournalEntry extends PanacheEntityBase {
     return Objects.hash(id, uuid, title, date, lastModification, body, type);
   }
 
-  @OneToMany(mappedBy = "journalEntry")
+  @OneToMany(mappedBy = "journalEntry", fetch = FetchType.LAZY)
   public Collection<LegacyJournalComment> getComments() {
     return comments;
   }
@@ -127,7 +128,7 @@ public class LegacyJournalEntry extends PanacheEntityBase {
     this.comments = comments;
   }
 
-  @OneToMany(mappedBy = "journalEntry")
+  @OneToMany(mappedBy = "journalEntry", fetch = FetchType.LAZY)
   public Collection<LegacyJournalPingback> getPingbacks() {
     return pingbacks;
   }
@@ -136,7 +137,7 @@ public class LegacyJournalEntry extends PanacheEntityBase {
     this.pingbacks = pingbacks;
   }
 
-  @OneToMany(mappedBy = "journalEntry")
+  @OneToMany(mappedBy = "journalEntry", fetch = FetchType.LAZY)
   public Collection<LegacyJournalTrackback> getTrackbacks() {
     return trackbacks;
   }

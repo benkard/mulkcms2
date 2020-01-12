@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Fetch;
 
 @Entity
 @Table(name = "articles", schema = "public", catalog = "mulkcms")
@@ -53,7 +55,7 @@ public class Article extends PanacheEntityBase {
     return Objects.hash(id);
   }
 
-  @OneToMany(mappedBy = "article")
+  @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
   public Collection<ArticleAlias> getAliases() {
     return aliases;
   }
@@ -62,7 +64,7 @@ public class Article extends PanacheEntityBase {
     this.aliases = aliases;
   }
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "article_category_memberships",
       joinColumns = @JoinColumn(name = "article"),
       inverseJoinColumns = @JoinColumn(name = "category")
@@ -75,7 +77,7 @@ public class Article extends PanacheEntityBase {
     this.categories = categories;
   }
 
-  @OneToMany(mappedBy = "article")
+  @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
   public Collection<ArticleRevision> getRevisions() {
     return revisions;
   }
@@ -84,7 +86,7 @@ public class Article extends PanacheEntityBase {
     this.revisions = revisions;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "type", referencedColumnName = "id", nullable = false)
   public ArticleType getType() {
     return type;
@@ -94,7 +96,7 @@ public class Article extends PanacheEntityBase {
     this.type = type;
   }
 
-  @OneToMany(mappedBy = "article")
+  @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
   public Collection<Comment> getComments() {
     return comments;
   }
@@ -103,7 +105,7 @@ public class Article extends PanacheEntityBase {
     this.comments = comments;
   }
 
-  @OneToMany(mappedBy = "article")
+  @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
   public Collection<JournalEntry> getJournalEntries() {
     return journalEntries;
   }

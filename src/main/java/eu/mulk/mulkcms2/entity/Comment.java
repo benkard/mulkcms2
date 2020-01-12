@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -59,7 +60,7 @@ public class Comment extends PanacheEntityBase {
     return Objects.hash(id, globalId);
   }
 
-  @OneToMany(mappedBy = "comment")
+  @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
   public Collection<CommentRevision> getRevisions() {
     return revisions;
   }
@@ -68,7 +69,7 @@ public class Comment extends PanacheEntityBase {
     this.revisions = revisions;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "article", referencedColumnName = "id", nullable = false)
   public Article getArticle() {
     return article;

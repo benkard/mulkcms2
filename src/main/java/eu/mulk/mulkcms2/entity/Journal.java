@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -56,7 +57,7 @@ public class Journal extends PanacheEntityBase {
     return Objects.hash(id, pathPrefix);
   }
 
-  @OneToMany(mappedBy = "journal")
+  @OneToMany(mappedBy = "journal", fetch = FetchType.LAZY)
   public Collection<JournalEntry> getEntries() {
     return entries;
   }
