@@ -39,8 +39,7 @@ public class OpenIdPK implements Serializable {
       return false;
     }
     OpenIdPK openIdPK = (OpenIdPK) o;
-    return userId == openIdPK.userId &&
-        Objects.equals(openid, openIdPK.openid);
+    return userId == openIdPK.userId && Objects.equals(openid, openIdPK.openid);
   }
 
   @Override

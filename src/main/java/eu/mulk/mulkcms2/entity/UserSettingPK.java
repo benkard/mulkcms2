@@ -39,8 +39,7 @@ public class UserSettingPK implements Serializable {
       return false;
     }
     UserSettingPK that = (UserSettingPK) o;
-    return userId == that.userId &&
-        Objects.equals(setting, that.setting);
+    return userId == that.userId && Objects.equals(setting, that.setting);
   }
 
   @Override

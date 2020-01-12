@@ -39,8 +39,7 @@ public class CachedPagePK implements Serializable {
       return false;
     }
     CachedPagePK that = (CachedPagePK) o;
-    return characteristicHash == that.characteristicHash &&
-        Objects.equals(alias, that.alias);
+    return characteristicHash == that.characteristicHash && Objects.equals(alias, that.alias);
   }
 
   @Override

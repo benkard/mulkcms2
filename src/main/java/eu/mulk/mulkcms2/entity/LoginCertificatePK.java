@@ -40,8 +40,7 @@ public class LoginCertificatePK implements Serializable {
       return false;
     }
     LoginCertificatePK that = (LoginCertificatePK) o;
-    return userId == that.userId &&
-        Arrays.equals(certificate, that.certificate);
+    return userId == that.userId && Arrays.equals(certificate, that.certificate);
   }
 
   @Override

@@ -39,8 +39,7 @@ public class PasswordPK implements Serializable {
       return false;
     }
     PasswordPK that = (PasswordPK) o;
-    return userId == that.userId &&
-        Objects.equals(password, that.password);
+    return userId == that.userId && Objects.equals(password, that.password);
   }
 
   @Override

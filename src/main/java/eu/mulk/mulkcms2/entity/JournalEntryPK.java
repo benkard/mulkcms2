@@ -39,8 +39,7 @@ public class JournalEntryPK implements Serializable {
       return false;
     }
     JournalEntryPK that = (JournalEntryPK) o;
-    return journalId == that.journalId &&
-        index == that.index;
+    return journalId == that.journalId && index == that.index;
   }
 
   @Override

@@ -39,8 +39,7 @@ public class UserPermissionPK implements Serializable {
       return false;
     }
     UserPermissionPK that = (UserPermissionPK) o;
-    return userId == that.userId &&
-        Objects.equals(permission, that.permission);
+    return userId == that.userId && Objects.equals(permission, that.permission);
   }
 
   @Override

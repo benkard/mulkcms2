@@ -1,7 +1,6 @@
 package eu.mulk.mulkcms2.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,43 +13,11 @@ import javax.persistence.Table;
 @Table(name = "article_aliases", schema = "public", catalog = "mulkcms")
 public class ArticleAlias extends PanacheEntityBase {
 
-  private String alias;
-  private Article article;
-
   @Id
   @Column(name = "alias", nullable = false, length = -1)
-  public String getAlias() {
-    return alias;
-  }
-
-  public void setAlias(String alias) {
-    this.alias = alias;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ArticleAlias that = (ArticleAlias) o;
-    return Objects.equals(alias, that.alias);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(alias);
-  }
+  public String alias;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "article", referencedColumnName = "id", nullable = false)
-  public Article getArticle() {
-    return article;
-  }
-
-  public void setArticle(Article article) {
-    this.article = article;
-  }
+  public Article article;
 }
