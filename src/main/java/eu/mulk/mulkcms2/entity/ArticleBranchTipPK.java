@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
@@ -27,5 +28,22 @@ public class ArticleBranchTipPK implements Serializable {
 
   public void setRevisionId(int revisionId) {
     this.revisionId = revisionId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof ArticleBranchTipPK)) {
+      return false;
+    }
+    ArticleBranchTipPK that = (ArticleBranchTipPK) o;
+    return articleId == that.articleId && revisionId == that.revisionId;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(articleId, revisionId);
   }
 }
