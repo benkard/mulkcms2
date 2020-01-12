@@ -57,5 +57,8 @@ spotless {
   }
 }
 
+sourceCompatibility = 13
+targetCompatibility = 13
+
 group 'eu.mulk'
 version '0.1.0-SNAPSHOT'
