@@ -5,6 +5,9 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.27.0"
 }
 
+sourceCompatibility = 11
+targetCompatibility = 11
+
 sourceSets {
     main {
         scala {
@@ -80,9 +83,6 @@ spotless {
     removeUnusedImports()
   }
 }
-
-sourceCompatibility = 13
-targetCompatibility = 13
 
 group 'eu.mulk'
 version '0.1.0-SNAPSHOT'
