@@ -1,7 +1,7 @@
-package eu.mulk
+package eu.mulk.mulkcms2
 
-import javax.ws.rs.{GET, Path, Produces}
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.{GET, Path, Produces}
 
 @Path("/hello")
 class ExampleResource {
