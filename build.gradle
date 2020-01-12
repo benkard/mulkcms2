@@ -55,6 +55,11 @@ spotless {
   scala {
     scalafmt()
   }
+
+  java {
+    googleJavaFormat()
+    removeUnusedImports()
+  }
 }
 
 sourceCompatibility = 13
