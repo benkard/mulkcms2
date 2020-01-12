@@ -3,10 +3,14 @@ package eu.mulk.entity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -16,8 +20,8 @@ public class Category extends PanacheEntityBase {
 
   private int id;
   private String name;
-  private Collection<CategoryInclusion> supercategories;
-  private Collection<CategoryInclusion> subcategories;
+  private Set<Category> supercategories;
+  private Set<Category> subcategories;
 
   @Id
   @Column(name = "id", nullable = false)
@@ -57,21 +61,25 @@ public class Category extends PanacheEntityBase {
     return Objects.hash(id, name);
   }
 
-  @OneToMany(mappedBy = "subcategory")
-  public Collection<CategoryInclusion> getSupercategories() {
+  @ManyToMany
+  @JoinTable(name = "category_inclusions",
+      joinColumns = @JoinColumn(name = "category"),
+      inverseJoinColumns = @JoinColumn(name = "supercategory")
+  )
+  public Set<Category> getSupercategories() {
     return supercategories;
   }
 
-  public void setSupercategories(Collection<CategoryInclusion> supercategories) {
+  public void setSupercategories(Set<Category> supercategories) {
     this.supercategories = supercategories;
   }
 
-  @OneToMany(mappedBy = "supercategory")
-  public Collection<CategoryInclusion> getSubcategories() {
+  @ManyToMany(mappedBy = "supercategories")
+  public Set<Category> getSubcategories() {
     return subcategories;
   }
 
-  public void setSubcategories(Collection<CategoryInclusion> subcategories) {
+  public void setSubcategories(Set<Category> subcategories) {
     this.subcategories = subcategories;
   }
 }

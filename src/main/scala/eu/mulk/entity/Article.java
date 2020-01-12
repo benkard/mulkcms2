@@ -3,10 +3,13 @@ package eu.mulk.entity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -17,7 +20,7 @@ public class Article extends PanacheEntityBase {
 
   private int id;
   private Collection<ArticleAlias> aliases;
-  private Collection<ArticleCategoryMembership> categoryMemberships;
+  private Set<Category> categories;
   private Collection<ArticleRevision> revisions;
   private ArticleType type;
   private Collection<Comment> comments;
@@ -59,14 +62,17 @@ public class Article extends PanacheEntityBase {
     this.aliases = aliases;
   }
 
-  @OneToMany(mappedBy = "article")
-  public Collection<ArticleCategoryMembership> getCategoryMemberships() {
-    return categoryMemberships;
+  @ManyToMany
+  @JoinTable(name = "article_category_memberships",
+      joinColumns = @JoinColumn(name = "article"),
+      inverseJoinColumns = @JoinColumn(name = "category")
+  )
+  public Set<Category> getCategories() {
+    return categories;
   }
 
-  public void setCategoryMemberships(
-      Collection<ArticleCategoryMembership> categoryMemberships) {
-    this.categoryMemberships = categoryMemberships;
+  public void setCategories(Set<Category> categories) {
+    this.categories = categories;
   }
 
   @OneToMany(mappedBy = "article")

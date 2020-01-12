@@ -4,11 +4,14 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -25,8 +28,8 @@ public class ArticleRevision extends PanacheEntityBase {
   private String status;
   private String globalId;
   private Collection<ArticleRevisionCharacteristic> characteristics;
-  private Collection<ArticleRevisionParenthood> children;
-  private Collection<ArticleRevisionParenthood> parents;
+  private Set<ArticleRevision> children;
+  private Set<ArticleRevision> parents;
   private Article article;
   private User authors;
 
@@ -133,21 +136,25 @@ public class ArticleRevision extends PanacheEntityBase {
     this.characteristics = characteristics;
   }
 
-  @OneToMany(mappedBy = "parent")
-  public Collection<ArticleRevisionParenthood> getChildren() {
+  @ManyToMany
+  @JoinTable(name = "article_revision_parenthood",
+      joinColumns = @JoinColumn(name = "parent"),
+      inverseJoinColumns = @JoinColumn(name = "child")
+  )
+  public Set<ArticleRevision> getChildren() {
     return children;
   }
 
-  public void setChildren(Collection<ArticleRevisionParenthood> children) {
+  public void setChildren(Set<ArticleRevision> children) {
     this.children = children;
   }
 
-  @OneToMany(mappedBy = "child")
-  public Collection<ArticleRevisionParenthood> getParents() {
+  @ManyToMany(mappedBy = "children")
+  public Set<ArticleRevision> getParents() {
     return parents;
   }
 
-  public void setParents(Collection<ArticleRevisionParenthood> parents) {
+  public void setParents(Set<ArticleRevision> parents) {
     this.parents = parents;
   }
 
