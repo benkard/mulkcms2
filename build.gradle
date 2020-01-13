@@ -1,5 +1,4 @@
 plugins {
-    id 'scala'
     id 'java'
     id 'io.quarkus'
     id "com.diffplug.gradle.spotless" version "${spotlessPluginVersion}"
@@ -9,25 +8,6 @@ plugins {
 
 sourceCompatibility = 11
 targetCompatibility = 11
-
-sourceSets {
-    main {
-        scala {
-            srcDirs = ['src/main/scala', 'src/main/java']
-        }
-        java {
-            srcDirs = []
-        }
-    }
-    test {
-        scala {
-            srcDirs = ['src/test/scala', 'src/test/java']
-        }
-        java {
-            srcDirs = []
-        }
-    }
-}
 
 repositories {
      mavenLocal()
