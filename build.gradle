@@ -57,7 +57,15 @@ dependencies {
 
     implementation 'org.scala-lang:scala-library'
 
+    implementation 'org.mapstruct:mapstruct'
+    compileOnly 'org.mapstruct:mapstruct-processor'
+
+    compileOnly 'com.google.code.findbugs:jsr305'
+
     implementation 'com.vladmihalcea:hibernate-types-52'
+
+    implementation "jakarta.security.jacc:jakarta.security.jacc-api"
+    implementation "net.java.dev.jna:jna"
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
@@ -65,6 +73,11 @@ dependencies {
     constraints {
         implementation "org.scala-lang:scala-library:${scalaVersion}"
         implementation "com.vladmihalcea:hibernate-types-52:${hibernateTypesVersion}"
+        implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+        compileOnly "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+        compileOnly "com.google.code.findbugs:jsr305:${findbugsJsr305Version}"
+        implementation "jakarta.security.jacc:jakarta.security.jacc-api:${jakartaJaccVersion}"
+        implementation "net.java.dev.jna:jna:${jnaVersion}"
     }
 }
 
