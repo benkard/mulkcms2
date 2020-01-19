@@ -36,3 +36,7 @@ build/
 
 # Shell
 .envrc
+
+# Maven
+target/
+*.versionsBackup
