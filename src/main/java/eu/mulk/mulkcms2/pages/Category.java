@@ -31,4 +31,7 @@ public class Category extends PanacheEntityBase {
 
   @ManyToMany(mappedBy = "supercategories", fetch = FetchType.LAZY)
   public Set<Category> subcategories;
+
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
+  public Set<Article> articles;
 }
