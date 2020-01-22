@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "lit-html": "^1.1.2",
+    "redux": "^4.0.5"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7"
+  }
+}
