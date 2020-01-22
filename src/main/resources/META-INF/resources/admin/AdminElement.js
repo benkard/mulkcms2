@@ -27,12 +27,11 @@ export class AdminElement extends HTMLElement {
     render() {
         let greetee = this.getAttribute("greetee");
 
-        const template = `
-            <p>Hello ${greetee}! <button id="switch">Switch</button></p>
+        const template = html`
+            <p>Hello ${greetee}! <button @click=${this.onSwitchClicked}>Switch</button></p>
             `;
 
-        this.shadowRoot.innerHTML = template;
-        this.shadowRoot.querySelector('#switch').addEventListener('click', this.onSwitchClicked);
+        render(template, this.shadowRoot);
     }
 }
 
