@@ -87,3 +87,23 @@ spotless {
 
 group 'eu.mulk'
 version '0.1.0-SNAPSHOT'
+
+task yarnInstall(type:Exec) {
+  workingDir "src/main/resources/META-INF/resources"
+  commandLine "yarn", "install"
+}
+
+task snowpack(type:Exec) {
+  dependsOn yarnInstall
+
+  workingDir "src/main/resources/META-INF/resources"
+  commandLine "yarn", "run", "snowpack"
+}
+
+task compileWeb {
+  dependsOn snowpack
+
+  doLast {}
+}
+
+build.dependsOn compileWeb

@@ -1,9 +1,0 @@
-{
-  "imports": {
-    "loose-envify": "/node_modules/loose-envify/loose-envify.js",
-    "js-tokens": "/node_modules/js-tokens/index.js",
-    "symbol-observable": "/node_modules/symbol-observable/es/index.js",
-    "redux": "/node_modules/redux/es/redux.mjs",
-    "lit-html": "/node_modules/lit-html/lit-html.js"
-  }
-}

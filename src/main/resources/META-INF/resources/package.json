@@ -6,5 +6,7 @@
     "redux": "^4.0.5",
     "sanitize.css": "^11.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "snowpack": "^1.1.0"
+  }
 }
