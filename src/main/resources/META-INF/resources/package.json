@@ -18,7 +18,7 @@
       "sanitize.css/{sanitize,forms,formsize,typography,page}.css",
       "prefixfree",
       "prismjs",
-      "purecss/build/{base,forms,menus,tables}.css",
+      "purecss/build/{base,buttons,forms,menus,tables}.css",
       "redux"
     ]
   }
