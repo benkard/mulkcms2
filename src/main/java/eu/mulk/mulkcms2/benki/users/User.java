@@ -53,7 +53,7 @@ public class User extends PanacheEntityBase {
   public Collection<LazychatMessage> lazychatMessages;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<Openids> openids;
+  public Collection<OpenId> openids;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<PageKey> pageKeys;

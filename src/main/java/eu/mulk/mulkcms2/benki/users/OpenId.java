@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
-public class Openids extends PanacheEntityBase {
+@Entity(name = "BenkiOpenId")
+public class OpenId extends PanacheEntityBase {
 
   @Id
   @Column(name = "openid", nullable = false, length = -1)

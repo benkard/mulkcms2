@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity
+@Entity(name = "CmsOpenId")
 @Table(name = "openids", schema = "public", catalog = "mulkcms")
 @IdClass(OpenIdPK.class)
 public class OpenId extends PanacheEntityBase {
