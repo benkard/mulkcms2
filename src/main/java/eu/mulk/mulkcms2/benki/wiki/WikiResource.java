@@ -44,7 +44,12 @@ public class WikiResource {
   @Produces(TEXT_HTML)
   public TemplateInstance getPage(@PathParam("pageName") String pageName) {
     Optional<WikiPageRevision> maybePage =
-        WikiPageRevision.find("title = ?1", Sort.by("date").descending(), pageName)
+        WikiPageRevision.find(
+                "from WikiPageRevision rev"
+                    + " join fetch rev.author"
+                    + " where rev.title = ?1",
+                Sort.by("date").descending(),
+                pageName)
             .firstResultOptional();
     if (maybePage.isEmpty()) {
       throw new NotFoundException();
