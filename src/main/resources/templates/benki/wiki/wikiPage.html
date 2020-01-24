@@ -6,5 +6,15 @@
 </head>
 <body>
   <h1>{title}</h1>
+
+  <header>
+    Last edit: <time datetime="{date.htmlFormat}">{date.humanFormat}</time> {author.name}
+  </header>
+
+  <main>
+    <article>
+      {content.raw}
+    </article>
+  </main>
 </body>
 </html>
