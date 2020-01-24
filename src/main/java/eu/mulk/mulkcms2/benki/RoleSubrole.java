@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,78 +12,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "role_subroles", schema = "public", catalog = "benki")
 @IdClass(RoleSubrolePK.class)
-public class RoleSubrole {
-
-  private int superroleId;
-  private int subroleId;
-  private Role superrole;
-  private Role subrole;
+public class RoleSubrole extends PanacheEntityBase {
 
   @Id
   @Column(name = "superrole", nullable = false)
-  public int getSuperroleId() {
-    return superroleId;
-  }
-
-  public void setSuperroleId(int superroleId) {
-    this.superroleId = superroleId;
-  }
+  public int superroleId;
 
   @Id
   @Column(name = "subrole", nullable = false)
-  public int getSubroleId() {
-    return subroleId;
-  }
-
-  public void setSubroleId(int subroleId) {
-    this.subroleId = subroleId;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RoleSubrole that = (RoleSubrole) o;
-
-    if (superroleId != that.superroleId) {
-      return false;
-    }
-    if (subroleId != that.subroleId) {
-      return false;
-    }
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = superroleId;
-    result = 31 * result + subroleId;
-    return result;
-  }
+  public int subroleId;
 
   @ManyToOne
   @JoinColumn(name = "superrole", referencedColumnName = "id", nullable = false)
-  public Role getSuperrole() {
-    return superrole;
-  }
-
-  public void setSuperrole(Role superrole) {
-    this.superrole = superrole;
-  }
+  public Role superrole;
 
   @ManyToOne
   @JoinColumn(name = "subrole", referencedColumnName = "id", nullable = false)
-  public Role getSubrole() {
-    return subrole;
-  }
-
-  public void setSubrole(Role subrole) {
-    this.subrole = subrole;
-  }
+  public Role subrole;
 }

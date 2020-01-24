@@ -1,7 +1,7 @@
 package eu.mulk.mulkcms2.benki;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,29 +12,29 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users", schema = "public", catalog = "benki")
-public class User {
+public class User extends PanacheEntityBase {
 
-  private int id;
-  private String firstName;
-  private String middleNames;
-  private String lastName;
-  private String email;
-  private String website;
-  private String status;
-  private Collection<Bookmark> bookmarks;
-  private Collection<LazychatMessage> lazychatMessages;
-  private Collection<Openids> openids;
-  private Collection<PageKey> pageKeys;
-  private Collection<Post> posts;
-  private Collection<UserDefaultTarget> defaultTargets;
-  private Collection<UserEmailAddress> emailAddresses;
-  private Collection<UserJid> jids;
-  private Collection<UserNickname> nicknames;
-  private Collection<UserRole> roles;
-  private Collection<UserRsaKey> rsaKeys;
-  private Role ownedRole;
-  private Collection<WebId> webids;
-  private Collection<WikiPageRevision> wikiPageRevisions;
+  public int id;
+  public String firstName;
+  public String middleNames;
+  public String lastName;
+  public String email;
+  public String website;
+  public String status;
+  public Collection<Bookmark> bookmarks;
+  public Collection<LazychatMessage> lazychatMessages;
+  public Collection<Openids> openids;
+  public Collection<PageKey> pageKeys;
+  public Collection<Post> posts;
+  public Collection<UserDefaultTarget> defaultTargets;
+  public Collection<UserEmailAddress> emailAddresses;
+  public Collection<UserJid> jids;
+  public Collection<UserNickname> nicknames;
+  public Collection<UserRole> roles;
+  public Collection<UserRsaKey> rsaKeys;
+  public Role ownedRole;
+  public Collection<WebId> webids;
+  public Collection<WikiPageRevision> wikiPageRevisions;
 
   @Id
   @Column(name = "id", nullable = false)
@@ -46,7 +46,6 @@ public class User {
     this.id = id;
   }
 
-  @Basic
   @Column(name = "first_name", nullable = true, length = -1)
   public String getFirstName() {
     return firstName;
@@ -56,7 +55,6 @@ public class User {
     this.firstName = firstName;
   }
 
-  @Basic
   @Column(name = "middle_names", nullable = true, length = -1)
   public String getMiddleNames() {
     return middleNames;
@@ -66,7 +64,6 @@ public class User {
     this.middleNames = middleNames;
   }
 
-  @Basic
   @Column(name = "last_name", nullable = true, length = -1)
   public String getLastName() {
     return lastName;
@@ -76,7 +73,6 @@ public class User {
     this.lastName = lastName;
   }
 
-  @Basic
   @Column(name = "email", nullable = true, length = -1)
   public String getEmail() {
     return email;
@@ -86,7 +82,6 @@ public class User {
     this.email = email;
   }
 
-  @Basic
   @Column(name = "website", nullable = true, length = -1)
   public String getWebsite() {
     return website;
@@ -96,7 +91,6 @@ public class User {
     this.website = website;
   }
 
-  @Basic
   @Column(name = "status", nullable = true, length = -1)
   public String getStatus() {
     return status;
@@ -168,8 +162,7 @@ public class User {
     return lazychatMessages;
   }
 
-  public void setLazychatMessages(
-      Collection<LazychatMessage> lazychatMessages) {
+  public void setLazychatMessages(Collection<LazychatMessage> lazychatMessages) {
     this.lazychatMessages = lazychatMessages;
   }
 
@@ -205,8 +198,7 @@ public class User {
     return defaultTargets;
   }
 
-  public void setDefaultTargets(
-      Collection<UserDefaultTarget> defaultTargets) {
+  public void setDefaultTargets(Collection<UserDefaultTarget> defaultTargets) {
     this.defaultTargets = defaultTargets;
   }
 
@@ -215,8 +207,7 @@ public class User {
     return emailAddresses;
   }
 
-  public void setEmailAddresses(
-      Collection<UserEmailAddress> emailAddresses) {
+  public void setEmailAddresses(Collection<UserEmailAddress> emailAddresses) {
     this.emailAddresses = emailAddresses;
   }
 
@@ -280,8 +271,7 @@ public class User {
     return wikiPageRevisions;
   }
 
-  public void setWikiPageRevisions(
-      Collection<WikiPageRevision> wikiPageRevisions) {
+  public void setWikiPageRevisions(Collection<WikiPageRevision> wikiPageRevisions) {
     this.wikiPageRevisions = wikiPageRevisions;
   }
 }

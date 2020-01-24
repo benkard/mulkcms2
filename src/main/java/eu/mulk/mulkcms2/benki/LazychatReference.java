@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,67 +12,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "lazychat_references", schema = "public", catalog = "benki")
 @IdClass(LazychatReferencePK.class)
-public class LazychatReference {
-
-  private int referrerId;
-  private int refereeId;
-  private LazychatMessage referrer;
+public class LazychatReference extends PanacheEntityBase {
 
   @Id
   @Column(name = "referrer", nullable = false)
-  public int getReferrerId() {
-    return referrerId;
-  }
-
-  public void setReferrerId(int referrerId) {
-    this.referrerId = referrerId;
-  }
+  public int referrerId;
 
   @Id
   @Column(name = "referee", nullable = false)
-  public int getRefereeId() {
-    return refereeId;
-  }
-
-  public void setRefereeId(int refereeId) {
-    this.refereeId = refereeId;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    LazychatReference that = (LazychatReference) o;
-
-    if (referrerId != that.referrerId) {
-      return false;
-    }
-    if (refereeId != that.refereeId) {
-      return false;
-    }
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = referrerId;
-    result = 31 * result + refereeId;
-    return result;
-  }
+  public int refereeId;
 
   @ManyToOne
   @JoinColumn(name = "referrer", referencedColumnName = "id", nullable = false)
-  public LazychatMessage getReferrer() {
-    return referrer;
-  }
+  public LazychatMessage referrer;
 
-  public void setReferrer(LazychatMessage referrer) {
-    this.referrer = referrer;
-  }
+  @ManyToOne
+  @JoinColumn(name = "referee", referencedColumnName = "id", nullable = false)
+  public LazychatMessage referee;
 }

@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,50 +10,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "wiki_pages", schema = "public", catalog = "benki")
-public class WikiPage {
-
-  private int id;
-  private Collection<WikiPageRevision> revisions;
+public class WikiPage extends PanacheEntityBase {
 
   @Id
   @Column(name = "id", nullable = false)
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    WikiPage wikiPage = (WikiPage) o;
-
-    if (id != wikiPage.id) {
-      return false;
-    }
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return id;
-  }
+  public int id;
 
   @OneToMany(mappedBy = "page")
-  public Collection<WikiPageRevision> getRevisions() {
-    return revisions;
-  }
-
-  public void setRevisions(Collection<WikiPageRevision> revisions) {
-    this.revisions = revisions;
-  }
+  public Collection<WikiPageRevision> revisions;
 }
