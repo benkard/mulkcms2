@@ -2,10 +2,24 @@
   "dependencies": {
     "lit-html": "^1.1.2",
     "normalize.css": "^8.0.1",
+    "prefixfree": "^1.0.0",
+    "prismjs": "^1.19.0",
+    "purecss": "^1.0.1",
     "redux": "^4.0.5",
     "sanitize.css": "^11.0.0"
   },
   "devDependencies": {
     "snowpack": "^1.1.0"
+  },
+  "snowpack": {
+    "webDependencies": [
+      "lit-html",
+      "normalize.css/normalize.css",
+      "sanitize.css/{sanitize,forms,formsize,typography,page}.css",
+      "prefixfree",
+      "prismjs",
+      "purecss/build/{base,forms,menus,tables}.css",
+      "redux"
+    ]
   }
 }
