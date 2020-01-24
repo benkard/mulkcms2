@@ -8,11 +8,13 @@ import eu.mulk.mulkcms2.benki.lafargue.LazychatMessage;
 import eu.mulk.mulkcms2.benki.wiki.WikiPageRevision;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -72,7 +74,7 @@ public class User extends PanacheEntityBase {
   public Collection<UserNickname> nicknames;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<UserRole> roles;
+  public Collection<UserRole> directRoles;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserRsaKey> rsaKeys;
@@ -89,4 +91,11 @@ public class User extends PanacheEntityBase {
 
   @ManyToMany(mappedBy = "visibleTo", fetch = FetchType.LAZY)
   public Collection<Post> visiblePosts;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "effective_user_roles",
+      joinColumns = @JoinColumn(name = "user"),
+      inverseJoinColumns = @JoinColumn(name = "role"))
+  public Set<Role> effectiveRoles;
 }
