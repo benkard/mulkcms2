@@ -10,6 +10,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -43,49 +44,49 @@ public class User extends PanacheEntityBase {
   @Column(name = "status", nullable = true, length = -1)
   public String status;
 
-  @OneToMany(mappedBy = "owner")
+  @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
   public Collection<Bookmark> bookmarks;
 
-  @OneToMany(mappedBy = "owner")
+  @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
   public Collection<LazychatMessage> lazychatMessages;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<Openids> openids;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<PageKey> pageKeys;
 
-  @OneToMany(mappedBy = "owner")
+  @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
   public Collection<Post> posts;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserDefaultTarget> defaultTargets;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserEmailAddress> emailAddresses;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserJid> jids;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserNickname> nicknames;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserRole> roles;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserRsaKey> rsaKeys;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "role", referencedColumnName = "id", nullable = false)
   public Role ownedRole;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<WebId> webids;
 
-  @OneToMany(mappedBy = "author")
+  @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
   public Collection<WikiPageRevision> wikiPageRevisions;
 
-  @ManyToMany(mappedBy = "visibleTo")
+  @ManyToMany(mappedBy = "visibleTo", fetch = FetchType.LAZY)
   public Collection<Post> visiblePosts;
 }

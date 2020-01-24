@@ -3,6 +3,7 @@ package eu.mulk.mulkcms2.benki.bookmarx;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -22,7 +23,7 @@ public class BookmarkTag extends PanacheEntityBase {
   @Column(name = "tag", nullable = false, length = -1)
   public String tag;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "bookmark", referencedColumnName = "id", nullable = false)
   public Bookmark bookmark;
 }

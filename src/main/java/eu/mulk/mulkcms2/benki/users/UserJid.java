@@ -3,6 +3,7 @@ package eu.mulk.mulkcms2.benki.users;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -22,7 +23,7 @@ public class UserJid extends PanacheEntityBase {
   @Column(name = "jid", nullable = false, length = -1)
   public String jid;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
   public User user;
 }

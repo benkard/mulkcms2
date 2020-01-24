@@ -5,6 +5,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -24,7 +25,7 @@ public class PageKey extends PanacheEntityBase {
   @Column(name = "key", nullable = false, precision = 0)
   public BigInteger key;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
   public User user;
 }

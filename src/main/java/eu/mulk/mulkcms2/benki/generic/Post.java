@@ -28,7 +28,7 @@ public abstract class Post extends PanacheEntityBase {
   @Column(name = "date", nullable = true)
   public OffsetDateTime date;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner", referencedColumnName = "id")
   public User owner;
 

@@ -4,6 +4,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -28,11 +29,11 @@ public class UserRsaKey extends PanacheEntityBase {
   @Column(name = "exponent", nullable = false, precision = 0)
   public BigInteger exponent;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
   public User user;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumns({
     @JoinColumn(
         name = "modulus",

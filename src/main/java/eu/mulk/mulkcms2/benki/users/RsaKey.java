@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.OneToMany;
@@ -23,6 +24,6 @@ public class RsaKey extends PanacheEntityBase {
   @Column(name = "exponent", nullable = false, precision = 0)
   public BigInteger exponent;
 
-  @OneToMany(mappedBy = "rsaKey")
+  @OneToMany(mappedBy = "rsaKey", fetch = FetchType.LAZY)
   public Collection<UserRsaKey> users;
 }

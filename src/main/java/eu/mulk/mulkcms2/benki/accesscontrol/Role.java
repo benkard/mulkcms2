@@ -8,6 +8,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,21 +24,21 @@ public class Role extends PanacheEntityBase {
   @Column(name = "name", nullable = true, length = -1)
   public String name;
 
-  @OneToMany(mappedBy = "target")
+  @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
   public Collection<PostTarget> targetedPosts;
 
-  @OneToMany(mappedBy = "superrole")
+  @OneToMany(mappedBy = "superrole", fetch = FetchType.LAZY)
   public Collection<RoleSubrole> subroles;
 
-  @OneToMany(mappedBy = "subrole")
+  @OneToMany(mappedBy = "subrole", fetch = FetchType.LAZY)
   public Collection<RoleSubrole> superroles;
 
-  @OneToMany(mappedBy = "target")
+  @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
   public Collection<UserDefaultTarget> usersUsedByAsDefaultTarget;
 
-  @OneToMany(mappedBy = "role")
+  @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
   public Collection<UserRole> users;
 
-  @OneToMany(mappedBy = "ownedRole")
+  @OneToMany(mappedBy = "ownedRole", fetch = FetchType.LAZY)
   public Collection<User> owningUsers;
 }

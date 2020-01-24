@@ -3,6 +3,7 @@ package eu.mulk.mulkcms2.benki.lafargue;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -22,11 +23,11 @@ public class LazychatReference extends PanacheEntityBase {
   @Column(name = "referee", nullable = false)
   public int refereeId;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "referrer", referencedColumnName = "id", nullable = false)
   public LazychatMessage referrer;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "referee", referencedColumnName = "id", nullable = false)
   public LazychatMessage referee;
 }

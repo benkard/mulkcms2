@@ -3,6 +3,7 @@ package eu.mulk.mulkcms2.benki.accesscontrol;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -22,11 +23,11 @@ public class RoleSubrole extends PanacheEntityBase {
   @Column(name = "subrole", nullable = false)
   public int subroleId;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "superrole", referencedColumnName = "id", nullable = false)
   public Role superrole;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "subrole", referencedColumnName = "id", nullable = false)
   public Role subrole;
 }
