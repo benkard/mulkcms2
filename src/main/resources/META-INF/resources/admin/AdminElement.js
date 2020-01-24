@@ -1,5 +1,5 @@
-import {html, render} from "lit-html";
-import {createStore} from "redux";
+import {html, render} from "../web_modules/lit-html.js";
+import {createStore} from "../web_modules/redux.js";
 
 export class AdminElement extends HTMLElement {
     constructor() {
