@@ -15,8 +15,7 @@ public class ExampleResource {
 
   private static Logger log = Logger.getLogger(ExampleResource.class);
 
-  @Inject
-  SecurityIdentity identity;
+  @Inject SecurityIdentity identity;
 
   @GET
   @Produces({MediaType.TEXT_PLAIN})
