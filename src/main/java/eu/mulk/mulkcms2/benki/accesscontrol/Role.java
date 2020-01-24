@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -59,8 +60,8 @@ public class Role extends PanacheEntityBase {
   @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
   public Collection<UserRole> directUsers;
 
-  @OneToMany(mappedBy = "ownedRole", fetch = FetchType.LAZY)
-  public Collection<User> owningUsers;
+  @OneToOne(mappedBy = "ownedRole", fetch = FetchType.LAZY)
+  public User owningUsers;
 
   @ManyToMany(mappedBy = "effectiveRoles", fetch = FetchType.LAZY)
   public Collection<User> effectiveUsers;
