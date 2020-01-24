@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "posts", schema = "public", catalog = "benki")
+@Table(name = "posts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Post extends PanacheEntityBase {
 

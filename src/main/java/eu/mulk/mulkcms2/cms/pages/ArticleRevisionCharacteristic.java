@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "article_revision_characteristics", schema = "public", catalog = "mulkcms")
+@Table(name = "article_revision_characteristics", schema = "public")
 @IdClass(ArticleRevisionCharacteristicPK.class)
 public class ArticleRevisionCharacteristic extends PanacheEntityBase {
 

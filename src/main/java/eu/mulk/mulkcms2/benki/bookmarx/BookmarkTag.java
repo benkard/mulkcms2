@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "bookmark_tags", schema = "public", catalog = "benki")
+@Table(name = "bookmark_tags", schema = "benki")
 @IdClass(BookmarkTagPK.class)
 public class BookmarkTag extends PanacheEntityBase {
 

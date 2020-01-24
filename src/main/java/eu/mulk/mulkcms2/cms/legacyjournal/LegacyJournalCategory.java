@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "journal_category", schema = "public", catalog = "mulkcms")
+@Table(name = "journal_category", schema = "public")
 public class LegacyJournalCategory extends PanacheEntityBase {
 
   @Id

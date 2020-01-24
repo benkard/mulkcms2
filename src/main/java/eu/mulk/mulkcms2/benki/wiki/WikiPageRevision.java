@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "wiki_page_revisions", schema = "public", catalog = "benki")
+@Table(name = "wiki_page_revisions", schema = "benki")
 public class WikiPageRevision extends PanacheEntityBase {
 
   @Id

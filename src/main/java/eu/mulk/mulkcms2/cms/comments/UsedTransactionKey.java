@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "used_transaction_keys", schema = "public", catalog = "mulkcms")
+@Table(name = "used_transaction_keys", schema = "public")
 public class UsedTransactionKey extends PanacheEntityBase {
 
   @Id

@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "login_certificates", schema = "public", catalog = "mulkcms")
+@Table(name = "login_certificates", schema = "public")
 @IdClass(LoginCertificatePK.class)
 public class LoginCertificate extends PanacheEntityBase {
 

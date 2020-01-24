@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_rsa_keys", schema = "public", catalog = "benki")
+@Table(name = "user_rsa_keys", schema = "benki")
 @IdClass(UserRsaKeyPK.class)
 public class UserRsaKey extends PanacheEntityBase {
 

@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "lazychat_references", schema = "public", catalog = "benki")
+@Table(name = "lazychat_references", schema = "benki")
 @IdClass(LazychatReferencePK.class)
 public class LazychatReference extends PanacheEntityBase {
 

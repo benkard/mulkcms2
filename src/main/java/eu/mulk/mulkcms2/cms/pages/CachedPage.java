@@ -9,7 +9,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "cached_pages", schema = "public", catalog = "mulkcms")
+@Table(name = "cached_pages", schema = "public")
 @IdClass(CachedPagePK.class)
 public class CachedPage extends PanacheEntityBase {
 

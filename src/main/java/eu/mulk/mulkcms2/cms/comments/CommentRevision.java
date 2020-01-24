@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.TypeDef;
 
 @Entity
-@Table(name = "comment_revisions", schema = "public", catalog = "mulkcms")
+@Table(name = "comment_revisions", schema = "public")
 @TypeDef(name = "inet", typeClass = PostgreSQLInetType.class, defaultForType = Inet.class)
 public class CommentRevision extends PanacheEntityBase {
 

@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Immutable;
 
 @Entity
-@Table(name = "article_comment_counts", schema = "public", catalog = "mulkcms")
+@Table(name = "article_comment_counts", schema = "public")
 @Immutable
 public class ArticleCommentCount extends PanacheEntityBase {
 

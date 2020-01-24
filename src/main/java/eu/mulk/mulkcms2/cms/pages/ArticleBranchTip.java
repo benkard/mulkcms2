@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Immutable;
 
 @Entity
-@Table(name = "article_branch_tips", schema = "public", catalog = "mulkcms")
+@Table(name = "article_branch_tips", schema = "public")
 @IdClass(ArticleBranchTipPK.class)
 @Immutable
 public class ArticleBranchTip extends PanacheEntityBase {

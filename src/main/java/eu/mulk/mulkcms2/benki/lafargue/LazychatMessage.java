@@ -9,7 +9,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "lazychat_messages", schema = "public", catalog = "benki")
+@Table(name = "lazychat_messages", schema = "benki")
 public class LazychatMessage extends Post {
 
   @Column(name = "content", nullable = true, length = -1)

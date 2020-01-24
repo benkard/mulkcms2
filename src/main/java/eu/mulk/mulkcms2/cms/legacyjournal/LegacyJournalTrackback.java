@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "journal_trackback", schema = "public", catalog = "mulkcms")
+@Table(name = "journal_trackback", schema = "public")
 public class LegacyJournalTrackback extends PanacheEntityBase {
 
   @Id

@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "categories", schema = "public", catalog = "mulkcms")
+@Table(name = "categories", schema = "public")
 public class Category extends PanacheEntityBase {
 
   @Id

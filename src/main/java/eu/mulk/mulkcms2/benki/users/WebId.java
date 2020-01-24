@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "webids", schema = "public", catalog = "benki")
+@Table(name = "webids", schema = "benki")
 public class WebId extends PanacheEntityBase {
 
   @Id

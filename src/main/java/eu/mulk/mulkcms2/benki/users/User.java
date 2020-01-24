@@ -21,7 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity(name = "BenkiUser")
-@Table(name = "users", schema = "public", catalog = "benki")
+@Table(name = "users", schema = "benki")
 public class User extends PanacheEntityBase {
 
   @Id

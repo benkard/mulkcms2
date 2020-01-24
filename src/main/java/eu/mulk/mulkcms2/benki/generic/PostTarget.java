@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "post_targets", schema = "public", catalog = "benki")
+@Table(name = "post_targets", schema = "benki")
 @IdClass(PostTargetPK.class)
 public class PostTarget extends PanacheEntityBase {
 

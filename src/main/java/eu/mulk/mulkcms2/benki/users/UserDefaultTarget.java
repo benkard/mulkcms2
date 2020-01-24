@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_default_target", schema = "public", catalog = "benki")
+@Table(name = "user_default_target", schema = "benki")
 @IdClass(UserDefaultTargetPK.class)
 public class UserDefaultTarget extends PanacheEntityBase {
 

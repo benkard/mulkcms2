@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "article_revisions", schema = "public", catalog = "mulkcms")
+@Table(name = "article_revisions", schema = "public")
 public class ArticleRevision extends PanacheEntityBase {
 
   @Id

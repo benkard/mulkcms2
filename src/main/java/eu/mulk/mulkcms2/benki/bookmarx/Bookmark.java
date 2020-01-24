@@ -9,7 +9,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "bookmarks", schema = "public", catalog = "benki")
+@Table(name = "bookmarks", schema = "benki")
 public class Bookmark extends Post {
 
   @Column(name = "uri", nullable = false, length = -1)

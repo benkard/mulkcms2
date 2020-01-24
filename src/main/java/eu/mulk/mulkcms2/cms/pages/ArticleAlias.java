@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "article_aliases", schema = "public", catalog = "mulkcms")
+@Table(name = "article_aliases", schema = "public")
 public class ArticleAlias extends PanacheEntityBase {
 
   @Id
