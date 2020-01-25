@@ -65,6 +65,8 @@ dependencies {
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
 
+    implementation 'org.jsoup:jsoup:1.12.1'
+
     constraints {
         implementation "com.vladmihalcea:hibernate-types-52:${hibernateTypesVersion}"
         implementation "org.mapstruct:mapstruct:${mapstructVersion}"
