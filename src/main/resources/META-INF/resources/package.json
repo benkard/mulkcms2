@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "elix": "^9.0.3",
     "lit-html": "^1.1.2",
     "normalize.css": "^8.0.1",
     "prefixfree": "^1.0.0",
@@ -13,6 +14,7 @@
   },
   "snowpack": {
     "webDependencies": [
+      "elix",
       "lit-html",
       "normalize.css/normalize.css",
       "sanitize.css/{sanitize,forms,formsize,typography,page}.css",
