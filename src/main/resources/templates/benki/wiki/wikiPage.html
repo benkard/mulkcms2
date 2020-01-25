@@ -2,19 +2,31 @@
 <html>
 <head>
   <meta charset="UTF-8">
+
   <title>{title} &#8212; Benki Wiki</title>
+
+  <link rel="stylesheet" type="text/css" href="/common.css" />
 </head>
+
 <body>
-  <h1>{title}</h1>
+  <article id="wiki-page">
+    <header>
+      <h1>{title}</h1>
 
-  <header>
-    Last edit: <time datetime="{date.htmlFormat}">{date.humanFormat}</time> {author.name}
-  </header>
+      <div class="">
+        Last edit: <time datetime="{date.htmlFormat}">{date.humanFormat}</time> by {author.name}
+      </div>
+    </header>
 
-  <main>
-    <article>
+    <main>
       {content.raw}
-    </article>
-  </main>
+    </main>
+
+    <hr>
+
+    <footer>
+      <a href="/wiki/{title}/revisions">Page revisions</a>
+    </footer>
+  </article>
 </body>
 </html>
