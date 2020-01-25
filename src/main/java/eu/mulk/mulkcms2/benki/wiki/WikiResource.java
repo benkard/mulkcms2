@@ -4,6 +4,7 @@ import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
 import io.quarkus.panache.common.Sort;
 import io.quarkus.qute.Template;
+import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.Authenticated;
@@ -11,6 +12,7 @@ import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.jwt.auth.principal.JWTCallerPrincipal;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
 import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -55,17 +57,7 @@ public class WikiResource {
       throw new NotFoundException();
     }
     var page = maybePage.get();
-    return wikiPage
-        .data("title", page.title)
-        .data(
-            "date",
-            Map.of(
-                "htmlFormat", htmlDateFormatter.format(page.date),
-                "humanFormat", humanDateFormatter.format(page.date)))
-        .data(
-            "author",
-            Map.of("name", String.format("%s %s", page.author.firstName, page.author.lastName)))
-        .data("content", page.content);
+    return wikiPage.data("page", page);
   }
 
   @POST
@@ -84,5 +76,15 @@ public class WikiResource {
   @Produces(TEXT_HTML)
   public TemplateInstance getPageRevisions(@PathParam("pageName") String pageName) {
     throw new NotImplementedYetException();
+  }
+
+  @TemplateExtension
+  static String humanDateTime(TemporalAccessor x) {
+    return humanDateFormatter.format(x);
+  }
+
+  @TemplateExtension
+  static String htmlDateTime(TemporalAccessor x) {
+    return htmlDateFormatter.format(x);
   }
 }
