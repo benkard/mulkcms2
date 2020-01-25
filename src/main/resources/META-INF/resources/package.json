@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "ContentTools": "^1.6.10",
     "elix": "^9.0.3",
     "lit-html": "^1.1.2",
     "normalize.css": "^8.0.1",
@@ -14,6 +15,9 @@
   },
   "snowpack": {
     "webDependencies": [
+      "ContentTools",
+      "ContentTools/build/content-tools.min.css",
+      "ContentTools/build/images/*",
       "elix",
       "lit-html",
       "normalize.css/normalize.css",

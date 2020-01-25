@@ -1,7 +1,20 @@
 {@eu.mulk.mulkcms2.benki.wiki.WikiPageRevision page}
 
 {#include base.html}
+
 {#title}{page.title} &#8212; Benki Wiki{/title}
+
+{#head}
+<link rel="stylesheet" type="text/css" href="/web_modules/ContentTools/build/content-tools.min.css" />
+<script type="module">
+  import {ContentTools} from "/web_modules/ContentTools.js";
+  window.addEventListener('DOMContentLoaded', function() {
+    let editor = ContentTools.EditorApp.get();
+    editor.init('*[data-editable]', 'data-name');
+  });
+</script>
+{/head}
+
 {#body}
 <article id="wiki-page">
   <header>
@@ -9,7 +22,9 @@
   </header>
 
   <main>
-    {#with page}{content.raw}{/}
+    <div data-editable data-name="main-content">
+      {#with page}{content.raw}{/}
+    </div>
   </main>
 
   <hr>
@@ -19,4 +34,5 @@
   </footer>
 </article>
 {/body}
+
 {/include}

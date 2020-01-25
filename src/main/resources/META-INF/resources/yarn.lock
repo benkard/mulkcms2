@@ -779,6 +779,11 @@
   dependencies:
     "@types/node" "*"
 
+ContentTools@^1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/ContentTools/-/ContentTools-1.6.10.tgz#a9a416e2cf6c2263490bc0fee5df886592272af5"
+  integrity sha512-jlm41jP7oPC2+XCMSnyG5zX5BiA9st9NEacREGqbjdSoqCmcTiGDpLucEVNrWzCFUsdEvkClbiBVez3wd9ZPNQ==
+
 acorn@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.1.0.tgz#949d36f2c292535da602283586c2477c57eb2d6c"
