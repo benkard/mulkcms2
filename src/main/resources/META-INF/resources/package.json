@@ -23,13 +23,13 @@
       "bosonic",
       "elix",
       "lit-html",
-      "normalize.css/normalize.css",
       "normalize-opentype.css/normalize-opentype.css",
-      "sanitize.css/{sanitize,forms,formsize,typography,page}.css",
+      "normalize.css/normalize.css",
       "prefixfree",
       "prismjs",
       "purecss/build/{base,buttons,forms,menus,tables}.css",
-      "redux"
+      "redux",
+      "sanitize.css/{sanitize,forms,formsize,typography,page}.css"
     ]
   }
 }
