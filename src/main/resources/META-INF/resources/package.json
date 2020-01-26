@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "ContentTools": "^1.6.10",
+    "bosonic": "^1.0.0",
     "elix": "^9.0.3",
     "lit-html": "^1.1.2",
     "normalize-opentype.css": "^0.2.4",
@@ -19,6 +20,7 @@
       "ContentTools",
       "ContentTools/build/content-tools.min.css",
       "ContentTools/build/images/*",
+      "bosonic",
       "elix",
       "lit-html",
       "normalize.css/normalize.css",
