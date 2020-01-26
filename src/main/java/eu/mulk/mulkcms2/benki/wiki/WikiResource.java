@@ -13,7 +13,6 @@ import io.smallrye.jwt.auth.principal.JWTCallerPrincipal;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
-import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -39,6 +38,10 @@ public class WikiResource {
   @Inject
   Template wikiPage;
 
+  @ResourcePath("benki/wiki/wikiPageRevisionList.html")
+  @Inject
+  Template wikiPageRevisionList;
+
   @Inject SecurityIdentity identity;
 
   @GET
@@ -47,9 +50,7 @@ public class WikiResource {
   public TemplateInstance getPage(@PathParam("pageName") String pageName) {
     Optional<WikiPageRevision> maybePage =
         WikiPageRevision.find(
-                "from WikiPageRevision rev"
-                    + " join fetch rev.author"
-                    + " where rev.title = ?1",
+                "from WikiPageRevision rev" + " join fetch rev.author" + " where rev.title = ?1",
                 Sort.by("date").descending(),
                 pageName)
             .firstResultOptional();
@@ -75,7 +76,27 @@ public class WikiResource {
   @Path("/{pageName}/revisions")
   @Produces(TEXT_HTML)
   public TemplateInstance getPageRevisions(@PathParam("pageName") String pageName) {
-    throw new NotImplementedYetException();
+    Optional<WikiPageRevision> maybePrimaryRevision =
+        WikiPageRevision.find(
+                "from WikiPageRevision rev" + " join fetch rev.author" + " where rev.title = ?1",
+                Sort.by("date").descending(),
+                pageName)
+            .firstResultOptional();
+    if (maybePrimaryRevision.isEmpty()) {
+      throw new NotFoundException();
+    }
+    var primaryRevision = maybePrimaryRevision.get();
+
+    WikiPage page =
+        WikiPageRevision.find(
+                "from WikiPage p"
+                    + " join fetch p.revisions rev"
+                    + " join fetch rev.author"
+                    + " where p.id = ?1",
+                primaryRevision.page.id)
+            .singleResult();
+
+    return wikiPageRevisionList.data("page", page).data("title", pageName);
   }
 
   @TemplateExtension

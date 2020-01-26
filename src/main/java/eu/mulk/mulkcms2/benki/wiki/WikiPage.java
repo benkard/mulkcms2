@@ -1,12 +1,13 @@
 package eu.mulk.mulkcms2.benki.wiki;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -18,5 +19,6 @@ public class WikiPage extends PanacheEntityBase {
   public int id;
 
   @OneToMany(mappedBy = "page", fetch = FetchType.LAZY)
-  public Collection<WikiPageRevision> revisions;
+  @OrderBy("date desc")
+  public List<WikiPageRevision> revisions;
 }
