@@ -105,4 +105,8 @@ task compileWeb {
   doLast {}
 }
 
+processResources {
+    exclude("META-INF/resources/node_modules/**/*")
+}
+
 build.dependsOn compileWeb

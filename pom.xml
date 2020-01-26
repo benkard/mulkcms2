@@ -289,6 +289,16 @@
       </plugin>
     </plugins>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>META-INF/resources/node_modules/**/*</exclude>
+        </excludes>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+
   </build>
 
   <profiles>
