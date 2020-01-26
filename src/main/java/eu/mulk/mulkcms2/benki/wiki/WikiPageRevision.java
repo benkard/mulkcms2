@@ -38,4 +38,21 @@ public class WikiPageRevision extends PanacheEntityBase {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "author", referencedColumnName = "id")
   public User author;
+
+  public WikiPageRevision() {}
+
+  public WikiPageRevision(
+      OffsetDateTime date,
+      String title,
+      String content,
+      String format,
+      WikiPage page,
+      User author) {
+    this.date = date;
+    this.title = title;
+    this.content = content;
+    this.format = format;
+    this.page = page;
+    this.author = author;
+  }
 }
