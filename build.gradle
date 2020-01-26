@@ -109,4 +109,4 @@ processResources {
     exclude("META-INF/resources/node_modules/**/*")
 }
 
-build.dependsOn compileWeb
+quarkusBuild.dependsOn compileWeb
