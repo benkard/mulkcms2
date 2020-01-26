@@ -1268,6 +1268,11 @@ node-releases@^1.1.46:
   dependencies:
     semver "^6.3.0"
 
+normalize-opentype.css@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/normalize-opentype.css/-/normalize-opentype.css-0.2.4.tgz#d4dd3b1dd4932292e4f2eee05e3f524eaa2e4095"
+  integrity sha1-1N07HdSTIpLk8u7gXj9STqouQJU=
+
 normalize.css@^8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
