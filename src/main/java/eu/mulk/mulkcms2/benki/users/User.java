@@ -9,11 +9,14 @@ import eu.mulk.mulkcms2.benki.wiki.WikiPageRevision;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
 import java.util.Set;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -52,8 +55,10 @@ public class User extends PanacheEntityBase {
   @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
   public Collection<LazychatMessage> lazychatMessages;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<OpenId> openids;
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(name = "openids", schema = "benki", joinColumns = @JoinColumn(name = "user"))
+  @Column(name = "openid")
+  public Collection<String> openids;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<PageKey> pageKeys;
@@ -64,27 +69,41 @@ public class User extends PanacheEntityBase {
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserDefaultTarget> defaultTargets;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<UserEmailAddress> emailAddresses;
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(
+      name = "user_email_addresses",
+      schema = "benki",
+      joinColumns = @JoinColumn(name = "user"))
+  @Column(name = "email")
+  public Collection<String> emailAddresses;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<UserJid> jids;
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(name = "user_jids", schema = "benki", joinColumns = @JoinColumn(name = "user"))
+  @Column(name = "jid")
+  public Collection<String> jids;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<UserNickname> nicknames;
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(
+      name = "user_nicknames",
+      schema = "benki",
+      joinColumns = @JoinColumn(name = "user"))
+  @Column(name = "nickname")
+  public Collection<String> nicknames;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserRole> directRoles;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<UserRsaKey> rsaKeys;
+  public Collection<RsaKey> rsaKeys;
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "role", referencedColumnName = "id", nullable = false)
   public Role ownedRole;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<WebId> webids;
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(name = "webids", schema = "benki", joinColumns = @JoinColumn(name = "user"))
+  @Column(name = "webid")
+  public Collection<String> webids;
 
   @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
   public Collection<WikiPageRevision> wikiPageRevisions;
@@ -95,6 +114,7 @@ public class User extends PanacheEntityBase {
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "effective_user_roles",
+      schema = "benki",
       joinColumns = @JoinColumn(name = "user"),
       inverseJoinColumns = @JoinColumn(name = "role"))
   public Set<Role> effectiveRoles;

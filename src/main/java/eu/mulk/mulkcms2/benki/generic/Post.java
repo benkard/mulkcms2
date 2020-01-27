@@ -35,6 +35,7 @@ public abstract class Post extends PanacheEntityBase {
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "user_visible_posts",
+      schema = "benki",
       joinColumns = @JoinColumn(name = "message"),
       inverseJoinColumns = @JoinColumn(name = "user"))
   public Set<User> visibleTo;

@@ -2,13 +2,14 @@ package eu.mulk.mulkcms2.benki.users;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.math.BigInteger;
-import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -24,6 +25,11 @@ public class RsaKey extends PanacheEntityBase {
   @Column(name = "exponent", nullable = false, precision = 0)
   public BigInteger exponent;
 
-  @OneToMany(mappedBy = "rsaKey", fetch = FetchType.LAZY)
-  public Collection<UserRsaKey> users;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "user_rsa_keys",
+      schema = "benki",
+      joinColumns = {@JoinColumn(name = "modulus"), @JoinColumn(name = "exponent")},
+      inverseJoinColumns = @JoinColumn(name = "user"))
+  public User user;
 }

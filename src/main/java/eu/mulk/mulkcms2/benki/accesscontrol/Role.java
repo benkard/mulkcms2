@@ -37,6 +37,7 @@ public class Role extends PanacheEntityBase {
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "role_subroles",
+      schema = "benki",
       joinColumns = @JoinColumn(name = "superrole"),
       inverseJoinColumns = @JoinColumn(name = "subrole"))
   public Set<Role> directSubroles;
@@ -47,6 +48,7 @@ public class Role extends PanacheEntityBase {
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "effective_role_subroles",
+      schema = "benki",
       joinColumns = @JoinColumn(name = "superrole"),
       inverseJoinColumns = @JoinColumn(name = "subrole"))
   public Set<Role> effectiveSubroles;
@@ -67,7 +69,7 @@ public class Role extends PanacheEntityBase {
   public Collection<User> effectiveUsers;
 
   @ElementCollection(fetch = FetchType.LAZY)
-  @CollectionTable(name = "role_tags", joinColumns = @JoinColumn(name = "role"))
+  @CollectionTable(name = "role_tags", schema = "benki", joinColumns = @JoinColumn(name = "role"))
   @Column(name = "tag")
   public Set<String> tags;
 }
