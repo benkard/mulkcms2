@@ -8,9 +8,11 @@
 <link rel="stylesheet" type="text/css" href="/web_modules/ContentTools/build/content-tools.min.css" />
 <script type="module">
   import {ContentTools} from "/web_modules/ContentTools.js";
+
   window.addEventListener('DOMContentLoaded', function() {
     let editor = ContentTools.EditorApp.get();
     editor.init('*[data-editable]', 'data-name');
+
     editor.addEventListener('saved', async function (ev) {
       let regions = ev.detail().regions;
       if (Object.getOwnPropertyNames(regions).length === 0) {
@@ -30,6 +32,15 @@
         body: requestParams
       });
 
+      let status = await response.json();
+      if (status.status === "ok") {
+        if (status.hasOwnProperty("content")) {
+          document.getElementById("wiki-content").innerHTML = status.content;
+        }
+      } else {
+        alert("Failed to save page: " + JSON.stringify(status));
+      }
+
       this.busy(false);
     });
   });
@@ -45,7 +56,7 @@
   </header>
 
   <main>
-    <div data-editable data-name="wiki-content">
+    <div data-editable data-name="wiki-content" id="wiki-content">
       {#with page}{enrichedContent.raw}{/}
     </div>
   </main>

@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki.wiki;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
 import eu.mulk.mulkcms2.benki.users.User;
@@ -16,6 +17,8 @@ import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.json.JsonObject;
+import javax.json.spi.JsonProvider;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.FormParam;
@@ -38,6 +41,8 @@ public class WikiResource {
 
   private static DateTimeFormatter humanDateFormatter =
       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
+
+  private static JsonProvider jsonProvider = JsonProvider.provider();
 
   @ResourcePath("benki/wiki/wikiPage.html")
   @Inject
@@ -71,14 +76,15 @@ public class WikiResource {
   @Path("/{pageName}")
   @Authenticated
   @Transactional
-  public void updatePage(
+  @Produces(APPLICATION_JSON)
+  public JsonObject updatePage(
       @PathParam("pageName") String pageName,
       @FormParam("wiki-title") String title,
       @FormParam("wiki-content") String content) {
 
     if (title == null && content == null) {
       // No changes, nothing to do.
-      return;
+      return jsonProvider.createObjectBuilder().add("status", "ok").build();
     }
 
     if (title != null) {
@@ -112,6 +118,12 @@ public class WikiResource {
             User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult());
 
     pageRevision.persistAndFlush();
+
+    return jsonProvider
+        .createObjectBuilder()
+        .add("status", "ok")
+        .add("content", pageRevision.enrichedContent())
+        .build();
   }
 
   @GET
