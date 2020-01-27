@@ -111,7 +111,7 @@ public class User extends PanacheEntityBase {
   public Collection<WikiPageRevision> wikiPageRevisions;
 
   @ManyToMany(mappedBy = "visibleTo", fetch = FetchType.LAZY)
-  public Collection<Post> visiblePosts;
+  public Set<Post> visiblePosts;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

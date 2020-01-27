@@ -69,7 +69,7 @@ public class Role extends PanacheEntityBase {
   public User owningUsers;
 
   @ManyToMany(mappedBy = "effectiveRoles", fetch = FetchType.LAZY)
-  public Collection<User> effectiveUsers;
+  public Set<User> effectiveUsers;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "role_tags", schema = "benki", joinColumns = @JoinColumn(name = "role"))
