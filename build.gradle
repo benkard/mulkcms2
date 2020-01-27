@@ -108,6 +108,8 @@ task compileWeb {
 
 processResources {
     exclude("META-INF/resources/node_modules/**/*")
+    exclude("META-INF/resources/package.json")
+    exclude("META-INF/resources/yarn.lock")
 }
 
 quarkusBuild.dependsOn compileWeb

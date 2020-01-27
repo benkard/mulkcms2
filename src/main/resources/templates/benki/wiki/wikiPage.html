@@ -25,10 +25,11 @@
         requestParams.append(name, regions[name]);
       }
 
-      var response = await fetch("/wiki/{page.title}", {
+      let response = await fetch("/wiki/{page.title}", {
         method: 'POST',
         body: requestParams
       });
+
       this.busy(false);
     });
   });
@@ -45,7 +46,7 @@
 
   <main>
     <div data-editable data-name="wiki-content">
-      {#with page}{content.raw}{/}
+      {#with page}{enrichedContent.raw}{/}
     </div>
   </main>
 

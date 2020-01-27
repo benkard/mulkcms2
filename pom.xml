@@ -298,6 +298,8 @@
         <directory>src/main/resources</directory>
         <excludes>
           <exclude>META-INF/resources/node_modules/**/*</exclude>
+          <exclude>META-INF/resources/package.json</exclude>
+          <exclude>META-INF/resources/yarn.lock</exclude>
         </excludes>
         <filtering>false</filtering>
       </resource>
