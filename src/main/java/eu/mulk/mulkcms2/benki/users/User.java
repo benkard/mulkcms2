@@ -60,7 +60,7 @@ public class User extends PanacheEntityBase {
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "openids", schema = "benki", joinColumns = @JoinColumn(name = "user"))
   @Column(name = "openid")
-  public Collection<String> openids;
+  public Set<String> openids;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<PageKey> pageKeys;
@@ -77,12 +77,12 @@ public class User extends PanacheEntityBase {
       schema = "benki",
       joinColumns = @JoinColumn(name = "user"))
   @Column(name = "email")
-  public Collection<String> emailAddresses;
+  public Set<String> emailAddresses;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "user_jids", schema = "benki", joinColumns = @JoinColumn(name = "user"))
   @Column(name = "jid")
-  public Collection<String> jids;
+  public Set<String> jids;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(
@@ -90,7 +90,7 @@ public class User extends PanacheEntityBase {
       schema = "benki",
       joinColumns = @JoinColumn(name = "user"))
   @Column(name = "nickname")
-  public Collection<String> nicknames;
+  public Set<String> nicknames;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   public Collection<UserRole> directRoles;
@@ -105,7 +105,7 @@ public class User extends PanacheEntityBase {
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "webids", schema = "benki", joinColumns = @JoinColumn(name = "user"))
   @Column(name = "webid")
-  public Collection<String> webids;
+  public Set<String> webids;
 
   @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
   public Collection<WikiPageRevision> wikiPageRevisions;
