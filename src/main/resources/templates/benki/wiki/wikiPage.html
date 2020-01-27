@@ -11,6 +11,26 @@
   window.addEventListener('DOMContentLoaded', function() {
     let editor = ContentTools.EditorApp.get();
     editor.init('*[data-editable]', 'data-name');
+    editor.addEventListener('saved', async function (ev) {
+      let regions = ev.detail().regions;
+      if (Object.getOwnPropertyNames(regions).length === 0) {
+        // Nothing changed.
+        return;
+      }
+
+      this.busy(true);
+
+      let requestParams = new URLSearchParams();
+      for (let name of Object.getOwnPropertyNames(regions)) {
+        requestParams.append(name, regions[name]);
+      }
+
+      var response = await fetch("/wiki/{page.title}", {
+        method: 'POST',
+        body: requestParams
+      });
+      this.busy(false);
+    });
   });
 </script>
 {/head}
@@ -18,11 +38,13 @@
 {#body}
 <article id="wiki-page">
   <header>
-    <h1>{page.title}</h1>
+    <div data-editable data-name="wiki-title">
+      <h1>{page.title}</h1>
+    </div>
   </header>
 
   <main>
-    <div data-editable data-name="main-content">
+    <div data-editable data-name="wiki-content">
       {#with page}{content.raw}{/}
     </div>
   </main>

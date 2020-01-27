@@ -16,6 +16,8 @@ import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -24,6 +26,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import org.jboss.logging.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 @Path("/wiki")
 public class WikiResource {
@@ -66,10 +70,25 @@ public class WikiResource {
   @POST
   @Path("/{pageName}")
   @Authenticated
+  @Transactional
   public void updatePage(
       @PathParam("pageName") String pageName,
-      @FormParam("title") String title,
-      @FormParam("content") String content) {
+      @FormParam("wiki-title") String title,
+      @FormParam("wiki-content") String content) {
+
+    if (title == null && content == null) {
+      // No changes, nothing to do.
+      return;
+    }
+
+    if (title != null) {
+      // Remove markup.  Reject whitespace.
+      title = Jsoup.clean(title, Whitelist.none());
+      if (!title.matches("\\w+")) {
+        throw new BadRequestException("title does not match \"\\w+\"");
+      }
+    }
+
     var userName = identity.getPrincipal().getName();
 
     Optional<WikiPageRevision> maybeCurrentRevision =
@@ -86,13 +105,13 @@ public class WikiResource {
     var pageRevision =
         new WikiPageRevision(
             OffsetDateTime.now(),
-            title,
-            content,
+            title != null ? title : currentRevision.title,
+            content != null ? content : currentRevision.content,
             "html5",
             currentRevision.page,
-            User.find("name = ?1", userName).singleResult());
+            User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult());
 
-    WikiPageRevision.persist(pageRevision);
+    pageRevision.persistAndFlush();
   }
 
   @GET
