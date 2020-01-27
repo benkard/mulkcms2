@@ -6,6 +6,8 @@ import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,8 +19,9 @@ import javax.persistence.Table;
 public class Comment extends PanacheEntityBase {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
-  public int id;
+  public Integer id;
 
   @Column(name = "global_id", nullable = true, length = -1)
   public String globalId;

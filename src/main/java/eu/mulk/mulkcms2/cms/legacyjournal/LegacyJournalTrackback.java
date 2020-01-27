@@ -4,6 +4,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,8 +16,9 @@ import javax.persistence.Table;
 public class LegacyJournalTrackback extends PanacheEntityBase {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
-  public int id;
+  public Integer id;
 
   @Column(name = "uuid", nullable = false, length = 36)
   public String uuid;

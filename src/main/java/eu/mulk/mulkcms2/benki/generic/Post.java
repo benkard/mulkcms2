@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -14,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -22,8 +25,14 @@ import javax.persistence.Table;
 public abstract class Post extends PanacheEntityBase {
 
   @Id
+  @SequenceGenerator(
+      allocationSize = 1,
+      sequenceName = "posts_id_seq",
+      name = "posts_id_seq",
+      schema = "benki")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "posts_id_seq")
   @Column(name = "id", nullable = false)
-  public int id;
+  public Integer id;
 
   @Column(name = "date", nullable = true)
   public OffsetDateTime date;
