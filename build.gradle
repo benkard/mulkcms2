@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.quarkus'
+    id "com.bmuschko.docker-remote-api" version "${dockerPluginVersion}"
     id "com.diffplug.gradle.spotless" version "${spotlessPluginVersion}"
     id "com.github.ben-manes.versions" version "${versionsPluginVersion}"
     id "se.patrikerdes.use-latest-versions" version "${useLatestVersionsPluginVersion}"
@@ -85,8 +86,8 @@ spotless {
   }
 }
 
-group 'eu.mulk'
-version '0.1.0-SNAPSHOT'
+group "eu.mulk"
+version "${projectVersion}"
 
 task yarnInstall(type:Exec) {
   workingDir "src/main/resources/META-INF/resources"
@@ -113,3 +114,18 @@ processResources {
 }
 
 quarkusBuild.dependsOn compileWeb
+
+task buildDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
+    inputDir = file(".")
+    dockerFile = file("src/main/docker/Dockerfile.jvm")
+    images.add("docker.benkard.de/mulk/mulkcms2:${projectVersion}")
+}
+
+buildDocker.dependsOn quarkusBuild
+assemble.dependsOn buildDocker
+
+task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+    images.add("docker.benkard.de/mulk/mulkcms2:${projectVersion}")
+}
+
+pushDocker.dependsOn buildDocker

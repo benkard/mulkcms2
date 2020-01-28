@@ -7,28 +7,25 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/mulkcms2-jvm .
+# docker build -f src/main/docker/Dockerfile.jvm -t docker.benkard.de/mulk/mulkcms2 .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/mulkcms2-jvm
+# docker run -i --rm -p 8080:8080 docker.benkard.de/mulk/mulkcms2
 #
 ###
-FROM fabric8/java-alpine-openjdk8-jre:1.6.5
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENV AB_ENABLED=jmx_exporter
+FROM adoptopenjdk:13-jre-hotspot
 
-# Be prepared for running in OpenShift too
-RUN adduser -G root --no-create-home --disabled-password 1001 \
-  && chown -R 1001 /deployments \
+RUN mkdir -p /deployments
+
+RUN useradd --user-group --uid 1200 java \
+  && chown -R java /deployments \
   && chmod -R "g+rwX" /deployments \
-  && chown -R 1001:root /deployments
+  && chown -R java:java /deployments
 
 COPY build/lib/* /deployments/lib/
 COPY build/*-runner.jar /deployments/app.jar
 EXPOSE 8080
 
-# run with user 1001
-USER 1001
-
-ENTRYPOINT [ "/deployments/run-java.sh" ]
+USER java
+ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseShenandoahGC", "-XX:ShenandoahGCHeuristics=compact", "-Dquarkus.http.host=0.0.0.0", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager", "-jar", "/deployments/app.jar"]

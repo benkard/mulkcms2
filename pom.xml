@@ -17,6 +17,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
+    <dockerfile-plugin.version>1.4.13</dockerfile-plugin.version>
     <quarkus-plugin.version>1.2.0.Final</quarkus-plugin.version>
     <surefire-plugin.version>3.0.0-M4</surefire-plugin.version>
     <spotless-plugin.version>1.26.1</spotless-plugin.version>
@@ -291,6 +292,27 @@
           </java>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>dockerfile-maven-plugin</artifactId>
+        <version>${dockerfile-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>default</id>
+            <goals>
+              <goal>build</goal>
+              <goal>push</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <dockerfile>src/main/docker/Dockerfile.jvm</dockerfile>
+          <repository>docker.benkard.de/mulk/mulkcms2</repository>
+          <tag>${project.version}</tag>
+        </configuration>
+      </plugin>
+
     </plugins>
 
     <resources>
