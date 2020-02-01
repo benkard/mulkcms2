@@ -47,3 +47,6 @@ web_modules
 
 # Unknown
 out/
+
+# Credentials
+keys.p12

@@ -39,6 +39,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-resteasy-jsonb'
     implementation 'io.quarkus:quarkus-resteasy-qute'
     implementation 'io.quarkus:quarkus-scheduler'
+    implementation 'io.quarkus:quarkus-smallrye-jwt'
 
     //implementation 'io.quarkus:quarkus-elytron-security'
     //implementation 'io.quarkus:quarkus-elytron-security-jdbc'
@@ -53,6 +54,8 @@ dependencies {
     //implementation 'jakarta.transaction:jakarta.transaction-api'
     //implementation 'org.jboss.spec.javax.xml.bind:jboss-jaxb-api_2.3_spec'
     //implementation 'jakarta.persistence:jakarta.persistence-api'
+
+    implementation "org.bitbucket.b_c:jose4j"
 
     implementation 'org.mapstruct:mapstruct'
     compileOnly 'org.mapstruct:mapstruct-processor'
@@ -76,6 +79,7 @@ dependencies {
         compileOnly "com.google.code.findbugs:jsr305:${findbugsJsr305Version}"
         implementation "jakarta.security.jacc:jakarta.security.jacc-api:${jakartaJaccVersion}"
         implementation "net.java.dev.jna:jna:${jnaVersion}"
+        implementation "org.bitbucket.b_c:jose4j:${jose4jVersion}"
     }
 }
 
