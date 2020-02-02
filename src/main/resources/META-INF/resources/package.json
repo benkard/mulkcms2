@@ -21,7 +21,7 @@
       "ContentTools/build/content-tools.min.css",
       "ContentTools/build/images/*",
       "bosonic",
-      "elix",
+      "elix/define/*.js",
       "lit-html",
       "normalize-opentype.css/normalize-opentype.css",
       "normalize.css/normalize.css",
