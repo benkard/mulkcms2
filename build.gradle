@@ -99,6 +99,8 @@ version "${projectVersion}"
 task yarnInstall(type:Exec) {
   def resourceDir = "src/main/resources/META-INF/resources"
 
+  onlyIf { !project.hasProperty('skipWeb') }
+
   inputs.file "${resourceDir}/package.json"
   outputs.dir "${resourceDir}/node_modules"
   outputs.file "${resourceDir}/yarn.lock"
@@ -109,6 +111,8 @@ task yarnInstall(type:Exec) {
 
 task snowpack(type:Exec) {
   def resourceDir = "src/main/resources/META-INF/resources"
+
+  onlyIf { !project.hasProperty('skipWeb') }
 
   dependsOn yarnInstall
 
@@ -136,6 +140,8 @@ processResources {
 quarkusBuild.dependsOn compileWeb
 
 task buildDocker(type: DockerBuildImage) {
+    onlyIf { !project.hasProperty('skipDocker') }
+
     inputDir = file(".")
     dockerFile = file("src/main/docker/Dockerfile.jvm")
     images.add("docker.benkard.de/mulk/mulkcms2:${projectVersion}")
