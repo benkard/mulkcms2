@@ -1,31 +1,30 @@
 package eu.mulk.mulkcms2.authentication;
 
-import static javax.ws.rs.Priorities.AUTHENTICATION;
-
+import io.quarkus.security.credential.Credential;
+import io.quarkus.security.identity.AuthenticationRequestContext;
+import io.quarkus.security.identity.IdentityProvider;
 import io.quarkus.security.identity.SecurityIdentity;
-import io.smallrye.jwt.auth.AbstractBearerTokenExtractor;
+import io.quarkus.security.identity.request.TokenAuthenticationRequest;
+import io.quarkus.smallrye.jwt.runtime.auth.JWTAuthMechanism;
 import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
-import io.smallrye.jwt.auth.principal.JWTAuthContextInfo;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Permission;
 import java.security.Principal;
 import java.security.PublicKey;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import javax.annotation.PostConstruct;
-import javax.annotation.Priority;
-import javax.inject.Inject;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.ext.Provider;
+import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jwt.MalformedClaimException;
@@ -41,11 +40,11 @@ import org.slf4j.LoggerFactory;
  * way, there is no need to route the user through an OpenID Connect IdP on each request, for
  * example.
  *
+ * @see JWTAuthMechanism
  * @see JwtCookieSetterFilter
  */
-@Provider
-@Priority(AUTHENTICATION)
-public class JwtCookieLoginFilter implements ContainerRequestFilter {
+@ApplicationScoped
+public class JwtCookieLoginFilter implements IdentityProvider<TokenAuthenticationRequest> {
 
   @ConfigProperty(name = "mulkcms.jwt.signing-key")
   String signingKeyAlias;
@@ -62,18 +61,14 @@ public class JwtCookieLoginFilter implements ContainerRequestFilter {
   @ConfigProperty(name = "mulkcms.jwt.validity")
   Duration validity;
 
-  @Inject SecurityIdentity identity;
-
-  @Inject JWTAuthContextInfo authContextInfo;
-
   private static final Logger log = LoggerFactory.getLogger(JwtCookieLoginFilter.class);
 
   private PublicKey signingKey;
 
   @PostConstruct
   public void postCostruct()
-      throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException,
-          UnrecoverableKeyException {
+      throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
+    log.info("Hello!");
     try (var is = new FileInputStream(signingKeyFile)) {
       var keystore = KeyStore.getInstance(KeyStore.getDefaultType());
       keystore.load(is, signingKeyPassphrase.toCharArray());
@@ -83,102 +78,107 @@ public class JwtCookieLoginFilter implements ContainerRequestFilter {
   }
 
   @Override
-  public void filter(ContainerRequestContext requestContext)
-      throws IOException {
+  public CompletionStage<SecurityIdentity> authenticate(
+      TokenAuthenticationRequest request, AuthenticationRequestContext context) {
 
-    try {
-      if (!identity.isAnonymous()) {
-        log.debug("Already authenticated, skipping JWT check.");
-        return;
-      }
+    log.info("Starting JWT verification.");
 
-      AbstractBearerTokenExtractor extractor =
-          new BearerTokenExtractor(requestContext, authContextInfo);
-      String bearerToken = extractor.getBearerToken();
+    return context.runBlocking(
+        () -> {
+          try {
+            log.info("JWT verification started.");
 
-      var jwtConsumer =
-          new JwtConsumerBuilder()
-              .setJwsAlgorithmConstraints(
-                  new AlgorithmConstraints(
-                      AlgorithmConstraints.ConstraintType.WHITELIST,
-                      AlgorithmIdentifiers.RSA_USING_SHA256,
-                      AlgorithmIdentifiers.RSA_USING_SHA384,
-                      AlgorithmIdentifiers.RSA_USING_SHA512,
-                      AlgorithmIdentifiers.ECDSA_USING_P256_CURVE_AND_SHA256,
-                      AlgorithmIdentifiers.ECDSA_USING_P384_CURVE_AND_SHA384,
-                      AlgorithmIdentifiers.ECDSA_USING_P521_CURVE_AND_SHA512))
-              .setVerificationKey(signingKey)
-              .setRequireExpirationTime()
-              .setAllowedClockSkewInSeconds(60)
-              .build();
+            /*
+            AbstractBearerTokenExtractor extractor =
+                new BearerTokenExtractor(requestContext, authContextInfo);
+            String bearerToken = extractor.getBearerToken();
+            */
 
-      var claims = jwtConsumer.process(bearerToken).getJwtClaims();
-      claims.getSubject();
+            // FIXME: But how does this know how the token is extracted?  What passes it here?
+            // Look up JWTAuthMechanism.
+            var bearerToken = request.getToken().getToken();
 
-      var jwtPrincipal = new DefaultJWTCallerPrincipal(claims);
-      log.debug("JWT verified: {}", jwtPrincipal);
+            var jwtConsumer =
+                new JwtConsumerBuilder()
+                    .setJwsAlgorithmConstraints(
+                        new AlgorithmConstraints(
+                            AlgorithmConstraints.ConstraintType.WHITELIST,
+                            AlgorithmIdentifiers.RSA_USING_SHA256,
+                            AlgorithmIdentifiers.RSA_USING_SHA384,
+                            AlgorithmIdentifiers.RSA_USING_SHA512,
+                            AlgorithmIdentifiers.ECDSA_USING_P256_CURVE_AND_SHA256,
+                            AlgorithmIdentifiers.ECDSA_USING_P384_CURVE_AND_SHA384,
+                            AlgorithmIdentifiers.ECDSA_USING_P521_CURVE_AND_SHA512))
+                    .setVerificationKey(signingKey)
+                    .setRequireExpirationTime()
+                    .setAllowedClockSkewInSeconds(60)
+                    .build();
 
-      var securityContext =
-          new JwtSecurityContext(requestContext.getSecurityContext(), jwtPrincipal);
-      requestContext.setSecurityContext(securityContext);
-    } catch (InvalidJwtException | MalformedClaimException e) {
-      log.debug("Invalid JWT", e);
-    }
+            var claims = jwtConsumer.process(bearerToken).getJwtClaims();
+            claims.getSubject();
+
+            var jwtPrincipal = new DefaultJWTCallerPrincipal(claims);
+            log.info("JWT verified: {}", jwtPrincipal);
+
+            return new CookieIdentity(jwtPrincipal);
+          } catch (InvalidJwtException | MalformedClaimException e) {
+            log.info("JWT verification failed", e);
+            return null;
+          }
+        });
   }
 
-  private static class BearerTokenExtractor extends AbstractBearerTokenExtractor {
+  @Override
+  public Class<TokenAuthenticationRequest> getRequestType() {
+    return TokenAuthenticationRequest.class;
+  }
 
-    private final ContainerRequestContext requestContext;
+  private static class CookieIdentity implements SecurityIdentity {
 
-    BearerTokenExtractor(
-        ContainerRequestContext requestContext, JWTAuthContextInfo authContextInfo) {
-      super(authContextInfo);
-      this.requestContext = requestContext;
+    private Principal jwtPrincipal;
+
+    private CookieIdentity(Principal jwtPrincipal) {
+      this.jwtPrincipal = jwtPrincipal;
     }
 
     @Override
-    protected String getHeaderValue(String headerName) {
-      return requestContext.getHeaderString(headerName);
+    public Principal getPrincipal() {
+      return jwtPrincipal;
     }
 
     @Override
-    protected String getCookieValue(String cookieName) {
-      var tokenCookie = requestContext.getCookies().get(cookieName);
+    public boolean isAnonymous() {
+      return false;
+    }
 
-      if (tokenCookie != null) {
-        return tokenCookie.getValue();
-      }
+    @Override
+    public Set<String> getRoles() {
+      return Set.of();
+    }
+
+    @Override
+    public <T extends Credential> T getCredential(Class<T> credentialType) {
       return null;
     }
-  }
 
-  private static class JwtSecurityContext implements SecurityContext {
-    private SecurityContext delegate;
-    private JsonWebToken principal;
-
-    JwtSecurityContext(SecurityContext delegate, JsonWebToken principal) {
-      this.delegate = delegate;
-      this.principal = principal;
+    @Override
+    public Set<Credential> getCredentials() {
+      return Set.of();
     }
 
     @Override
-    public Principal getUserPrincipal() {
-      return principal;
+    public <T> T getAttribute(String name) {
+      return null;
     }
 
     @Override
-    public boolean isUserInRole(String role) {
-      return principal.getGroups().contains(role);
+    public Map<String, Object> getAttributes() {
+      return Map.of();
     }
 
     @Override
-    public boolean isSecure() {
-      return delegate.isSecure();
-    }
-
-    @Override
-    public String getAuthenticationScheme() {
-      return delegate.getAuthenticationScheme();
+    public CompletionStage<Boolean> checkPermission(Permission permission) {
+      return CompletableFuture.completedFuture(false);
     }
   }
 }
