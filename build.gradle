@@ -1,3 +1,6 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+
 plugins {
     id 'java'
     id 'io.quarkus'
@@ -94,14 +97,27 @@ group "eu.mulk"
 version "${projectVersion}"
 
 task yarnInstall(type:Exec) {
-  workingDir "src/main/resources/META-INF/resources"
+  def resourceDir = "src/main/resources/META-INF/resources"
+
+  inputs.file "${resourceDir}/package.json"
+  outputs.dir "${resourceDir}/node_modules"
+  outputs.file "${resourceDir}/yarn.lock"
+
+  workingDir resourceDir
   commandLine "yarn", "install"
 }
 
 task snowpack(type:Exec) {
+  def resourceDir = "src/main/resources/META-INF/resources"
+
   dependsOn yarnInstall
 
-  workingDir "src/main/resources/META-INF/resources"
+  inputs.dir "${resourceDir}/node_modules"
+  inputs.file "${resourceDir}/yarn.lock"
+  inputs.file "${resourceDir}/package.json"
+  outputs.dir "${resourceDir}/web_modules"
+
+  workingDir resourceDir
   commandLine "yarn", "run", "snowpack"
 }
 
@@ -119,7 +135,7 @@ processResources {
 
 quarkusBuild.dependsOn compileWeb
 
-task buildDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
+task buildDocker(type: DockerBuildImage) {
     inputDir = file(".")
     dockerFile = file("src/main/docker/Dockerfile.jvm")
     images.add("docker.benkard.de/mulk/mulkcms2:${projectVersion}")
@@ -128,7 +144,7 @@ task buildDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) 
 buildDocker.dependsOn quarkusBuild
 assemble.dependsOn buildDocker
 
-task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+task pushDocker(type: DockerPushImage) {
     images.add("docker.benkard.de/mulk/mulkcms2:${projectVersion}")
 }
 
