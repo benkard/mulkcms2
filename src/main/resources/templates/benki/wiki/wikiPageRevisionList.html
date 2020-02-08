@@ -23,11 +23,13 @@
     <tbody>
       {#with page}
         {#for revision in revisions}
+        <tr>
           {#with revision}
-            <tr>{date.humanDateTime}</tr>
-            <tr>{title}</tr>
-            <tr>{author.firstName}</tr>
+            <td>{date.humanDateTime}</td>
+            <td>{title}</td>
+            <td>{author.firstName}</td>
           {/with}
+        </tr>
         {/for}
       {/with}
     </tbody>
