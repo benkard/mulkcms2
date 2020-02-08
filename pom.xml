@@ -28,7 +28,7 @@
     <quarkus.platform.version>1.2.0.Final</quarkus.platform.version>
 
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
-    <hibernate-types.version>2.9.2</hibernate-types.version>
+    <hibernate-types.version>2.9.3</hibernate-types.version>
     <mapstruct.version>1.3.1.Final</mapstruct.version>
     <testcontainers.version>1.12.5</testcontainers.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
