@@ -1,4 +1,4 @@
-package eu.mulk.mulkcms2.benki.bookmarks;
+package eu.mulk.mulkcms2.common.markdown;
 
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
@@ -18,7 +18,7 @@ public class MarkdownConverter {
   private final Parser parser;
   private final HtmlRenderer renderer;
 
-  MarkdownConverter() {
+  public MarkdownConverter() {
     var options = new MutableDataSet();
     options.set(
         Parser.EXTENSIONS,

@@ -145,3 +145,17 @@ article.bookmark {
   padding: 0.3em;
   background: #fee;
 }
+
+.lazychat-message-info {
+  font-style: italic;
+  font-size: smaller;
+  margin: 0;
+  padding: 0;
+}
+
+article.lazychat-message {
+  margin: 0.5em 0;
+  border: 1px solid lightseagreen;
+  padding: 0.3em;
+  background: #efe;
+}

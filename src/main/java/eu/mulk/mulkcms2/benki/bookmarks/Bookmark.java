@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 
 @Entity
 @Table(name = "bookmarks", schema = "benki")
