@@ -11,6 +11,8 @@ import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -28,6 +30,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.RedirectionException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.jboss.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -53,6 +58,12 @@ public class WikiResource {
   Template wikiPageRevisionList;
 
   @Inject SecurityIdentity identity;
+
+  @GET
+  @Authenticated
+  public Response getRoot() throws URISyntaxException {
+    return Response.seeOther(new URI("/wiki/Home")).build();
+  }
 
   @GET
   @Path("/{pageName}")
