@@ -58,7 +58,6 @@ public class WikiResource {
   @Inject SecurityIdentity identity;
 
   @GET
-  @Authenticated
   public Response getRoot() throws URISyntaxException {
     return Response.seeOther(new URI("/wiki/Home")).build();
   }
