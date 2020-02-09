@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki.generic;
 
+import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.time.OffsetDateTime;
@@ -48,4 +49,12 @@ public abstract class Post extends PanacheEntityBase {
       joinColumns = @JoinColumn(name = "message"),
       inverseJoinColumns = @JoinColumn(name = "user"))
   public Set<User> visibleTo;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "post_targets",
+      schema = "benki",
+      joinColumns = @JoinColumn(name = "message"),
+      inverseJoinColumns = @JoinColumn(name = "target"))
+  public Set<Role> targets;
 }

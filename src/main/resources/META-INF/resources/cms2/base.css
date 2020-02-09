@@ -124,3 +124,7 @@ body > footer {
   padding: 0.5em 0.5em;
   border-top: lightgray solid 1px;
 }
+
+h1.bookmark-title {
+  font-size: 1em;
+}

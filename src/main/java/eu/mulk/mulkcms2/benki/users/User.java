@@ -113,6 +113,12 @@ public class User extends PanacheEntityBase {
   @ManyToMany(mappedBy = "visibleTo", fetch = FetchType.LAZY)
   public Set<Post> visiblePosts;
 
+  @ManyToMany(mappedBy = "visibleTo", fetch = FetchType.LAZY)
+  public Set<Bookmark> visibleBookmarks;
+
+  @ManyToMany(mappedBy = "visibleTo", fetch = FetchType.LAZY)
+  public Set<LazychatMessage> visibleLazychatMessages;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "effective_user_roles",

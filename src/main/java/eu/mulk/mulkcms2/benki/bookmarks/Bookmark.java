@@ -1,11 +1,13 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
 import eu.mulk.mulkcms2.benki.generic.Post;
-import java.util.Collection;
+import java.util.Set;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +23,11 @@ public class Bookmark extends Post {
   @Column(name = "description", nullable = true, length = -1)
   public String description;
 
-  @OneToMany(mappedBy = "bookmark", fetch = FetchType.LAZY)
-  public Collection<BookmarkTag> tags;
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(
+      name = "bookmark_tags",
+      schema = "benki",
+      joinColumns = @JoinColumn(name = "bookmark"))
+  @Column(name = "tag")
+  public Set<String> tags;
 }

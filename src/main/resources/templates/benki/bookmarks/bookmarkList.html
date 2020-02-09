@@ -1,0 +1,33 @@
+{@java.util.List<eu.mulk.mulkcms2.benki.bookmarks.Bookmark> bookmarks}
+
+{#include base.html}
+
+{#title}Benki Bookmarks{/title}
+{#siteSection}Bookmarks{/siteSection}
+{#bookmarksClass}this-page{/bookmarksClass}
+
+{#head}{/head}
+
+{#body}
+
+{#for bookmark in bookmarks}
+  {#with bookmark}
+    <article class="bookmark">
+      <header>
+        <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
+        <div>
+          <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
+          <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
+        </div>
+      </header>
+
+      <section class="bookmark-description">
+        {description}
+      </section>
+    </article>
+  {/with}
+{/for}
+
+{/body}
+
+{/include}
