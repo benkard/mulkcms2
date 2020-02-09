@@ -112,6 +112,7 @@ body > main {
   background-color: var(--main-bg-color);
   padding: 10px;
   border-left: 1px solid lightgray;
+  overflow: scroll;
 }
 
 body > footer {
@@ -127,4 +128,20 @@ body > footer {
 
 h1.bookmark-title {
   font-size: 1em;
+  margin: 0;
+  padding: 0;
+}
+
+.bookmark-info {
+  font-style: italic;
+  font-size: smaller;
+  margin: 0;
+  padding: 0;
+}
+
+article.bookmark {
+  margin: 0.5em 0;
+  border: 1px solid lightcoral;
+  padding: 0.3em;
+  background: #fee;
 }

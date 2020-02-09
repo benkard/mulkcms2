@@ -15,14 +15,14 @@
     <article class="bookmark">
       <header>
         <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
-        <div>
+        <div class="bookmark-info">
           <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
           <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
         </div>
       </header>
 
       <section class="bookmark-description">
-        {description}
+        {descriptionHtml.raw}
       </section>
     </article>
   {/with}

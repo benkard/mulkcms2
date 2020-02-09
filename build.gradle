@@ -75,6 +75,8 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.12.1'
 
+    implementation "com.vladsch.flexmark:flexmark-all"
+
     constraints {
         implementation "com.vladmihalcea:hibernate-types-52:${hibernateTypesVersion}"
         implementation "org.mapstruct:mapstruct:${mapstructVersion}"
@@ -83,6 +85,7 @@ dependencies {
         implementation "jakarta.security.jacc:jakarta.security.jacc-api:${jakartaJaccVersion}"
         implementation "net.java.dev.jna:jna:${jnaVersion}"
         implementation "org.bitbucket.b_c:jose4j:${jose4jVersion}"
+        implementation "com.vladsch.flexmark:flexmark-all:${flexmarkVersion}"
     }
 }
 

@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "bookmarks", schema = "benki")
@@ -30,4 +31,9 @@ public class Bookmark extends Post {
       joinColumns = @JoinColumn(name = "bookmark"))
   @Column(name = "tag")
   public Set<String> tags;
+
+  @Transient
+  public String getDescriptionHtml() {
+    return new MarkdownConverter().htmlify(description);
+  }
 }
