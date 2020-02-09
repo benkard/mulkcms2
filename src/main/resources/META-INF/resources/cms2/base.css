@@ -55,7 +55,7 @@ body {
   }
 
   body > nav > ol > li.this-page {
-    width: calc(100% + 1px);
+    width: calc(100% + 3px);
   }
 }
 
