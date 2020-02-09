@@ -48,7 +48,7 @@ public class LazychatResource {
       Role world = Role.find("from Role r join r.tags tag where tag = 'world'").singleResult();
       lazychatMessages =
           Bookmark.find(
-                  "select bm from LazychatMessage lm join lm.targets target left join fetch lm.owner where target = ?1",
+                  "select lm from LazychatMessage lm join lm.targets target left join fetch lm.owner where target = ?1",
                   Sort.by("date").descending(),
                   world)
               .list();
