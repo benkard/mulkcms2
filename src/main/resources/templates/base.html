@@ -13,6 +13,24 @@
 </head>
 
 <body>
-{#insert body}{/}
+  <header>
+    <h1><a href="/">Benki</a> → {#insert siteSection}{/}</h1>
+  </header>
+
+  <nav>
+    <ol>
+      <li><a href="/bookmarx">Bookmarks</a></li>
+      <li><a href="/lafargue">Remarks</a></li>
+      <li class="this-page"><a href="/wiki">Wiki</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    {#insert body}{/}
+  </main>
+
+  <footer>
+    <a href="/imprint">Imprint</a>
+  </footer>
 </body>
 </html>

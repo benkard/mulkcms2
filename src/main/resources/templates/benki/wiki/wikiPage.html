@@ -4,6 +4,8 @@
 
 {#title}{page.title} &#8212; Benki Wiki{/title}
 
+{#siteSection}Wiki{/siteSection}
+
 {#head}
 <link rel="stylesheet" type="text/css" href="/web_modules/ContentTools/build/content-tools.min.css" />
 <script type="module" src="/web_modules/elix/define/ExpandablePanel.js" defer></script>
@@ -75,14 +77,14 @@
       <h1>{page.title}</h1>
     </div>
 
-    <elix-expandable-panel id="warning-panel"><div id="warning-text"></div></elix-expandable-panel>
+    <elix-expandable-panel id="warning-panel" role="alert"><div id="warning-text"></div></elix-expandable-panel>
   </header>
 
-  <main>
+  <section id="wiki-page-content">
     <div data-editable data-name="wiki-content" id="wiki-content">
       {#with page}{enrichedContent.raw}{/}
     </div>
-  </main>
+  </section>
 
   <hr>
 

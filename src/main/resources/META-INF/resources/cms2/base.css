@@ -11,5 +11,116 @@
 /* Sanitize.css */
 @import "../web_modules/sanitize.css/sanitize.css";
 @import "../web_modules/sanitize.css/forms.css";
-@import "../web_modules/sanitize.css/page.css";
 @import "../web_modules/sanitize.css/typography.css";
+/* */
+
+html {
+  --main-bg-color: #f8f8f8;
+  --header-bg-color: #ffffff;
+  --nav-bg-color: #ffffff;
+  --footer-bg-color: #ffffff;
+}
+
+body {
+  display: grid;
+}
+
+body {
+  grid-template-columns: 1fr;
+  grid-gap: 0;
+
+  grid-template-areas:
+      "header"
+      "navbar"
+      "main"
+      "footer";
+}
+
+@media (max-width: 30em) {
+  body > main {
+    border-top: 1px solid lightgray
+  }
+}
+
+@media (min-width: 30em) {
+  body {
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: auto 1fr auto;
+    grid-gap: 0;
+
+    grid-template-areas:
+        "header main"
+        "navbar main"
+        "footer footer";
+  }
+
+  body > nav > ol > li.this-page {
+    width: calc(100% + 1px);
+  }
+}
+
+body > header {
+  grid-area: header;
+  flex: min-content;
+
+  text-align: center;
+  horiz-align: center;
+  background-color: var(--main-bg-color);
+  border-bottom: 1px solid lightgray;
+}
+
+body > header a {
+  text-decoration: none;
+}
+
+body > header h1 {
+  font-size: 1em;
+}
+
+body > nav {
+  grid-area: navbar;
+
+  background-color: var(--nav-bg-color);
+}
+
+body > nav > ol {
+  display: flex;
+  flex-direction: column;
+}
+
+body > nav > ol > li {
+  flex: auto;
+
+  padding: 5px;
+  padding-left: 1em;
+}
+
+body > nav > ol > li.this-page {
+  background-color: var(--main-bg-color);
+  border: 1px solid lightgray;
+  border-right: 1px solid var(--main-bg-color);
+  z-index: 1;
+}
+
+body > nav > ol > li > a {
+  text-decoration: none;
+}
+
+body > main {
+  grid-area: main;
+
+  background-color: var(--main-bg-color);
+  padding: 10px;
+  border-left: 1px solid lightgray;
+}
+
+body > footer {
+  grid-area: footer;
+
+  background-color: var(--footer-bg-color);
+  horiz-align: right;
+  text-align: right;
+
+  padding: 0.5em 0.5em;
+  border-top: lightgray solid 1px;
+}
