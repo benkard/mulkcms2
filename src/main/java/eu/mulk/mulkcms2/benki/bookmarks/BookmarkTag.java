@@ -1,4 +1,4 @@
-package eu.mulk.mulkcms2.benki.bookmarx;
+package eu.mulk.mulkcms2.benki.bookmarks;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;

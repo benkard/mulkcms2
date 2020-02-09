@@ -1,4 +1,4 @@
-package eu.mulk.mulkcms2.benki.lafargue;
+package eu.mulk.mulkcms2.benki.lazychat;
 
 import java.io.Serializable;
 import javax.persistence.Column;

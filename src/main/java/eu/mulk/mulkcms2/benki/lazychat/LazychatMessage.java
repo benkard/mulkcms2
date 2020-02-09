@@ -1,4 +1,4 @@
-package eu.mulk.mulkcms2.benki.lafargue;
+package eu.mulk.mulkcms2.benki.lazychat;
 
 import eu.mulk.mulkcms2.benki.generic.Post;
 import java.util.Collection;

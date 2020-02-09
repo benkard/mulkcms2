@@ -1,4 +1,4 @@
-package eu.mulk.mulkcms2.benki.lafargue;
+package eu.mulk.mulkcms2.benki.lazychat;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.persistence.Column;
