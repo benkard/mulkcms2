@@ -12,41 +12,45 @@
 {#body}
 
 {#if authenticated}
-  <section id="bookmark-submission">
-    <form class="pure-form pure-form-aligned" method="post">
-      <fieldset>
-        <legend>Submit Bookmark</legend>
+  <script type="module" src="/web_modules/elix/define/ExpandableSection.js"></script>
+  <elix-expandable-section>
+    <h2 slot="header" class="small-title"><button class="pure-button">Create New Bookmark</button></h2>
+    <section id="bookmark-submission">
+      <form class="pure-form pure-form-aligned" method="post">
+        <fieldset>
+          <legend>New Bookmark</legend>
 
-        <div class="pure-control-group">
-          <label for="title-input">Title:</label>
-          <input name="title" id="title-input" type="text" placeholder="Title" required/>
-        </div>
+          <div class="pure-control-group">
+            <label for="title-input">Title:</label>
+            <input name="title" id="title-input" type="text" placeholder="Title" required/>
+          </div>
 
-        <div class="pure-control-group">
-          <label for="uri-input">URI:</label>
-          <input name="uri" id="uri-input" type="text" placeholder="URI" required/>
-        </div>
+          <div class="pure-control-group">
+            <label for="uri-input">URI:</label>
+            <input name="uri" id="uri-input" type="text" placeholder="URI" required/>
+          </div>
 
-        <div class="pure-control-group">
-          <label for="description-input">Description:</label>
-          <textarea name="description" id="description-input" placeholder="Description"></textarea>
-        </div>
+          <div class="pure-control-group">
+            <label for="description-input">Description:</label>
+            <textarea name="description" id="description-input" placeholder="Description"></textarea>
+          </div>
 
-        <div class="pure-control-group">
-          <label for="visibility-input">Visibility:</label>
-          <select id="visibility-input" name="visibility" required>
-            <option value="public">Public</option>
-            <option value="semiprivate" selected>Semiprivate</option>
-            <option value="private">Private</option>
-          </select>
-        </div>
+          <div class="pure-control-group">
+            <label for="visibility-input">Visibility:</label>
+            <select id="visibility-input" name="visibility" required>
+              <option value="public">Public</option>
+              <option value="semiprivate" selected>Semiprivate</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
 
-        <div class="pure-controls">
-          <button type="submit" class="pure-button pure-button-primary">Submit Bookmark</button>
-        </div>
-      </fieldset>
-    </form>
-  </section>
+          <div class="pure-controls">
+            <button type="submit" class="pure-button pure-button-primary">Submit Bookmark</button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+  </elix-expandable-section>
 {/if}
 
 {#for bookmark in bookmarks}
