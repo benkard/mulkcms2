@@ -9,6 +9,7 @@ import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.ResourcePath;
+import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -81,6 +82,7 @@ public class BookmarkResource {
 
   @POST
   @Transactional
+  @Authenticated
   public Response postBookmark(
       @FormParam("uri") URI uri,
       @FormParam("title") @NotEmpty String title,
