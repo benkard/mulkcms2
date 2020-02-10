@@ -110,6 +110,10 @@ body > nav > ol > li > a {
   padding-left: 1em;
 }
 
+body > nav a:hover {
+  background-color: #f8f8f8;
+}
+
 body > main {
   grid-area: main;
 
