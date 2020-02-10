@@ -90,9 +90,6 @@ body > nav > ol {
 
 body > nav > ol > li {
   flex: auto;
-
-  padding: 5px;
-  padding-left: 1em;
 }
 
 body > nav > ol > li.this-page {
@@ -104,6 +101,9 @@ body > nav > ol > li.this-page {
 
 body > nav > ol > li > a {
   text-decoration: none;
+  display: block;
+  padding: 5px;
+  padding-left: 1em;
 }
 
 body > main {
