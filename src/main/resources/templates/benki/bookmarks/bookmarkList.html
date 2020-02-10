@@ -11,7 +11,7 @@
 
 {#body}
 
-{#if authenticated}
+{! #if authenticated !}
   <script type="module" src="/web_modules/elix/define/ExpandableSection.js"></script>
   <elix-expandable-section>
     <h2 slot="header" class="small-title"><button class="pure-button">Create New Bookmark</button></h2>
@@ -51,7 +51,7 @@
       </form>
     </section>
   </elix-expandable-section>
-{/if}
+{! /if !}
 
 {#for bookmark in bookmarks}
   {#with bookmark}
