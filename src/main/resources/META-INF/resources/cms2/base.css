@@ -141,9 +141,9 @@ h1.bookmark-title {
 
 article.bookmark {
   margin: 0.5em 0;
-  border: 1px solid lightcoral;
+  border: 1px solid #e0b0b0;
   padding: 0.3em;
-  background: #fee;
+  background: #f8f0f0;
 }
 
 .lazychat-message-info {
@@ -155,7 +155,7 @@ article.bookmark {
 
 article.lazychat-message {
   margin: 0.5em 0;
-  border: 1px solid lightseagreen;
+  border: 1px solid #a0c0c0;
   padding: 0.3em;
-  background: #efe;
+  background: #f0f8f0;
 }
