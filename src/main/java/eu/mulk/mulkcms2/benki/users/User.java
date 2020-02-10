@@ -68,8 +68,13 @@ public class User extends PanacheEntityBase {
   @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
   public Collection<Post> posts;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  public Collection<UserDefaultTarget> defaultTargets;
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "user_default_target",
+      schema = "benki",
+      joinColumns = @JoinColumn(name = "user"),
+      inverseJoinColumns = @JoinColumn(name = "target"))
+  public Set<Role> defaultTargets;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(

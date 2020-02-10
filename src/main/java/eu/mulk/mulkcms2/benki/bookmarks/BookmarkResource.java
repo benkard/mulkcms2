@@ -10,15 +10,27 @@ import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.identity.SecurityIdentity;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.json.spi.JsonProvider;
+import javax.transaction.Transactional;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 
 @Path("/bookmarks")
@@ -41,7 +53,7 @@ public class BookmarkResource {
 
   @GET
   @Produces(TEXT_HTML)
-  public TemplateInstance getPage() {
+  public TemplateInstance getIndex() {
     List<Bookmark> bookmarks;
     if (identity.isAnonymous()) {
       Role world = Role.find("from Role r join r.tags tag where tag = 'world'").singleResult();
@@ -62,7 +74,44 @@ public class BookmarkResource {
                   user.id)
               .list();
     }
-    return bookmarkList.data("bookmarks", bookmarks);
+    return bookmarkList
+        .data("bookmarks", bookmarks)
+        .data("authenticated", !identity.isAnonymous());
+  }
+
+  @POST
+  @Transactional
+  public Response postBookmark(
+      @FormParam("uri") URI uri,
+      @FormParam("title") @NotEmpty String title,
+      @FormParam("description") String description,
+      @FormParam("visibility") @NotNull @Pattern(regexp = "public|semiprivate|private") String visibility)
+      throws URISyntaxException {
+
+    var userName = identity.getPrincipal().getName();
+    User user =
+        User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
+
+    var bookmark = new Bookmark();
+    bookmark.uri = uri.toString();
+    bookmark.title = title;
+    bookmark.tags = Set.of();
+    bookmark.description = description != null ? description : "";
+    bookmark.owner = user;
+    bookmark.date = OffsetDateTime.now();
+
+    if (visibility.equals("public")) {
+      Role world = Role.find("from Role r join r.tags tag where tag = 'world'").singleResult();
+      bookmark.targets = Set.of(world);
+    } else if (visibility.equals("semiprivate")) {
+      bookmark.targets = Set.copyOf(user.defaultTargets);
+    } else if (!visibility.equals("private")) {
+      throw new BadRequestException(String.format("invalid visibility “%s”", visibility));
+    }
+
+    bookmark.persistAndFlush();
+
+    return Response.seeOther(new URI("/bookmarks")).build();
   }
 
   @TemplateExtension

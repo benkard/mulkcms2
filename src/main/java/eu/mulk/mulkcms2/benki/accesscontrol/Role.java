@@ -2,7 +2,6 @@ package eu.mulk.mulkcms2.benki.accesscontrol;
 
 import eu.mulk.mulkcms2.benki.generic.PostTarget;
 import eu.mulk.mulkcms2.benki.users.User;
-import eu.mulk.mulkcms2.benki.users.UserDefaultTarget;
 import eu.mulk.mulkcms2.benki.users.UserRole;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
@@ -59,8 +58,8 @@ public class Role extends PanacheEntityBase {
   @ManyToMany(mappedBy = "effectiveSubroles", fetch = FetchType.LAZY)
   public Set<Role> effectiveSuperroles;
 
-  @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
-  public Collection<UserDefaultTarget> usersUsedByAsDefaultTarget;
+  @ManyToMany(mappedBy = "defaultTargets", fetch = FetchType.LAZY)
+  public Set<User> usersUsedByAsDefaultTarget;
 
   @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
   public Collection<UserRole> directUsers;
