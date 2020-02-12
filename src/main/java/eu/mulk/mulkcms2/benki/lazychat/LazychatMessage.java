@@ -1,7 +1,7 @@
 package eu.mulk.mulkcms2.benki.lazychat;
 
-import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import eu.mulk.mulkcms2.benki.generic.Post;
+import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
 import eu.mulk.mulkcms2.benki.generic.Post;
+import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -10,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 
 @Entity
 @Table(name = "bookmarks", schema = "benki")
