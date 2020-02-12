@@ -13,7 +13,8 @@
 
 {! #if authenticated !}
   <script type="module" src="/web_modules/elix/define/ExpandableSection.js"></script>
-  <elix-expandable-section>
+  <script type="module" src="/bookmarks/bookmarkList.js" defer></script>
+  <elix-expandable-section id="bookmark-submission-pane">
     <h2 slot="header" class="small-title"><button class="pure-button">Create New Bookmark</button></h2>
     <section id="bookmark-submission">
       <form class="pure-form pure-form-aligned" method="post">
@@ -21,13 +22,13 @@
           <legend>New Bookmark</legend>
 
           <div class="pure-control-group">
-            <label for="title-input">Title:</label>
-            <input name="title" id="title-input" type="text" placeholder="Title" required/>
+            <label for="uri-input">URI:</label>
+            <input name="uri" id="uri-input" type="text" placeholder="URI" required/>
           </div>
 
           <div class="pure-control-group">
-            <label for="uri-input">URI:</label>
-            <input name="uri" id="uri-input" type="text" placeholder="URI" required/>
+            <label for="title-input">Title:</label>
+            <input name="title" id="title-input" type="text" placeholder="Title" required/>
           </div>
 
           <div class="pure-control-group">
