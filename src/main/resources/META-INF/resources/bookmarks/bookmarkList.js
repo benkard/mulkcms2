@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  let bookmarkSubmissionPane = document.getElementById('bookmark-submission-pane');
+  let bookmarkSubmissionPane = document.getElementById(
+      'bookmark-submission-pane');
   let titleInput = document.getElementById('title-input');
   let uriInput = document.getElementById('uri-input');
   let uriSpinner = document.getElementById('uri-spinner');
@@ -9,7 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
   uriInput.addEventListener('blur', async () => {
     uriSpinner.hidden = false;
     uriSpinner.playing = true;
-    let r = await fetch(uriInput.value);
+    let searchParams = new URLSearchParams({'uri': uriInput.value});
+    console.log(`/bookmarks/page-info?${searchParams}`);
+    let fetchUrl = new URL(`/bookmarks/page-info?${searchParams}`, document.URL);
+    let r = await fetch(fetchUrl);
     uriSpinner.hidden = true;
     uriSpinner.playing = false;
 
@@ -17,14 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    let html = await r.text();
-    let parser = new DOMParser();
-    let doc = parser.parseFromString(html, "text/html");
-    let titles = doc.getElementsByTagName('title');
-    if (titles.length <= 0) {
-      return;
-    }
-    titleInput.value = titles[0].innerText;
+    let pageInfo = await r.json();
+    titleInput.value = pageInfo.title;
   });
 });
 

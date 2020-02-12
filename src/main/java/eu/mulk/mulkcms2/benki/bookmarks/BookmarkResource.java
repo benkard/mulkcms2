@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
@@ -11,6 +12,7 @@ import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
@@ -20,6 +22,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
@@ -31,8 +34,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.jboss.logging.Logger;
+import org.jsoup.Jsoup;
 
 @Path("/bookmarks")
 public class BookmarkResource {
@@ -75,9 +80,7 @@ public class BookmarkResource {
                   user.id)
               .list();
     }
-    return bookmarkList
-        .data("bookmarks", bookmarks)
-        .data("authenticated", !identity.isAnonymous());
+    return bookmarkList.data("bookmarks", bookmarks).data("authenticated", !identity.isAnonymous());
   }
 
   @POST
@@ -87,7 +90,8 @@ public class BookmarkResource {
       @FormParam("uri") URI uri,
       @FormParam("title") @NotEmpty String title,
       @FormParam("description") String description,
-      @FormParam("visibility") @NotNull @Pattern(regexp = "public|semiprivate|private") String visibility)
+      @FormParam("visibility") @NotNull @Pattern(regexp = "public|semiprivate|private")
+          String visibility)
       throws URISyntaxException {
 
     var userName = identity.getPrincipal().getName();
@@ -114,6 +118,15 @@ public class BookmarkResource {
     bookmark.persistAndFlush();
 
     return Response.seeOther(new URI("/bookmarks")).build();
+  }
+
+  @GET
+  @Path("page-info")
+  @Authenticated
+  @Produces(APPLICATION_JSON)
+  public JsonObject getPageInfo(@QueryParam("uri") URI uri) throws IOException {
+    var document = Jsoup.connect(uri.toString()).get();
+    return jsonProvider.createObjectBuilder().add("title", document.title()).build();
   }
 
   @TemplateExtension
