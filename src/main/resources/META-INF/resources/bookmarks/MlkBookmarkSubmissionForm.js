@@ -63,41 +63,34 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
   render() {
     const template = html`
       <link rel="stylesheet" type="text/css" href="/cms2/base.css" />
+      <link rel="stylesheet" type="text/css" href="MlkBookmarkSubmissionForm.css" />
 
-      <form class="pure-form pure-form-aligned" method="post" action="/bookmarks">
+      <form class="pure-form" method="post" action="/bookmarks">
         <fieldset>
           <legend>New Bookmark</legend>
 
-          <div class="pure-control-group">
-            <label for="uri-input">URI:</label>
-            <input name="uri" id="uri-input" type="text" placeholder="URI" required
-                   value=${this.getAttribute("uri") || ""}
-                   @blur=${this.onUriBlur.bind(this)} />
-            <elix-progress-spinner id="uri-spinner" hidden></elix-progress-spinner>
-          </div>
+          <label for="uri-input">URI:</label>
+          <input name="uri" id="uri-input" type="text" placeholder="URI" required
+                 value=${this.getAttribute("uri") || ""}
+                 @blur=${this.onUriBlur.bind(this)} />
+          <elix-progress-spinner id="uri-spinner" hidden></elix-progress-spinner>
 
-          <div class="pure-control-group">
-            <label for="title-input">Title:</label>
-            <input name="title" id="title-input" type="text" placeholder="Title" required
-                   value="${this.getAttribute("title") || ""}" />
-          </div>
+          <label for="title-input">Title:</label>
+          <input name="title" id="title-input" type="text" placeholder="Title" required
+                 value="${this.getAttribute("title") || ""}" />
 
-          <div class="pure-control-group">
-            <label for="description-input">Description:</label>
-            <textarea name="description" id="description-input" placeholder="Description"
-                >${this.getAttribute("description") || ""}</textarea>
-          </div>
+          <label for="description-input">Description:</label>
+          <textarea name="description" id="description-input" placeholder="Description"
+              >${this.getAttribute("description") || ""}</textarea>
 
-          <div class="pure-control-group">
-            <label for="visibility-input">Visibility:</label>
-            <select id="visibility-input" name="visibility" required>
-              <option value="public">Public</option>
-              <option value="semiprivate" selected>Semiprivate</option>
-              <option value="private">Private</option>
-            </select>
-          </div>
+          <label for="visibility-input">Visibility:</label>
+          <select id="visibility-input" name="visibility" required>
+            <option value="public">Public</option>
+            <option value="semiprivate" selected>Semiprivate</option>
+            <option value="private">Private</option>
+          </select>
 
-          <div class="pure-controls">
+          <div class="controls">
             <button type="submit" class="pure-button pure-button-primary">Submit Bookmark</button>
           </div>
         </fieldset>

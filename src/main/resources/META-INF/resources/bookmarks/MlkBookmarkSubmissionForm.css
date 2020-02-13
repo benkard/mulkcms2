@@ -1,0 +1,30 @@
+fieldset {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 5px;
+}
+
+label,
+input,
+button,
+textarea {
+  grid-column: 1 / 2;
+}
+
+@media (min-width: 30em) {
+  fieldset {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    grid-gap: 0;
+  }
+
+  label {
+    grid-column: 1 / 2;
+  }
+
+  input,
+  button,
+  textarea {
+    grid-column: 2 / 3;
+  }
+}
