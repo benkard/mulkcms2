@@ -28,6 +28,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
       uriInput.focus();
     } else if (!titleInput.value) {
       titleInput.focus();
+      this.onUriBlur();
     } else {
       descriptionInput.focus();
     }
