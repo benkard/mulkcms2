@@ -21,7 +21,16 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
 
   focus() {
     let uriInput = this.shadowRoot.getElementById('uri-input');
-    uriInput.focus();
+    let titleInput = this.shadowRoot.getElementById('title-input');
+    let descriptionInput = this.shadowRoot.getElementById('description-input');
+
+    if (!uriInput.value) {
+      uriInput.focus();
+    } else if (!titleInput.value) {
+      titleInput.focus();
+    } else {
+      descriptionInput.focus();
+    }
   }
 
   async onUriBlur() {
@@ -54,25 +63,28 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     const template = html`
       <link rel="stylesheet" type="text/css" href="/cms2/base.css" />
 
-      <form class="pure-form pure-form-aligned" method="post">
+      <form class="pure-form pure-form-aligned" method="post" action="/bookmarks">
         <fieldset>
           <legend>New Bookmark</legend>
 
           <div class="pure-control-group">
             <label for="uri-input">URI:</label>
             <input name="uri" id="uri-input" type="text" placeholder="URI" required
-                   @blur=${this.onUriBlur.bind(this)}/>
+                   value=${this.getAttribute("uri") || ""}
+                   @blur=${this.onUriBlur.bind(this)} />
             <elix-progress-spinner id="uri-spinner" hidden></elix-progress-spinner>
           </div>
 
           <div class="pure-control-group">
             <label for="title-input">Title:</label>
-            <input name="title" id="title-input" type="text" placeholder="Title" required/>
+            <input name="title" id="title-input" type="text" placeholder="Title" required
+                   value="${this.getAttribute("title") || ""}" />
           </div>
 
           <div class="pure-control-group">
             <label for="description-input">Description:</label>
-            <textarea name="description" id="description-input" placeholder="Description"></textarea>
+            <textarea name="description" id="description-input" placeholder="Description"
+                >${this.getAttribute("description") || ""}</textarea>
           </div>
 
           <div class="pure-control-group">

@@ -21,6 +21,8 @@ import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
@@ -55,6 +57,10 @@ public class BookmarkResource {
   @Inject
   Template bookmarkList;
 
+  @ResourcePath("benki/bookmarks/newBookmark.html")
+  @Inject
+  Template newBookmark;
+
   @Inject SecurityIdentity identity;
 
   @GET
@@ -81,6 +87,17 @@ public class BookmarkResource {
               .list();
     }
     return bookmarkList.data("bookmarks", bookmarks).data("authenticated", !identity.isAnonymous());
+  }
+
+  @GET
+  @Authenticated
+  @Path("new")
+  @Produces(TEXT_HTML)
+  public TemplateInstance getNewBookmarkForm(
+      @QueryParam("uri") @CheckForNull String uri,
+      @QueryParam("title") @CheckForNull String title,
+      @QueryParam("description") @CheckForNull String description) {
+    return newBookmark.data("uri", uri).data("title", title).data("description", description);
   }
 
   @POST

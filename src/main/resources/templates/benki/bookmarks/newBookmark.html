@@ -1,0 +1,26 @@
+{@java.util.List<eu.mulk.mulkcms2.benki.bookmarks.Bookmark> bookmarks}
+{@java.lang.Boolean authenticated}
+
+{#include base.html}
+
+{#title}Benki Bookmarks{/title}
+{#siteSection}Bookmarks{/siteSection}
+{#bookmarksClass}this-page{/bookmarksClass}
+
+{#head}{/head}
+
+{#body}
+
+<script type="module" src="/bookmarks/MlkBookmarkSubmissionForm.js" defer></script>
+<script type="module" src="/bookmarks/newBookmark.js" defer></script>
+
+<mlk-bookmark-submission-form
+    id="bookmark-submission-form"
+    uri="{uri}"
+    title="{title}"
+    description="{description}">
+</mlk-bookmark-submission-form>
+
+{/body}
+
+{/include}
