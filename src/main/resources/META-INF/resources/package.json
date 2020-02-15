@@ -24,6 +24,7 @@
       "bosonic",
       "elix/define/*.js",
       "lit-html",
+      "elix/define/*.d.ts",
       "normalize-opentype.css/normalize-opentype.css",
       "normalize.css/normalize.css",
       "prefixfree",
