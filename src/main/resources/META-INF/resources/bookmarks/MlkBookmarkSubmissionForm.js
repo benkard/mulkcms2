@@ -1,6 +1,7 @@
 // @flow
 
 import ProgressSpinner from "../web_modules/elix/define/ProgressSpinner.js";
+import { cast } from "../types.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -49,13 +50,13 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     shadow.appendChild(template.content.cloneNode(true));
 
     this.descriptionInput =
-        this.cast(shadow.getElementById('description-input'));
+        cast(shadow.getElementById('description-input'));
     this.titleInput =
-        this.cast(shadow.getElementById('title-input'));
+        cast(shadow.getElementById('title-input'));
     this.uriInput =
-        this.cast(shadow.getElementById('uri-input'));
+        cast(shadow.getElementById('uri-input'));
     this.uriSpinner =
-        this.cast(shadow.getElementById('uri-spinner'));
+        cast(shadow.getElementById('uri-spinner'));
   }
 
   static get observedAttributes() {
@@ -116,16 +117,6 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     let pageInfo = await r.json();
     this.titleInput.value = pageInfo.title;
   }
-
-  cast/*:: <T>*/(x /*: ?Object*/) /*: T*/ {
-    if (x === null || x === undefined) {
-      throw "unexpected null or undefined";
-    } else {
-      /*:: (x: T); */
-      return x;
-    }
-  }
-
 }
 
 customElements.define("mlk-bookmark-submission-form", MlkBookmarkSubmissionForm);
