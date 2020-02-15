@@ -4,6 +4,9 @@ import ProgressSpinner from "../web_modules/elix/define/ProgressSpinner.js";
 export class MlkBookmarkSubmissionForm extends HTMLElement {
   constructor() {
     super();
+
+    this.onUriBlur = this.onUriBlur.bind(this);
+
     this.attachShadow({mode: "open"});
   }
 
@@ -17,6 +20,18 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     this.render();
+  }
+
+  get uri() {
+    return this.getAttribute("uri");
+  }
+
+  get title() {
+    return this.getAttribute("title");
+  }
+
+  get description() {
+    return this.getAttribute("description");
   }
 
   focus() {
@@ -71,17 +86,17 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
 
           <label for="uri-input">URI:</label>
           <input name="uri" id="uri-input" type="text" placeholder="URI" required
-                 value=${this.getAttribute("uri") || ""}
-                 @blur=${this.onUriBlur.bind(this)} />
+                 value=${this.uri || ""}
+                 @blur=${this.onUriBlur} />
           <elix-progress-spinner id="uri-spinner" hidden></elix-progress-spinner>
 
           <label for="title-input">Title:</label>
           <input name="title" id="title-input" type="text" placeholder="Title" required
-                 value="${this.getAttribute("title") || ""}" />
+                 value="${this.title || ""}" />
 
           <label for="description-input">Description:</label>
           <textarea name="description" id="description-input" placeholder="Description"
-              >${this.getAttribute("description") || ""}</textarea>
+              >${this.description || ""}</textarea>
 
           <label for="visibility-input">Visibility:</label>
           <select id="visibility-input" name="visibility" required>
