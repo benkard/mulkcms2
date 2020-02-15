@@ -126,7 +126,7 @@ task snowpack(type:Exec) {
   outputs.dir "${resourceDir}/web_modules"
 
   workingDir resourceDir
-  commandLine "yarn", "run", "snowpack"
+  commandLine "yarn", "run", "snowpack", "--optimize"
 }
 
 task compileWeb {
