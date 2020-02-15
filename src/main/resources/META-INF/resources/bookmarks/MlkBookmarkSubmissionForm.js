@@ -63,7 +63,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
   render() {
     const template = html`
       <link rel="stylesheet" type="text/css" href="/cms2/base.css" />
-      <link rel="stylesheet" type="text/css" href="MlkBookmarkSubmissionForm.css" />
+      <link rel="stylesheet" type="text/css" href="/bookmarks/MlkBookmarkSubmissionForm.css" />
 
       <form class="pure-form" method="post" action="/bookmarks">
         <fieldset>
