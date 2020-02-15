@@ -140,9 +140,21 @@ task flow(type:Exec) {
   commandLine "yarn", "run", "flow", "--color=always"
 }
 
+task eslint(type:Exec) {
+  def resourceDir = "src/main/resources/META-INF/resources"
+
+  onlyIf { !project.hasProperty('skipWeb') }
+
+  dependsOn snowpack
+
+  workingDir resourceDir
+  commandLine "yarn", "run", "eslint", "cms2", "bookmarks", "--color"
+}
+
 task compileWeb {
   dependsOn snowpack
   dependsOn flow
+  dependsOn eslint
 
   doLast {}
 }
