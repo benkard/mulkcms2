@@ -11,11 +11,17 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["greetee"];
+    return [];
   }
 
   connectedCallback () {
     this.render();
+
+    let shadow = this.shadowRoot;
+    this.descriptionInput = shadow.getElementById('description-input');
+    this.titleInput = shadow.getElementById('title-input');
+    this.uriInput = shadow.getElementById('uri-input');
+    this.uriSpinner = shadow.getElementById('uri-spinner');
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -35,44 +41,36 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
   }
 
   focus() {
-    let uriInput = this.shadowRoot.getElementById('uri-input');
-    let titleInput = this.shadowRoot.getElementById('title-input');
-    let descriptionInput = this.shadowRoot.getElementById('description-input');
-
-    if (!uriInput.value) {
-      uriInput.focus();
-    } else if (!titleInput.value) {
-      titleInput.focus();
+    if (!this.uriInput.value) {
+      this.uriInput.focus();
+    } else if (!this.titleInput.value) {
+      this.titleInput.focus();
       this.onUriBlur();
     } else {
-      descriptionInput.focus();
+      this.descriptionInput.focus();
     }
   }
 
   async onUriBlur() {
-    let titleInput = this.shadowRoot.getElementById('title-input');
-    let uriInput = this.shadowRoot.getElementById('uri-input');
-    let uriSpinner = this.shadowRoot.getElementById('uri-spinner');
-
-    if (!uriInput.value) {
+    if (!this.uriInput.value) {
       return;
     }
 
-    uriSpinner.hidden = false;
-    uriSpinner.playing = true;
-    let searchParams = new URLSearchParams({'uri': uriInput.value});
+    this.uriSpinner.hidden = false;
+    this.uriSpinner.playing = true;
+    let searchParams = new URLSearchParams({'uri': this.uriInput.value});
     console.log(`/bookmarks/page-info?${searchParams}`);
     let fetchUrl = new URL(`/bookmarks/page-info?${searchParams}`, document.URL);
     let r = await fetch(fetchUrl);
-    uriSpinner.hidden = true;
-    uriSpinner.playing = false;
+    this.uriSpinner.hidden = true;
+    this.uriSpinner.playing = false;
 
     if (!r.ok) {
       return;
     }
 
     let pageInfo = await r.json();
-    titleInput.value = pageInfo.title;
+    this.titleInput.value = pageInfo.title;
   }
 
   render() {
