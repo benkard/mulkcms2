@@ -70,6 +70,10 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     this.descriptionInput.innerText = this.description || "";
   }
 
+  disconnectedCallback () {
+    this.uriInput.removeEventListener('blur', this.onUriBlur.bind(this));
+  }
+
   attributeChangedCallback(name /*:string*/, oldValue /*:string*/, newValue /*:string*/) {
   }
 
