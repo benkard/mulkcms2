@@ -1,3 +1,5 @@
+// @flow
+
 import ProgressSpinner from "../web_modules/elix/define/ProgressSpinner.js";
 
 const template = document.createElement('template');
@@ -33,18 +35,27 @@ template.innerHTML = `
   </form>`;
 
 export class MlkBookmarkSubmissionForm extends HTMLElement {
+  /*::
+  descriptionInput: HTMLTextAreaElement;
+  titleInput: HTMLInputElement;
+  uriInput: HTMLInputElement;
+  uriSpinner: ProgressSpinner;
+  */
+
   constructor() {
     super();
 
-    this.onUriBlur = this.onUriBlur.bind(this);
-
     let shadow = this.attachShadow({mode: "open"});
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    shadow.appendChild(template.content.cloneNode(true));
 
-    this.descriptionInput = shadow.getElementById('description-input');
-    this.titleInput = shadow.getElementById('title-input');
-    this.uriInput = shadow.getElementById('uri-input');
-    this.uriSpinner = shadow.getElementById('uri-spinner');
+    this.descriptionInput =
+        this.cast(shadow.getElementById('description-input'));
+    this.titleInput =
+        this.cast(shadow.getElementById('title-input'));
+    this.uriInput =
+        this.cast(shadow.getElementById('uri-input'));
+    this.uriSpinner =
+        this.cast(shadow.getElementById('uri-spinner'));
   }
 
   static get observedAttributes() {
@@ -52,21 +63,20 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
   }
 
   connectedCallback () {
-    this.uriInput.addEventListener('blur', this.onUriBlur);
+    this.uriInput.addEventListener('blur', this.onUriBlur.bind(this));
     this.uriInput.value = this.uri || "";
-    this.titleInput.value = this.title || "";
+    this.titleInput.value = this.titleText || "";
     this.descriptionInput.innerText = this.description || "";
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    this.render();
+  attributeChangedCallback(name /*:string*/, oldValue /*:string*/, newValue /*:string*/) {
   }
 
   get uri() {
     return this.getAttribute("uri");
   }
 
-  get title() {
+  get titleText() {
     return this.getAttribute("title");
   }
 
@@ -93,8 +103,8 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     this.uriSpinner.hidden = false;
     this.uriSpinner.playing = true;
     let searchParams = new URLSearchParams({'uri': this.uriInput.value});
-    console.log(`/bookmarks/page-info?${searchParams}`);
-    let fetchUrl = new URL(`/bookmarks/page-info?${searchParams}`, document.URL);
+    console.log(`/bookmarks/page-info?${searchParams.toString()}`);
+    let fetchUrl = new URL(`/bookmarks/page-info?${searchParams.toString()}`, document.URL);
     let r = await fetch(fetchUrl);
     this.uriSpinner.hidden = true;
     this.uriSpinner.playing = false;
@@ -106,6 +116,16 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     let pageInfo = await r.json();
     this.titleInput.value = pageInfo.title;
   }
+
+  cast/*:: <T>*/(x /*: ?Object*/) /*: T*/ {
+    if (x === null || x === undefined) {
+      throw "unexpected null or undefined";
+    } else {
+      /*:: (x: T); */
+      return x;
+    }
+  }
+
 }
 
 customElements.define("mlk-bookmark-submission-form", MlkBookmarkSubmissionForm);

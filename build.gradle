@@ -129,8 +129,20 @@ task snowpack(type:Exec) {
   commandLine "yarn", "run", "snowpack", "--optimize"
 }
 
+task flow(type:Exec) {
+  def resourceDir = "src/main/resources/META-INF/resources"
+
+  onlyIf { !project.hasProperty('skipWeb') }
+
+  dependsOn snowpack
+
+  workingDir resourceDir
+  commandLine "yarn", "run", "flow", "--color=always"
+}
+
 task compileWeb {
   dependsOn snowpack
+  dependsOn flow
 
   doLast {}
 }

@@ -13,6 +13,7 @@
     "sanitize.css": "^11.0.0"
   },
   "devDependencies": {
+    "flow-bin": "^0.118.0",
     "snowpack": "^1.1.0"
   },
   "snowpack": {
