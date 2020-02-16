@@ -1,10 +1,19 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_ATOM_XML;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
+import com.rometools.rome.feed.atom.Content;
+import com.rometools.rome.feed.atom.Entry;
+import com.rometools.rome.feed.atom.Feed;
+import com.rometools.rome.feed.atom.Link;
+import com.rometools.rome.feed.synd.SyndPersonImpl;
+import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.WireFeedOutput;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.users.User;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
@@ -15,14 +24,18 @@ import io.quarkus.security.identity.SecurityIdentity;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
@@ -37,7 +50,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 import org.jsoup.Jsoup;
 
@@ -63,30 +79,87 @@ public class BookmarkResource {
 
   @Inject SecurityIdentity identity;
 
+  @Context UriInfo uri;
+
+  @Inject
+  @ConfigProperty(name = "mulkcms.tag-base")
+  String tagBase;
+
   @GET
   @Produces(TEXT_HTML)
   public TemplateInstance getIndex() {
-    List<Bookmark> bookmarks;
-    if (identity.isAnonymous()) {
-      Role world = Role.find("from Role r join r.tags tag where tag = 'world'").singleResult();
-      bookmarks =
-          Bookmark.find(
-                  "select bm from Bookmark bm join bm.targets target left join fetch bm.owner where target = ?1",
-                  Sort.by("date").descending(),
-                  world)
-              .list();
-    } else {
-      var userName = identity.getPrincipal().getName();
-      User user =
-          User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
-      bookmarks =
-          Bookmark.find(
-                  "select bm from BenkiUser u inner join u.visibleBookmarks bm left join fetch bm.owner where u.id = ?1",
-                  Sort.by("date").descending(),
-                  user.id)
-              .list();
-    }
-    return bookmarkList.data("bookmarks", bookmarks).data("authenticated", !identity.isAnonymous());
+    var bookmarkQuery = bookmarkQuery();
+    return bookmarkList
+        .data("bookmarks", bookmarkQuery.list())
+        .data("authenticated", !identity.isAnonymous());
+  }
+
+  @GET
+  @Path("feed")
+  @Produces(APPLICATION_ATOM_XML)
+  public String getFeed() throws FeedException {
+    var bookmarks = bookmarkQuery().list();
+    var feed = new Feed("atom_1.0");
+
+    feed.setTitle("Book Marx");
+    feed.setId(
+        String.format(
+            "tag:%s,2019:marx:%s",
+            tagBase, identity.isAnonymous() ? "world" : identity.getPrincipal().getName()));
+    feed.setUpdated(
+        Date.from(
+            bookmarks.stream()
+                .map(x -> x.date)
+                .max(Comparator.comparing(x -> x))
+                .orElse(OffsetDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC))
+                .toInstant()));
+
+    var selfLink = new Link();
+    selfLink.setHref(uri.getRequestUri().toString());
+    selfLink.setRel("self");
+    feed.setOtherLinks(List.of(selfLink));
+
+    var htmlAltLink = new Link();
+    htmlAltLink.setHref(uri.resolve(URI.create("/bookmarks")).toString());
+    htmlAltLink.setRel("alternate");
+    htmlAltLink.setType("text/html");
+    feed.setAlternateLinks(List.of(htmlAltLink));
+
+    feed.setEntries(
+        bookmarks.stream()
+            .map(
+                bookmark -> {
+                  var entry = new Entry();
+
+                  entry.setId(String.format("tag:%s,2012:/marx/%d", tagBase, bookmark.id));
+                  entry.setPublished(Date.from(bookmark.date.toInstant()));
+                  entry.setUpdated(Date.from(bookmark.date.toInstant()));
+
+                  var author = new SyndPersonImpl();
+                  author.setName(bookmark.owner.getFirstAndLastName());
+                  entry.setAuthors(List.of(author));
+
+                  var title = new Content();
+                  title.setType("text");
+                  title.setValue(bookmark.title);
+                  entry.setTitleEx(title);
+
+                  var summary = new Content();
+                  summary.setType("html");
+                  summary.setValue(bookmark.getDescriptionHtml());
+                  entry.setSummary(summary);
+
+                  var link = new Link();
+                  link.setHref(bookmark.uri);
+                  link.setRel("alternate");
+                  entry.setAlternateLinks(List.of(link));
+
+                  return entry;
+                })
+            .collect(Collectors.toUnmodifiableList()));
+
+    var wireFeedOutput = new WireFeedOutput();
+    return wireFeedOutput.outputString(feed);
   }
 
   @GET
@@ -154,5 +227,23 @@ public class BookmarkResource {
   @TemplateExtension
   static String htmlDateTime(TemporalAccessor x) {
     return htmlDateFormatter.format(x);
+  }
+
+  private PanacheQuery<Bookmark> bookmarkQuery() {
+    if (identity.isAnonymous()) {
+      Role world = Role.find("from Role r join r.tags tag where tag = 'world'").singleResult();
+      return Bookmark.find(
+          "select bm from Bookmark bm join bm.targets target left join fetch bm.owner where target = ?1",
+          Sort.by("date").descending(),
+          world);
+    } else {
+      var userName = identity.getPrincipal().getName();
+      User user =
+          User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
+      return Bookmark.find(
+          "select bm from BenkiUser u inner join u.visibleBookmarks bm left join fetch bm.owner where u.id = ?1",
+          Sort.by("date").descending(),
+          user.id);
+    }
   }
 }

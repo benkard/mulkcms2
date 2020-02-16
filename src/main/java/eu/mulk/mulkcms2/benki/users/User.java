@@ -23,6 +23,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity(name = "BenkiUser")
 @Table(name = "users", schema = "benki")
@@ -131,4 +132,9 @@ public class User extends PanacheEntityBase {
       joinColumns = @JoinColumn(name = "user"),
       inverseJoinColumns = @JoinColumn(name = "role"))
   public Set<Role> effectiveRoles;
+
+  @Transient
+  public String getFirstAndLastName() {
+    return String.format("%s %s", firstName, lastName);
+  }
 }
