@@ -1,6 +1,6 @@
 // @flow
 
-import ProgressSpinner from "../web_modules/elix/define/ProgressSpinner.js";
+import /*:: ProgressSpinner from */ "../web_modules/elix/define/ProgressSpinner.js";
 import { cast } from "../cms2/types.js";
 
 const template = document.createElement('template');
