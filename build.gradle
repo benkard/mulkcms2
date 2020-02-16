@@ -73,9 +73,9 @@ dependencies {
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
 
-    implementation "org.jsoup:jsoup"
-
+    implementation "com.rometools:rome"
     implementation "com.vladsch.flexmark:flexmark-all"
+    implementation "org.jsoup:jsoup"
 
     constraints {
         implementation "com.vladmihalcea:hibernate-types-52:${hibernateTypesVersion}"
@@ -87,6 +87,7 @@ dependencies {
         implementation "org.bitbucket.b_c:jose4j:${jose4jVersion}"
         implementation "com.vladsch.flexmark:flexmark-all:${flexmarkVersion}"
         implementation "org.jsoup:jsoup:${jsoupVersion}"
+        implementation "com.rometools:rome:${romeVersion}"
     }
 }
 
