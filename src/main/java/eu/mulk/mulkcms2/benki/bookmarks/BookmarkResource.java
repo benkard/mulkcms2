@@ -100,6 +100,7 @@ public class BookmarkResource {
     var bookmarkQuery = selectBookmarks(null);
     return bookmarkList
         .data("bookmarks", bookmarkQuery)
+        .data("feedUri", "/bookmarks/feed")
         .data("authenticated", !identity.isAnonymous());
   }
 
@@ -111,14 +112,15 @@ public class BookmarkResource {
     var bookmarkQuery = selectBookmarks(owner);
     return bookmarkList
         .data("bookmarks", bookmarkQuery)
+        .data("feedUri", String.format("/bookmarks/~%s/feed", ownerName))
         .data("authenticated", !identity.isAnonymous());
   }
 
   @GET
   @Path("feed")
   @Produces(APPLICATION_ATOM_XML)
-  public String getFeed(@Nullable User owner) throws FeedException {
-    return makeFeed(null);
+  public String getFeed() throws FeedException {
+    return makeFeed(null, null);
   }
 
   @GET
@@ -126,18 +128,22 @@ public class BookmarkResource {
   @Produces(APPLICATION_ATOM_XML)
   public String getUserFeed(@PathParam("ownerName") String ownerName) throws FeedException {
     var owner = User.findByNickname(ownerName);
-    return makeFeed(owner);
+    return makeFeed(owner, ownerName);
   }
 
-  private String makeFeed(@Nullable User owner) throws FeedException {
+  private String makeFeed(@Nullable User owner, @Nullable String ownerName) throws FeedException {
     var bookmarks = selectBookmarks(owner);
     var feed = new Feed("atom_1.0");
+
+    var feedSubId = owner == null ? "" : String.format("/%d", owner.id);
 
     feed.setTitle("Book Marx");
     feed.setId(
         String.format(
-            "tag:%s,2019:marx:%s",
-            tagBase, identity.isAnonymous() ? "world" : identity.getPrincipal().getName()));
+            "tag:%s,2019:marx%s:%s",
+            tagBase,
+            feedSubId,
+            identity.isAnonymous() ? "world" : identity.getPrincipal().getName()));
     feed.setUpdated(
         Date.from(
             bookmarks.stream()
@@ -152,7 +158,8 @@ public class BookmarkResource {
     feed.setOtherLinks(List.of(selfLink));
 
     var htmlAltLink = new Link();
-    htmlAltLink.setHref(uri.resolve(URI.create("/bookmarks")).toString());
+    var htmlAltPath = owner == null ? "/bookmarks" : String.format("~%s/bookmarks", ownerName);
+    htmlAltLink.setHref(uri.resolve(URI.create(htmlAltPath)).toString());
     htmlAltLink.setRel("alternate");
     htmlAltLink.setType("text/html");
     feed.setAlternateLinks(List.of(htmlAltLink));
