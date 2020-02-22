@@ -267,12 +267,10 @@ public class BookmarkResource {
 
     From<?, Bookmark> bm;
     if (identity.isAnonymous()) {
-      var root = query.from(Bookmark.class);
-      bm = root;
-      query.select(root);
-      root.fetch(Bookmark_.owner, JoinType.LEFT);
+      bm = query.from(Bookmark.class);
+      query.select(bm);
 
-      var target = root.join(Bookmark_.targets);
+      var target = bm.join(Bookmark_.targets);
       query.where(cb.equal(target, Role.getWorld()));
     } else {
       var userName = identity.getPrincipal().getName();
@@ -281,9 +279,9 @@ public class BookmarkResource {
       var root = query.from(User.class);
       query.where(cb.equal(root, user));
       bm = root.join(User_.visibleBookmarks);
-      bm.fetch(Bookmark_.owner, JoinType.LEFT);
     }
 
+    bm.fetch(Bookmark_.owner, JoinType.LEFT);
     query.orderBy(cb.desc(bm.get(Bookmark_.date)));
 
     if (owner != null) {
