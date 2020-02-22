@@ -74,4 +74,8 @@ public class Role extends PanacheEntityBase {
   @CollectionTable(name = "role_tags", schema = "benki", joinColumns = @JoinColumn(name = "role"))
   @Column(name = "tag")
   public Set<String> tags;
+
+  public static Role getWorld() {
+    return find("from Role r join r.tags tag where tag = 'world'").singleResult();
+  }
 }

@@ -13,8 +13,6 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.users.User;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.panache.common.Sort;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
@@ -36,9 +34,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.JoinType;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -48,12 +52,14 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.hibernate.Session;
 import org.jboss.logging.Logger;
 import org.jsoup.Jsoup;
 
@@ -85,20 +91,45 @@ public class BookmarkResource {
   @ConfigProperty(name = "mulkcms.tag-base")
   String tagBase;
 
+  @PersistenceContext EntityManager entityManager;
+
   @GET
   @Produces(TEXT_HTML)
   public TemplateInstance getIndex() {
-    var bookmarkQuery = bookmarkQuery();
+    var bookmarkQuery = selectBookmarks(null);
     return bookmarkList
-        .data("bookmarks", bookmarkQuery.list())
+        .data("bookmarks", bookmarkQuery)
+        .data("authenticated", !identity.isAnonymous());
+  }
+
+  @GET
+  @Path("~{ownerName}")
+  @Produces(TEXT_HTML)
+  public TemplateInstance getUserIndex(@PathParam("ownerName") String ownerName) {
+    var owner = User.findByNickname(ownerName);
+    var bookmarkQuery = selectBookmarks(owner);
+    return bookmarkList
+        .data("bookmarks", bookmarkQuery)
         .data("authenticated", !identity.isAnonymous());
   }
 
   @GET
   @Path("feed")
   @Produces(APPLICATION_ATOM_XML)
-  public String getFeed() throws FeedException {
-    var bookmarks = bookmarkQuery().list();
+  public String getFeed(@Nullable User owner) throws FeedException {
+    return makeFeed(null);
+  }
+
+  @GET
+  @Path("~{ownerName}/feed")
+  @Produces(APPLICATION_ATOM_XML)
+  public String getUserFeed(@PathParam("ownerName") String ownerName) throws FeedException {
+    var owner = User.findByNickname(ownerName);
+    return makeFeed(owner);
+  }
+
+  private String makeFeed(@Nullable User owner) throws FeedException {
+    var bookmarks = selectBookmarks(owner);
     var feed = new Feed("atom_1.0");
 
     feed.setTitle("Book Marx");
@@ -185,8 +216,7 @@ public class BookmarkResource {
       throws URISyntaxException {
 
     var userName = identity.getPrincipal().getName();
-    User user =
-        User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
+    var user = User.findByNickname(userName);
 
     var bookmark = new Bookmark();
     bookmark.uri = uri.toString();
@@ -229,21 +259,38 @@ public class BookmarkResource {
     return htmlDateFormatter.format(x);
   }
 
-  private PanacheQuery<Bookmark> bookmarkQuery() {
+  private List<Bookmark> selectBookmarks(@Nullable User owner) {
+    var cb = entityManager.unwrap(Session.class).getCriteriaBuilder();
+
+    CriteriaQuery<Bookmark> query = cb.createQuery(Bookmark.class);
+
+    From<?, Bookmark> bm;
     if (identity.isAnonymous()) {
-      Role world = Role.find("from Role r join r.tags tag where tag = 'world'").singleResult();
-      return Bookmark.find(
-          "select bm from Bookmark bm join bm.targets target left join fetch bm.owner where target = ?1",
-          Sort.by("date").descending(),
-          world);
+      var root = query.from(Bookmark.class);
+      bm = root;
+      query.select(root);
+      root.fetch("owner", JoinType.LEFT);
+
+      var target = root.join("targets");
+      query.where(cb.equal(target, Role.getWorld()));
     } else {
       var userName = identity.getPrincipal().getName();
-      User user =
-          User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
-      return Bookmark.find(
-          "select bm from BenkiUser u inner join u.visibleBookmarks bm left join fetch bm.owner where u.id = ?1",
-          Sort.by("date").descending(),
-          user.id);
+      var user = User.findByNickname(userName);
+
+      var root = query.from(User.class);
+      query.where(cb.equal(root, user));
+      bm = root.join("visibleBookmarks");
+      bm.fetch("owner", JoinType.LEFT);
     }
+
+    query.orderBy(cb.desc(bm.get("date")));
+
+    if (owner != null) {
+      query.where(cb.equal(bm.get("owner"), owner));
+    }
+
+    var q = entityManager.createQuery(query);
+    log.debug(q.unwrap(org.hibernate.query.Query.class).getQueryString());
+    return q.getResultList();
   }
 }

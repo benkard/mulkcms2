@@ -137,4 +137,8 @@ public class User extends PanacheEntityBase {
   public String getFirstAndLastName() {
     return String.format("%s %s", firstName, lastName);
   }
+
+  public static User findByNickname(String nickname) {
+    return User.find("from BenkiUser u join u.nicknames n where ?1 = n", nickname).singleResult();
+  }
 }
