@@ -213,6 +213,12 @@
       <artifactId>hibernate-types-52</artifactId>
     </dependency>
 
+    <!-- Hibernate -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
+    </dependency>
+
     <!-- Jsoup -->
     <dependency>
       <groupId>org.jsoup</groupId>

@@ -33,6 +33,7 @@ nb-configuration.xml
 # Gradle
 .gradle/
 build/
+src/main/generated
 
 # Shell
 .envrc

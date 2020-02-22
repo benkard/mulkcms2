@@ -13,6 +13,7 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.users.User;
+import eu.mulk.mulkcms2.benki.users.User_;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
@@ -269,9 +270,9 @@ public class BookmarkResource {
       var root = query.from(Bookmark.class);
       bm = root;
       query.select(root);
-      root.fetch("owner", JoinType.LEFT);
+      root.fetch(Bookmark_.owner, JoinType.LEFT);
 
-      var target = root.join("targets");
+      var target = root.join(Bookmark_.targets);
       query.where(cb.equal(target, Role.getWorld()));
     } else {
       var userName = identity.getPrincipal().getName();
@@ -279,14 +280,14 @@ public class BookmarkResource {
 
       var root = query.from(User.class);
       query.where(cb.equal(root, user));
-      bm = root.join("visibleBookmarks");
-      bm.fetch("owner", JoinType.LEFT);
+      bm = root.join(User_.visibleBookmarks);
+      bm.fetch(Bookmark_.owner, JoinType.LEFT);
     }
 
-    query.orderBy(cb.desc(bm.get("date")));
+    query.orderBy(cb.desc(bm.get(Bookmark_.date)));
 
     if (owner != null) {
-      query.where(cb.equal(bm.get("owner"), owner));
+      query.where(cb.equal(bm.get(Bookmark_.owner), owner));
     }
 
     var q = entityManager.createQuery(query);
