@@ -275,8 +275,6 @@ public class BookmarkResource {
     From<?, Bookmark> bm;
     if (identity.isAnonymous()) {
       bm = query.from(Bookmark.class);
-      query.select(bm);
-
       var target = bm.join(Bookmark_.targets);
       query.where(cb.equal(target, Role.getWorld()));
     } else {
@@ -288,6 +286,7 @@ public class BookmarkResource {
       bm = root.join(User_.visibleBookmarks);
     }
 
+    query.select(bm);
     bm.fetch(Bookmark_.owner, JoinType.LEFT);
     query.orderBy(cb.desc(bm.get(Bookmark_.date)));
 
