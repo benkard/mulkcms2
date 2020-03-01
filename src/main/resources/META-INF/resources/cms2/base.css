@@ -114,6 +114,10 @@ body > nav a:hover {
   background-color: #f8f8f8;
 }
 
+body > nav li[data-site-section="About"] {
+  margin-top: 1em;
+}
+
 body > main {
   grid-area: main;
 
