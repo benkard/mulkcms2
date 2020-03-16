@@ -29,9 +29,11 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
@@ -41,9 +43,11 @@ import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -76,6 +80,9 @@ public class BookmarkResource {
 
   private static JsonProvider jsonProvider = JsonProvider.provider();
 
+  @ConfigProperty(name = "mulkcms.bookmarks.default-max-results")
+  int defaultMaxResults;
+
   @ResourcePath("benki/bookmarks/bookmarkList.html")
   @Inject
   Template bookmarkList;
@@ -96,24 +103,47 @@ public class BookmarkResource {
 
   @GET
   @Produces(TEXT_HTML)
-  public TemplateInstance getIndex() {
-    var bookmarkQuery = selectBookmarks(null);
+  public TemplateInstance getIndex(
+      @QueryParam("i") @CheckForNull Integer cursor,
+      @QueryParam("n") @CheckForNull Integer maxResults) {
+
+    maxResults = maxResults == null ? defaultMaxResults : maxResults;
+
+    var q = selectBookmarks(null, cursor, maxResults);
+
     return bookmarkList
-        .data("bookmarks", bookmarkQuery)
+        .data("bookmarks", q.bookmarks)
         .data("feedUri", "/bookmarks/feed")
-        .data("authenticated", !identity.isAnonymous());
+        .data("authenticated", !identity.isAnonymous())
+        .data("hasPreviousPage", q.prevCursor != null)
+        .data("hasNextPage", q.nextCursor != null)
+        .data("previousCursor", q.prevCursor)
+        .data("nextCursor", q.nextCursor)
+        .data("pageSize", maxResults);
   }
 
   @GET
   @Path("~{ownerName}")
   @Produces(TEXT_HTML)
-  public TemplateInstance getUserIndex(@PathParam("ownerName") String ownerName) {
+  public TemplateInstance getUserIndex(
+      @PathParam("ownerName") String ownerName,
+      @QueryParam("i") @CheckForNull Integer cursor,
+      @QueryParam("n") @CheckForNull Integer maxResults) {
+
+    maxResults = maxResults == null ? defaultMaxResults : maxResults;
+
     var owner = User.findByNickname(ownerName);
-    var bookmarkQuery = selectBookmarks(owner);
+    var q = selectBookmarks(owner, cursor, maxResults);
+
     return bookmarkList
-        .data("bookmarks", bookmarkQuery)
+        .data("bookmarks", q.bookmarks)
         .data("feedUri", String.format("/bookmarks/~%s/feed", ownerName))
-        .data("authenticated", !identity.isAnonymous());
+        .data("authenticated", !identity.isAnonymous())
+        .data("hasPreviousPage", q.prevCursor != null)
+        .data("hasNextPage", q.nextCursor != null)
+        .data("previousCursor", q.prevCursor)
+        .data("nextCursor", q.nextCursor)
+        .data("pageSize", maxResults);
   }
 
   @GET
@@ -267,35 +297,114 @@ public class BookmarkResource {
     return htmlDateFormatter.format(x);
   }
 
-  private List<Bookmark> selectBookmarks(@Nullable User owner) {
+  private static class BookmarkPage {
+    @CheckForNull Integer prevCursor;
+    @CheckForNull Integer cursor;
+    @CheckForNull Integer nextCursor;
+    List<Bookmark> bookmarks;
+
+    public BookmarkPage(
+        @CheckForNull Integer c0,
+        @CheckForNull Integer c1,
+        @CheckForNull Integer c2,
+        List<Bookmark> resultList) {
+      this.prevCursor = c0;
+      this.cursor = c1;
+      this.nextCursor = c2;
+      this.bookmarks = resultList;
+    }
+  }
+
+  private List<Bookmark> selectBookmarks(@CheckForNull User owner) {
+    return selectBookmarks(owner, null, null).bookmarks;
+  }
+
+  private BookmarkPage selectBookmarks(
+      @CheckForNull User owner, @CheckForNull Integer cursor, @CheckForNull Integer count) {
+
+    if (cursor != null) {
+      Objects.requireNonNull(count);
+    }
+
     var cb = entityManager.unwrap(Session.class).getCriteriaBuilder();
 
+    var forwardCriteria = generateBookmarkCriteriaQuery(owner, cursor, cb, true);
+    var forwardQuery = entityManager.createQuery(forwardCriteria);
+
+    if (count != null) {
+      forwardQuery.setMaxResults(count + 1);
+    }
+
+    log.debug(forwardQuery.unwrap(org.hibernate.query.Query.class).getQueryString());
+
+    @CheckForNull Integer prevCursor = null;
+    @CheckForNull Integer nextCursor = null;
+
+    if (cursor != null) {
+      // Look backwards as well so we can find the prevCursor.
+      var backwardCriteria = generateBookmarkCriteriaQuery(owner, cursor, cb, false);
+      var backwardQuery = entityManager.createQuery(backwardCriteria);
+      backwardQuery.setMaxResults(count);
+      var backwardResults = backwardQuery.getResultList();
+      if (!backwardResults.isEmpty()) {
+        prevCursor = backwardResults.get(backwardResults.size() - 1).id;
+      }
+    }
+
+    var forwardResults = forwardQuery.getResultList();
+    if (count != null) {
+      if (forwardResults.size() == count + 1) {
+        nextCursor = forwardResults.get(count).id;
+        forwardResults.remove((int) count);
+      }
+    }
+
+    return new BookmarkPage(prevCursor, cursor, nextCursor, forwardResults);
+  }
+
+  private CriteriaQuery<Bookmark> generateBookmarkCriteriaQuery(
+      @CheckForNull User owner, @CheckForNull Integer cursor, CriteriaBuilder cb, boolean forward) {
     CriteriaQuery<Bookmark> query = cb.createQuery(Bookmark.class);
+
+    var conditions = new ArrayList<Predicate>();
 
     From<?, Bookmark> bm;
     if (identity.isAnonymous()) {
       bm = query.from(Bookmark.class);
       var target = bm.join(Bookmark_.targets);
-      query.where(cb.equal(target, Role.getWorld()));
+      conditions.add(cb.equal(target, Role.getWorld()));
     } else {
       var userName = identity.getPrincipal().getName();
       var user = User.findByNickname(userName);
 
       var root = query.from(User.class);
-      query.where(cb.equal(root, user));
+      conditions.add(cb.equal(root, user));
       bm = root.join(User_.visibleBookmarks);
     }
 
     query.select(bm);
     bm.fetch(Bookmark_.owner, JoinType.LEFT);
-    query.orderBy(cb.desc(bm.get(Bookmark_.date)));
 
     if (owner != null) {
-      query.where(cb.equal(bm.get(Bookmark_.owner), owner));
+      conditions.add(cb.equal(bm.get(Bookmark_.owner), owner));
     }
 
-    var q = entityManager.createQuery(query);
-    log.debug(q.unwrap(org.hibernate.query.Query.class).getQueryString());
-    return q.getResultList();
+    if (forward) {
+      query.orderBy(cb.desc(bm.get(Bookmark_.id)));
+    } else {
+      query.orderBy(cb.asc(bm.get(Bookmark_.id)));
+    }
+
+    if (cursor != null) {
+      if (forward) {
+        conditions.add(cb.le(bm.get(Bookmark_.id), cursor));
+      } else {
+        conditions.add(cb.gt(bm.get(Bookmark_.id), cursor));
+      }
+    }
+
+    query.where(conditions.toArray(new Predicate[0]));
+
+    return query;
   }
 }

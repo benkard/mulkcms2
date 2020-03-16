@@ -1,5 +1,10 @@
 {@java.util.List<eu.mulk.mulkcms2.benki.bookmarks.Bookmark> bookmarks}
 {@java.lang.Boolean authenticated}
+{@java.lang.Boolean hasPreviousPage}
+{@java.lang.Boolean hasNextPage}
+{@java.lang.Integer previousCursor}
+{@java.lang.Integer nextCursor}
+{@java.lang.Integer pageSize}
 
 {#include base.html}
 
@@ -9,40 +14,54 @@
 
 {#head}
   <link href="{feedUri}" rel="alternate" type="application/atom+xml" />
+
+  <script type="module" src="/web_modules/elix/define/ExpandableSection.js"></script>
+  <script type="module" src="/bookmarks/MlkBookmarkSubmissionForm.js"></script>
+  <script type="module" src="/bookmarks/bookmarkList.js" defer></script>
 {/head}
 
 {#body}
 
 {! #if authenticated !}
-  <script type="module" src="/web_modules/elix/define/ExpandableSection.js"></script>
-  <script type="module" src="/bookmarks/MlkBookmarkSubmissionForm.js"></script>
-  <script type="module" src="/bookmarks/bookmarkList.js" defer></script>
-
   <elix-expandable-section id="bookmark-submission-pane">
-    <h2 slot="header" class="small-title"><button class="pure-button">Create New Bookmark</button></h2>
+    <h2 slot="header" class="small-title expandable-section-title"><button class="pure-button">Create New Bookmark</button></h2>
     <section id="bookmark-submission">
       <mlk-bookmark-submission-form id="bookmark-submission-form"></mlk-bookmark-submission-form>
     </section>
   </elix-expandable-section>
 {! /if !}
 
-{#for bookmark in bookmarks}
-  {#with bookmark}
-    <article class="bookmark">
-      <header>
-        <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
-        <div class="bookmark-info">
-          <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
-          <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
-        </div>
-      </header>
+<div class="paging">
+  {#if hasPreviousPage}<a href="?i={previousCursor}&n={pageSize}" class="pure-button">⇠ previous page</a>{/if}
+  <span class="filler"></span>
+  {#if hasNextPage}<a href="?i={nextCursor}&n={pageSize}" class="pure-button">next page ⇢</a>{/if}
+</div>
 
-      <section class="bookmark-description">
-        {descriptionHtml.raw}
-      </section>
-    </article>
-  {/with}
-{/for}
+<section id="main-content">
+  {#for bookmark in bookmarks}
+    {#with bookmark}
+      <article class="bookmark">
+        <header>
+          <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
+          <div class="bookmark-info">
+            <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
+            <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
+          </div>
+        </header>
+
+        <section class="bookmark-description">
+          {descriptionHtml.raw}
+        </section>
+      </article>
+    {/with}
+  {/for}
+</section>
+
+<div class="paging">
+  {#if hasPreviousPage}<a href="?i={previousCursor}&n={pageSize}" class="pure-button">⇠ previous page</a>{/if}
+  <span class="filler"></span>
+  {#if hasNextPage}<a href="?i={nextCursor}&n={pageSize}" class="pure-button">next page ⇢</a>{/if}
+</div>
 
 {/body}
 

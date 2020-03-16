@@ -124,7 +124,18 @@ body > main {
   background-color: var(--main-bg-color);
   padding: 10px;
   border-left: 1px solid lightgray;
-  overflow: scroll;
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+}
+
+main > * {
+  margin-top: 0.5rem;
+}
+
+main > *:first-child {
+  margin-top: 0;
 }
 
 body > footer {
@@ -174,4 +185,25 @@ article.lazychat-message {
 
 #bookmark-submission textarea {
   min-width: calc(100% - 12em);
+}
+
+.paging {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+}
+
+.paging > .filler {
+  flex: 1;
+}
+
+.paging > a {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: content;
+}
+
+elix-expandable-section .expandable-section-title {
+  margin-top: 0;
+  margin-bottom: 0;
 }
