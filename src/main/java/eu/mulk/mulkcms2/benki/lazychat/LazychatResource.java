@@ -2,10 +2,7 @@ package eu.mulk.mulkcms2.benki.lazychat;
 
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
-import eu.mulk.mulkcms2.benki.accesscontrol.Role;
-import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.users.User;
-import io.quarkus.panache.common.Sort;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
@@ -14,12 +11,18 @@ import io.quarkus.security.identity.SecurityIdentity;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
-import java.util.List;
+import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import javax.json.spi.JsonProvider;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.hibernate.Session;
 import org.jboss.logging.Logger;
 
 @Path("/lazychat")
@@ -34,36 +37,60 @@ public class LazychatResource {
 
   private static JsonProvider jsonProvider = JsonProvider.provider();
 
+  @ConfigProperty(name = "mulkcms.lazychat.default-max-results")
+  int defaultMaxResults;
+
   @ResourcePath("benki/lazychat/lazychatList.html")
   @Inject
   Template lazychatList;
 
   @Inject SecurityIdentity identity;
 
+  @PersistenceContext EntityManager entityManager;
+
   @GET
   @Produces(TEXT_HTML)
-  public TemplateInstance getPage() {
-    List<LazychatMessage> lazychatMessages;
-    if (identity.isAnonymous()) {
-      Role world = Role.find("from Role r join r.tags tag where tag = 'world'").singleResult();
-      lazychatMessages =
-          Bookmark.find(
-                  "select lm from LazychatMessage lm join lm.targets target left join fetch lm.owner where target = ?1",
-                  Sort.by("date").descending(),
-                  world)
-              .list();
-    } else {
-      var userName = identity.getPrincipal().getName();
-      User user =
-          User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
-      lazychatMessages =
-          Bookmark.find(
-                  "select lm from BenkiUser u inner join u.visibleLazychatMessages lm left join fetch lm.owner where u.id = ?1",
-                  Sort.by("date").descending(),
-                  user.id)
-              .list();
-    }
-    return lazychatList.data("lazychatMessages", lazychatMessages);
+  public TemplateInstance getIndex(
+      @QueryParam("i") @CheckForNull Integer cursor,
+      @QueryParam("n") @CheckForNull Integer maxResults) {
+
+    maxResults = maxResults == null ? defaultMaxResults : maxResults;
+
+    var session = entityManager.unwrap(Session.class);
+    var q = LazychatMessage.findViewable(session, identity, null, cursor, maxResults);
+
+    return lazychatList
+        .data("posts", q.posts)
+        .data("authenticated", !identity.isAnonymous())
+        .data("hasPreviousPage", q.prevCursor != null)
+        .data("hasNextPage", q.nextCursor != null)
+        .data("previousCursor", q.prevCursor)
+        .data("nextCursor", q.nextCursor)
+        .data("pageSize", maxResults);
+  }
+
+  @GET
+  @Path("~{ownerName}")
+  @Produces(TEXT_HTML)
+  public TemplateInstance getUserIndex(
+      @PathParam("ownerName") String ownerName,
+      @QueryParam("i") @CheckForNull Integer cursor,
+      @QueryParam("n") @CheckForNull Integer maxResults) {
+
+    maxResults = maxResults == null ? defaultMaxResults : maxResults;
+
+    var owner = User.findByNickname(ownerName);
+    var session = entityManager.unwrap(Session.class);
+    var q = LazychatMessage.findViewable(session, identity, owner, cursor, maxResults);
+
+    return lazychatList
+        .data("posts", q.posts)
+        .data("authenticated", !identity.isAnonymous())
+        .data("hasPreviousPage", q.prevCursor != null)
+        .data("hasNextPage", q.nextCursor != null)
+        .data("previousCursor", q.prevCursor)
+        .data("nextCursor", q.nextCursor)
+        .data("pageSize", maxResults);
   }
 
   @TemplateExtension

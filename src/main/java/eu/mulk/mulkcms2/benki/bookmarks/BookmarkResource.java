@@ -105,7 +105,7 @@ public class BookmarkResource {
     var q = Bookmark.findViewable(session, identity, null, cursor, maxResults);
 
     return bookmarkList
-        .data("bookmarks", q.posts)
+        .data("posts", q.posts)
         .data("feedUri", "/bookmarks/feed")
         .data("authenticated", !identity.isAnonymous())
         .data("hasPreviousPage", q.prevCursor != null)
@@ -130,7 +130,7 @@ public class BookmarkResource {
     var q = Bookmark.findViewable(session, identity, owner, cursor, maxResults);
 
     return bookmarkList
-        .data("bookmarks", q.posts)
+        .data("posts", q.posts)
         .data("feedUri", String.format("/bookmarks/~%s/feed", ownerName))
         .data("authenticated", !identity.isAnonymous())
         .data("hasPreviousPage", q.prevCursor != null)

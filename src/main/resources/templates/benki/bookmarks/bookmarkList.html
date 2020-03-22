@@ -1,4 +1,4 @@
-{@java.util.List<eu.mulk.mulkcms2.benki.bookmarks.Bookmark> bookmarks}
+{@java.util.List<eu.mulk.mulkcms2.benki.bookmarks.Bookmark> posts}
 {@java.lang.Boolean authenticated}
 {@java.lang.Boolean hasPreviousPage}
 {@java.lang.Boolean hasNextPage}
@@ -38,8 +38,8 @@
 </div>
 
 <section id="main-content">
-  {#for bookmark in bookmarks}
-    {#with bookmark}
+  {#for post in posts}
+    {#with post}
       <article class="bookmark">
         <header>
           <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
