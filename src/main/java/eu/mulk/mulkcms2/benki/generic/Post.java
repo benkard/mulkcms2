@@ -9,6 +9,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.security.identity.SecurityIdentity;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.persistence.Column;
@@ -30,11 +32,15 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
+import org.hibernate.Session;
+import org.jboss.logging.Logger;
 
 @Entity
 @Table(name = "posts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Post extends PanacheEntityBase {
+
+  private static Logger log = Logger.getLogger(Post.class);
 
   @Id
   @SequenceGenerator(
@@ -69,7 +75,7 @@ public abstract class Post extends PanacheEntityBase {
       inverseJoinColumns = @JoinColumn(name = "target"))
   public Set<Role> targets;
 
-  public static <T extends Post> CriteriaQuery<T> findViewable(
+  protected static <T extends Post> CriteriaQuery<T> queryViewable(
       Class<T> entityClass,
       SecurityIdentity readerIdentity,
       @CheckForNull User owner,
@@ -123,5 +129,76 @@ public abstract class Post extends PanacheEntityBase {
     query.where(conditions.toArray(new Predicate[0]));
 
     return query;
+  }
+
+  public static class PostPage<T extends Post> {
+    public @CheckForNull Integer prevCursor;
+    public @CheckForNull Integer cursor;
+    public @CheckForNull Integer nextCursor;
+    public List<T> posts;
+
+    private PostPage(
+        @CheckForNull Integer c0,
+        @CheckForNull Integer c1,
+        @CheckForNull Integer c2,
+        List<T> resultList) {
+      this.prevCursor = c0;
+      this.cursor = c1;
+      this.nextCursor = c2;
+      this.posts = resultList;
+    }
+  }
+
+  protected static <T extends Post> List<T> findViewable(
+      Class<T> entityClass, Session session, SecurityIdentity viewer, @CheckForNull User owner) {
+    return findViewable(entityClass, session, viewer, owner, null, null).posts;
+  }
+
+  protected static <T extends Post> PostPage<T> findViewable(
+      Class<T> entityClass,
+      Session session,
+      SecurityIdentity viewer,
+      @CheckForNull User owner,
+      @CheckForNull Integer cursor,
+      @CheckForNull Integer count) {
+
+    if (cursor != null) {
+      Objects.requireNonNull(count);
+    }
+
+    var cb = session.getCriteriaBuilder();
+
+    var forwardCriteria = Bookmark.queryViewable(entityClass, viewer, owner, cursor, cb, true);
+    var forwardQuery = session.createQuery(forwardCriteria);
+
+    if (count != null) {
+      forwardQuery.setMaxResults(count + 1);
+    }
+
+    log.debug(forwardQuery.unwrap(org.hibernate.query.Query.class).getQueryString());
+
+    @CheckForNull Integer prevCursor = null;
+    @CheckForNull Integer nextCursor = null;
+
+    if (cursor != null) {
+      // Look backwards as well so we can find the prevCursor.
+      var backwardCriteria = Bookmark.queryViewable(entityClass, viewer, owner, cursor, cb, false);
+      var backwardQuery = session.createQuery(backwardCriteria);
+      backwardQuery.setMaxResults(count);
+      var backwardResults = backwardQuery.getResultList();
+      if (!backwardResults.isEmpty()) {
+        prevCursor = backwardResults.get(backwardResults.size() - 1).id;
+      }
+    }
+
+    var forwardResults = forwardQuery.getResultList();
+    if (count != null) {
+      if (forwardResults.size() == count + 1) {
+        nextCursor = forwardResults.get(count).id;
+        forwardResults.remove((int) count);
+      }
+    }
+
+    return new PostPage(prevCursor, cursor, nextCursor, forwardResults);
   }
 }

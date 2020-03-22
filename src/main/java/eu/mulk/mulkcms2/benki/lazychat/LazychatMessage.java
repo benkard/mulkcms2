@@ -5,6 +5,7 @@ import eu.mulk.mulkcms2.benki.users.User;
 import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import io.quarkus.security.identity.SecurityIdentity;
 import java.util.Collection;
+import java.util.List;
 import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import org.hibernate.Session;
 
 @Entity
 @Table(name = "lazychat_messages", schema = "benki")
@@ -33,12 +33,17 @@ public class LazychatMessage extends Post {
     return new MarkdownConverter().htmlify(content);
   }
 
-  public static CriteriaQuery<LazychatMessage> findViewable(
-      SecurityIdentity readerIdentity,
+  public static List<LazychatMessage> findViewable(
+      Session session, SecurityIdentity viewer, @CheckForNull User owner) {
+    return findViewable(LazychatMessage.class, session, viewer, owner, null, null).posts;
+  }
+
+  public static PostPage<LazychatMessage> findViewable(
+      Session session,
+      SecurityIdentity viewer,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
-      CriteriaBuilder cb,
-      boolean forward) {
-    return Post.findViewable(LazychatMessage.class, readerIdentity, owner, cursor, cb, forward);
+      @CheckForNull Integer count) {
+    return findViewable(LazychatMessage.class, session, viewer, owner, cursor, count);
   }
 }

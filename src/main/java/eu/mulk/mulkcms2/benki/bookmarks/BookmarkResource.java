@@ -31,7 +31,6 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
@@ -102,10 +101,11 @@ public class BookmarkResource {
 
     maxResults = maxResults == null ? defaultMaxResults : maxResults;
 
-    var q = selectBookmarks(null, cursor, maxResults);
+    var session = entityManager.unwrap(Session.class);
+    var q = Bookmark.findViewable(session, identity, null, cursor, maxResults);
 
     return bookmarkList
-        .data("bookmarks", q.bookmarks)
+        .data("bookmarks", q.posts)
         .data("feedUri", "/bookmarks/feed")
         .data("authenticated", !identity.isAnonymous())
         .data("hasPreviousPage", q.prevCursor != null)
@@ -126,10 +126,11 @@ public class BookmarkResource {
     maxResults = maxResults == null ? defaultMaxResults : maxResults;
 
     var owner = User.findByNickname(ownerName);
-    var q = selectBookmarks(owner, cursor, maxResults);
+    var session = entityManager.unwrap(Session.class);
+    var q = Bookmark.findViewable(session, identity, owner, cursor, maxResults);
 
     return bookmarkList
-        .data("bookmarks", q.bookmarks)
+        .data("bookmarks", q.posts)
         .data("feedUri", String.format("/bookmarks/~%s/feed", ownerName))
         .data("authenticated", !identity.isAnonymous())
         .data("hasPreviousPage", q.prevCursor != null)
@@ -155,7 +156,7 @@ public class BookmarkResource {
   }
 
   private String makeFeed(@Nullable User owner, @Nullable String ownerName) throws FeedException {
-    var bookmarks = selectBookmarks(owner);
+    var bookmarks = Bookmark.findViewable(entityManager.unwrap(Session.class), identity, owner);
     var feed = new Feed("atom_1.0");
 
     var feedSubId = owner == null ? "" : String.format("/%d", owner.id);
@@ -288,70 +289,5 @@ public class BookmarkResource {
   @TemplateExtension
   static String htmlDateTime(TemporalAccessor x) {
     return htmlDateFormatter.format(x);
-  }
-
-  private static class BookmarkPage {
-    @CheckForNull Integer prevCursor;
-    @CheckForNull Integer cursor;
-    @CheckForNull Integer nextCursor;
-    List<Bookmark> bookmarks;
-
-    public BookmarkPage(
-        @CheckForNull Integer c0,
-        @CheckForNull Integer c1,
-        @CheckForNull Integer c2,
-        List<Bookmark> resultList) {
-      this.prevCursor = c0;
-      this.cursor = c1;
-      this.nextCursor = c2;
-      this.bookmarks = resultList;
-    }
-  }
-
-  private List<Bookmark> selectBookmarks(@CheckForNull User owner) {
-    return selectBookmarks(owner, null, null).bookmarks;
-  }
-
-  private BookmarkPage selectBookmarks(
-      @CheckForNull User owner, @CheckForNull Integer cursor, @CheckForNull Integer count) {
-
-    if (cursor != null) {
-      Objects.requireNonNull(count);
-    }
-
-    var cb = entityManager.unwrap(Session.class).getCriteriaBuilder();
-
-    var forwardCriteria = Bookmark.findViewable(identity, owner, cursor, cb, true);
-    var forwardQuery = entityManager.createQuery(forwardCriteria);
-
-    if (count != null) {
-      forwardQuery.setMaxResults(count + 1);
-    }
-
-    log.debug(forwardQuery.unwrap(org.hibernate.query.Query.class).getQueryString());
-
-    @CheckForNull Integer prevCursor = null;
-    @CheckForNull Integer nextCursor = null;
-
-    if (cursor != null) {
-      // Look backwards as well so we can find the prevCursor.
-      var backwardCriteria = Bookmark.findViewable(identity, owner, cursor, cb, false);
-      var backwardQuery = entityManager.createQuery(backwardCriteria);
-      backwardQuery.setMaxResults(count);
-      var backwardResults = backwardQuery.getResultList();
-      if (!backwardResults.isEmpty()) {
-        prevCursor = backwardResults.get(backwardResults.size() - 1).id;
-      }
-    }
-
-    var forwardResults = forwardQuery.getResultList();
-    if (count != null) {
-      if (forwardResults.size() == count + 1) {
-        nextCursor = forwardResults.get(count).id;
-        forwardResults.remove((int) count);
-      }
-    }
-
-    return new BookmarkPage(prevCursor, cursor, nextCursor, forwardResults);
   }
 }
