@@ -12,11 +12,7 @@ import com.rometools.rome.feed.synd.SyndPersonImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
-import eu.mulk.mulkcms2.benki.generic.Post;
-import eu.mulk.mulkcms2.benki.generic.Post_;
-import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.users.User;
-import eu.mulk.mulkcms2.benki.users.User_;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
@@ -32,7 +28,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -46,11 +41,6 @@ import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -331,7 +321,7 @@ public class BookmarkResource {
 
     var cb = entityManager.unwrap(Session.class).getCriteriaBuilder();
 
-    var forwardCriteria = queryPostList(Bookmark.class, owner, cursor, cb, true);
+    var forwardCriteria = Bookmark.findViewable(identity, owner, cursor, cb, true);
     var forwardQuery = entityManager.createQuery(forwardCriteria);
 
     if (count != null) {
@@ -345,7 +335,7 @@ public class BookmarkResource {
 
     if (cursor != null) {
       // Look backwards as well so we can find the prevCursor.
-      var backwardCriteria = queryPostList(Bookmark.class, owner, cursor, cb, false);
+      var backwardCriteria = Bookmark.findViewable(identity, owner, cursor, cb, false);
       var backwardQuery = entityManager.createQuery(backwardCriteria);
       backwardQuery.setMaxResults(count);
       var backwardResults = backwardQuery.getResultList();
@@ -363,60 +353,5 @@ public class BookmarkResource {
     }
 
     return new BookmarkPage(prevCursor, cursor, nextCursor, forwardResults);
-  }
-
-  private <T extends Post> CriteriaQuery<T> queryPostList(
-      Class<T> entityClass,
-      @CheckForNull User owner,
-      @CheckForNull Integer cursor,
-      CriteriaBuilder cb,
-      boolean forward) {
-    CriteriaQuery<T> query = cb.createQuery(entityClass);
-
-    var conditions = new ArrayList<Predicate>();
-
-    From<?, T> post;
-    if (identity.isAnonymous()) {
-      post = query.from(entityClass);
-      var target = post.join(Post_.targets);
-      conditions.add(cb.equal(target, Role.getWorld()));
-    } else {
-      var userName = identity.getPrincipal().getName();
-      var user = User.findByNickname(userName);
-
-      var root = query.from(User.class);
-      conditions.add(cb.equal(root, user));
-      if (entityClass.isAssignableFrom(Bookmark.class)) {
-        post = (From<?, T>) root.join(User_.visibleBookmarks);
-      } else {
-        assert entityClass.isAssignableFrom(LazychatMessage.class) : entityClass;
-        post = (From<?, T>) root.join(User_.visibleLazychatMessages);
-      }
-    }
-
-    query.select(post);
-    post.fetch(Post_.owner, JoinType.LEFT);
-
-    if (owner != null) {
-      conditions.add(cb.equal(post.get(Post_.owner), owner));
-    }
-
-    if (forward) {
-      query.orderBy(cb.desc(post.get(Post_.id)));
-    } else {
-      query.orderBy(cb.asc(post.get(Post_.id)));
-    }
-
-    if (cursor != null) {
-      if (forward) {
-        conditions.add(cb.le(post.get(Post_.id), cursor));
-      } else {
-        conditions.add(cb.gt(post.get(Post_.id), cursor));
-      }
-    }
-
-    query.where(conditions.toArray(new Predicate[0]));
-
-    return query;
   }
 }
