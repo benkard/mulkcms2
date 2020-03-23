@@ -28,14 +28,14 @@ import org.jboss.logging.Logger;
 @Path("/lazychat")
 public class LazychatResource {
 
-  private static Logger log = Logger.getLogger(LazychatResource.class);
+  private static final Logger log = Logger.getLogger(LazychatResource.class);
 
-  private static DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+  private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-  private static DateTimeFormatter humanDateFormatter =
+  private static final DateTimeFormatter humanDateFormatter =
       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
 
-  private static JsonProvider jsonProvider = JsonProvider.provider();
+  private static final JsonProvider jsonProvider = JsonProvider.provider();
 
   @ConfigProperty(name = "mulkcms.lazychat.default-max-results")
   int defaultMaxResults;

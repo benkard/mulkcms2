@@ -63,14 +63,14 @@ import org.jsoup.Jsoup;
 @Path("/bookmarks")
 public class BookmarkResource {
 
-  private static Logger log = Logger.getLogger(BookmarkResource.class);
+  private static final Logger log = Logger.getLogger(BookmarkResource.class);
 
-  private static DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+  private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-  private static DateTimeFormatter humanDateFormatter =
+  private static final DateTimeFormatter humanDateFormatter =
       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
 
-  private static JsonProvider jsonProvider = JsonProvider.provider();
+  private static final JsonProvider jsonProvider = JsonProvider.provider();
 
   @ConfigProperty(name = "mulkcms.bookmarks.default-max-results")
   int defaultMaxResults;
