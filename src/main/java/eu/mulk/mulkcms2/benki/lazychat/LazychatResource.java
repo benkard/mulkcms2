@@ -40,9 +40,9 @@ public class LazychatResource {
   @ConfigProperty(name = "mulkcms.lazychat.default-max-results")
   int defaultMaxResults;
 
-  @ResourcePath("benki/lazychat/lazychatList.html")
+  @ResourcePath("benki/posts/postList.html")
   @Inject
-  Template lazychatList;
+  Template postList;
 
   @Inject SecurityIdentity identity;
 
@@ -59,9 +59,10 @@ public class LazychatResource {
     var session = entityManager.unwrap(Session.class);
     var q = LazychatMessage.findViewable(session, identity, null, cursor, maxResults);
 
-    return lazychatList
+    return postList
         .data("posts", q.posts)
-        .data("authenticated", !identity.isAnonymous())
+        .data("pageTitle", "Lazy Chat")
+        .data("showBookmarkForm", false)
         .data("hasPreviousPage", q.prevCursor != null)
         .data("hasNextPage", q.nextCursor != null)
         .data("previousCursor", q.prevCursor)
@@ -83,9 +84,10 @@ public class LazychatResource {
     var session = entityManager.unwrap(Session.class);
     var q = LazychatMessage.findViewable(session, identity, owner, cursor, maxResults);
 
-    return lazychatList
+    return postList
         .data("posts", q.posts)
-        .data("authenticated", !identity.isAnonymous())
+        .data("pageTitle", "Lazy Chat")
+        .data("showBookmarkForm", false)
         .data("hasPreviousPage", q.prevCursor != null)
         .data("hasNextPage", q.nextCursor != null)
         .data("previousCursor", q.prevCursor)

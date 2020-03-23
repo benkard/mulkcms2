@@ -46,4 +46,14 @@ public class LazychatMessage extends Post {
       @CheckForNull Integer count) {
     return findViewable(LazychatMessage.class, session, viewer, owner, cursor, count);
   }
+
+  @Override
+  public boolean isBookmark() {
+    return false;
+  }
+
+  @Override
+  public boolean isLazychatMessage() {
+    return true;
+  }
 }

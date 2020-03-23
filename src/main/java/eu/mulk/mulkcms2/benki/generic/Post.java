@@ -75,6 +75,10 @@ public abstract class Post extends PanacheEntityBase {
       inverseJoinColumns = @JoinColumn(name = "target"))
   public Set<Role> targets;
 
+  public abstract boolean isBookmark();
+
+  public abstract boolean isLazychatMessage();
+
   protected static <T extends Post> CriteriaQuery<T> queryViewable(
       Class<T> entityClass,
       SecurityIdentity readerIdentity,

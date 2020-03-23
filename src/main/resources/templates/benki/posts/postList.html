@@ -1,5 +1,6 @@
 {@java.util.List<eu.mulk.mulkcms2.benki.bookmarks.Bookmark> posts}
-{@java.lang.Boolean authenticated}
+{@java.lang.String pageTitle}
+{@java.lang.Boolean showBookmarkForm}
 {@java.lang.Boolean hasPreviousPage}
 {@java.lang.Boolean hasNextPage}
 {@java.lang.Integer previousCursor}
@@ -8,9 +9,10 @@
 
 {#include base.html}
 
-{#title}Benki Bookmarks{/title}
-{#siteSection}Bookmarks{/siteSection}
-{#bookmarksClass}this-page{/bookmarksClass}
+{#title}Benki {pageTitle}{/title}
+{#siteSection}{pageTitle}{/siteSection}
+
+{#nav}{#navbar siteSection=pageTitle /}{/nav}
 
 {#head}
   <link href="{feedUri}" rel="alternate" type="application/atom+xml" />
@@ -22,14 +24,14 @@
 
 {#body}
 
-{! #if authenticated !}
+{#if showBookmarkForm}
   <elix-expandable-section id="bookmark-submission-pane">
     <h2 slot="header" class="small-title expandable-section-title"><button class="pure-button">Create New Bookmark</button></h2>
     <section id="bookmark-submission">
       <mlk-bookmark-submission-form id="bookmark-submission-form"></mlk-bookmark-submission-form>
     </section>
   </elix-expandable-section>
-{! /if !}
+{/if}
 
 <div class="paging">
   {#if hasPreviousPage}<a href="?i={previousCursor}&n={pageSize}" class="pure-button">⇠ previous page</a>{/if}
@@ -40,19 +42,34 @@
 <section id="main-content">
   {#for post in posts}
     {#with post}
-      <article class="bookmark">
-        <header>
-          <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
-          <div class="bookmark-info">
-            <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
-            <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
-          </div>
-        </header>
+      {#if post.isBookmark}
+        <article class="bookmark">
+          <header>
+            <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
+            <div class="bookmark-info">
+              <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
+              <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
+            </div>
+          </header>
 
-        <section class="bookmark-description">
-          {descriptionHtml.raw}
-        </section>
-      </article>
+          <section class="bookmark-description">
+            {descriptionHtml.raw}
+          </section>
+        </article>
+      {#else}
+        <article class="lazychat-message">
+          <header>
+            <div class="lazychat-message-info">
+              <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
+              <span class="lazychat-message-owner">{owner.firstName} {owner.lastName}</span>
+            </div>
+          </header>
+
+          <section class="lazychat-message-content">
+            {contentHtml.raw}
+          </section>
+        </article>
+      {/if}
     {/with}
   {/for}
 </section>

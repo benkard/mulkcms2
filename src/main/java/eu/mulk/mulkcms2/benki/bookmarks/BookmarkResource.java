@@ -75,9 +75,9 @@ public class BookmarkResource {
   @ConfigProperty(name = "mulkcms.bookmarks.default-max-results")
   int defaultMaxResults;
 
-  @ResourcePath("benki/bookmarks/bookmarkList.html")
+  @ResourcePath("benki/posts/postList.html")
   @Inject
-  Template bookmarkList;
+  Template postList;
 
   @ResourcePath("benki/bookmarks/newBookmark.html")
   @Inject
@@ -104,9 +104,11 @@ public class BookmarkResource {
     var session = entityManager.unwrap(Session.class);
     var q = Bookmark.findViewable(session, identity, null, cursor, maxResults);
 
-    return bookmarkList
+    return postList
         .data("posts", q.posts)
         .data("feedUri", "/bookmarks/feed")
+        .data("pageTitle", "Bookmarks")
+        .data("showBookmarkForm", false)
         .data("authenticated", !identity.isAnonymous())
         .data("hasPreviousPage", q.prevCursor != null)
         .data("hasNextPage", q.nextCursor != null)
@@ -129,9 +131,11 @@ public class BookmarkResource {
     var session = entityManager.unwrap(Session.class);
     var q = Bookmark.findViewable(session, identity, owner, cursor, maxResults);
 
-    return bookmarkList
+    return postList
         .data("posts", q.posts)
         .data("feedUri", String.format("/bookmarks/~%s/feed", ownerName))
+        .data("pageTitle", "Bookmarks")
+        .data("showBookmarkForm", false)
         .data("authenticated", !identity.isAnonymous())
         .data("hasPreviousPage", q.prevCursor != null)
         .data("hasNextPage", q.nextCursor != null)

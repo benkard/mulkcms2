@@ -56,4 +56,14 @@ public class Bookmark extends Post {
       @CheckForNull Integer count) {
     return findViewable(Bookmark.class, session, viewer, owner, cursor, count);
   }
+
+  @Override
+  public boolean isBookmark() {
+    return true;
+  }
+
+  @Override
+  public boolean isLazychatMessage() {
+    return false;
+  }
 }
