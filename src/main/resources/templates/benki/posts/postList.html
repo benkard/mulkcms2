@@ -19,7 +19,8 @@
 
   <script type="module" src="/web_modules/elix/define/ExpandableSection.js"></script>
   <script type="module" src="/bookmarks/MlkBookmarkSubmissionForm.js"></script>
-  <script type="module" src="/bookmarks/bookmarkList.js" defer></script>
+  <script type="module" src="/lazychat/MlkLazychatSubmissionForm.js"></script>
+  <script type="module" src="/posts/postList.js" defer></script>
 {/head}
 
 {#body}
@@ -29,6 +30,15 @@
     <h2 slot="header" class="small-title expandable-section-title"><button class="pure-button">Create New Bookmark</button></h2>
     <section id="bookmark-submission">
       <mlk-bookmark-submission-form id="bookmark-submission-form"></mlk-bookmark-submission-form>
+    </section>
+  </elix-expandable-section>
+{/if}
+
+{#if showLazychatForm}
+  <elix-expandable-section id="lazychat-submission-pane">
+    <h2 slot="header" class="small-title expandable-section-title"><button class="pure-button">Post Message</button></h2>
+    <section id="lazychat-submission">
+      <mlk-lazychat-submission-form id="lazychat-submission-form"></mlk-lazychat-submission-form>
     </section>
   </elix-expandable-section>
 {/if}
