@@ -17,8 +17,8 @@ template.innerHTML = `
 
       <label for="visibility-input">Visibility:</label>
       <select id="visibility-input" name="visibility" required>
-        <option value="public" selected>Public</option>
-        <option value="semiprivate">Semiprivate</option>
+        <option value="public">Public</option>
+        <option value="semiprivate" selected>Semiprivate</option>
         <option value="private">Private</option>
       </select>
 
