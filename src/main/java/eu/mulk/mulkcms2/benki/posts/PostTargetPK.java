@@ -1,4 +1,4 @@
-package eu.mulk.mulkcms2.benki.generic;
+package eu.mulk.mulkcms2.benki.posts;
 
 import java.io.Serializable;
 import javax.persistence.Column;

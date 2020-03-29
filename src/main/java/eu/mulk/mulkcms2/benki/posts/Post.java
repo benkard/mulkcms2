@@ -1,4 +1,4 @@
-package eu.mulk.mulkcms2.benki.generic;
+package eu.mulk.mulkcms2.benki.posts;
 
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
@@ -103,9 +103,10 @@ public abstract class Post extends PanacheEntityBase {
       conditions.add(cb.equal(root, user));
       if (entityClass.isAssignableFrom(Bookmark.class)) {
         post = (From<?, T>) root.join(User_.visibleBookmarks);
-      } else {
-        assert entityClass.isAssignableFrom(LazychatMessage.class) : entityClass;
+      } else if (entityClass.isAssignableFrom(LazychatMessage.class)) {
         post = (From<?, T>) root.join(User_.visibleLazychatMessages);
+      } else {
+        post = (From<?, T>) root.join(User_.visiblePosts);
       }
     }
 
@@ -153,13 +154,29 @@ public abstract class Post extends PanacheEntityBase {
     }
   }
 
-  protected static <T extends Post> List<T> findViewable(
-      Class<T> entityClass, Session session, SecurityIdentity viewer, @CheckForNull User owner) {
-    return findViewable(entityClass, session, viewer, owner, null, null).posts;
+  public static PostPage<Post> findViewable(
+      PostFilter postFilter,
+      Session session,
+      SecurityIdentity viewer,
+      @CheckForNull User owner,
+      @CheckForNull Integer cursor,
+      @CheckForNull Integer count) {
+    Class<? extends Post> entityClass;
+    switch (postFilter) {
+      case BOOKMARKS_ONLY:
+        entityClass = Bookmark.class;
+        break;
+      case LAZYCHAT_MESSAGES_ONLY:
+        entityClass = LazychatMessage.class;
+        break;
+      default:
+        entityClass = Post.class;
+    }
+    return findViewable(entityClass, session, viewer, owner, cursor, count);
   }
 
   protected static <T extends Post> PostPage<T> findViewable(
-      Class<T> entityClass,
+      Class<? extends T> entityClass,
       Session session,
       SecurityIdentity viewer,
       @CheckForNull User owner,
@@ -172,7 +189,7 @@ public abstract class Post extends PanacheEntityBase {
 
     var cb = session.getCriteriaBuilder();
 
-    var forwardCriteria = Bookmark.queryViewable(entityClass, viewer, owner, cursor, cb, true);
+    var forwardCriteria = queryViewable(entityClass, viewer, owner, cursor, cb, true);
     var forwardQuery = session.createQuery(forwardCriteria);
 
     if (count != null) {
@@ -186,7 +203,7 @@ public abstract class Post extends PanacheEntityBase {
 
     if (cursor != null) {
       // Look backwards as well so we can find the prevCursor.
-      var backwardCriteria = Bookmark.queryViewable(entityClass, viewer, owner, cursor, cb, false);
+      var backwardCriteria = queryViewable(entityClass, viewer, owner, cursor, cb, false);
       var backwardQuery = session.createQuery(backwardCriteria);
       backwardQuery.setMaxResults(count);
       var backwardResults = backwardQuery.getResultList();
@@ -195,7 +212,7 @@ public abstract class Post extends PanacheEntityBase {
       }
     }
 
-    var forwardResults = forwardQuery.getResultList();
+    var forwardResults = (List<T>) forwardQuery.getResultList();
     if (count != null) {
       if (forwardResults.size() == count + 1) {
         nextCursor = forwardResults.get(count).id;
@@ -203,6 +220,6 @@ public abstract class Post extends PanacheEntityBase {
       }
     }
 
-    return new PostPage(prevCursor, cursor, nextCursor, forwardResults);
+    return new PostPage<T>(prevCursor, cursor, nextCursor, forwardResults);
   }
 }

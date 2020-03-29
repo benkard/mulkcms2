@@ -1,4 +1,4 @@
-package eu.mulk.mulkcms2.benki.generic;
+package eu.mulk.mulkcms2.benki.posts;
 
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;

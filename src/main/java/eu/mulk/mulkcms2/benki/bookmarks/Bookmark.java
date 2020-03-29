@@ -1,6 +1,6 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
-import eu.mulk.mulkcms2.benki.generic.Post;
+import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.benki.users.User;
 import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import io.quarkus.security.identity.SecurityIdentity;

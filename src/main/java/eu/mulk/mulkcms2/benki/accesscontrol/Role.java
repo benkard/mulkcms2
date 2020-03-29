@@ -1,6 +1,6 @@
 package eu.mulk.mulkcms2.benki.accesscontrol;
 
-import eu.mulk.mulkcms2.benki.generic.PostTarget;
+import eu.mulk.mulkcms2.benki.posts.PostTarget;
 import eu.mulk.mulkcms2.benki.users.User;
 import eu.mulk.mulkcms2.benki.users.UserRole;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
