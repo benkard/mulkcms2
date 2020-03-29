@@ -10,7 +10,6 @@ import com.rometools.rome.feed.atom.Link;
 import com.rometools.rome.feed.synd.SyndPersonImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
-import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
@@ -148,21 +147,22 @@ public abstract class PostResource {
   }
 
   private String makeFeed(@Nullable User owner, @Nullable String ownerName) throws FeedException {
-    var bookmarks = Bookmark.findViewable(entityManager.unwrap(Session.class), identity, owner);
+    var posts = Post.findViewable(postFilter, entityManager.unwrap(Session.class), identity, owner);
     var feed = new Feed("atom_1.0");
 
     var feedSubId = owner == null ? "" : String.format("/%d", owner.id);
 
-    feed.setTitle("Book Marx");
+    feed.setTitle(String.format("Benki → %s", pageTitle));
     feed.setId(
         String.format(
-            "tag:%s,2019:marx%s:%s",
+            "tag:%s,2019:%s:%s:%s",
             tagBase,
+            pageTitle,
             feedSubId,
             identity.isAnonymous() ? "world" : identity.getPrincipal().getName()));
     feed.setUpdated(
         Date.from(
-            bookmarks.stream()
+            posts.stream()
                 .map(x -> x.date)
                 .max(Comparator.comparing(x -> x))
                 .orElse(OffsetDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC))
@@ -181,33 +181,39 @@ public abstract class PostResource {
     feed.setAlternateLinks(List.of(htmlAltLink));
 
     feed.setEntries(
-        bookmarks.stream()
+        posts.stream()
             .map(
-                bookmark -> {
+                post -> {
                   var entry = new Entry();
 
-                  entry.setId(String.format("tag:%s,2012:/marx/%d", tagBase, bookmark.id));
-                  entry.setPublished(Date.from(bookmark.date.toInstant()));
-                  entry.setUpdated(Date.from(bookmark.date.toInstant()));
+                  entry.setId(String.format("tag:%s,2012:/marx/%d", tagBase, post.id));
+                  entry.setPublished(Date.from(post.date.toInstant()));
+                  entry.setUpdated(Date.from(post.date.toInstant()));
 
                   var author = new SyndPersonImpl();
-                  author.setName(bookmark.owner.getFirstAndLastName());
+                  author.setName(post.owner.getFirstAndLastName());
                   entry.setAuthors(List.of(author));
 
-                  var title = new Content();
-                  title.setType("text");
-                  title.setValue(bookmark.title);
-                  entry.setTitleEx(title);
+                  if (post.getTitle() != null) {
+                    var title = new Content();
+                    title.setType("text");
+                    title.setValue(post.getTitle());
+                    entry.setTitleEx(title);
+                  }
 
-                  var summary = new Content();
-                  summary.setType("html");
-                  summary.setValue(bookmark.getDescriptionHtml());
-                  entry.setSummary(summary);
+                  if (post.getDescriptionHtml() != null) {
+                    var summary = new Content();
+                    summary.setType("html");
+                    summary.setValue(post.getDescriptionHtml());
+                    entry.setSummary(summary);
+                  }
 
-                  var link = new Link();
-                  link.setHref(bookmark.uri);
-                  link.setRel("alternate");
-                  entry.setAlternateLinks(List.of(link));
+                  if (post.getUri() != null) {
+                    var link = new Link();
+                    link.setHref(post.getUri());
+                    link.setRel("alternate");
+                    entry.setAlternateLinks(List.of(link));
+                  }
 
                   return entry;
                 })

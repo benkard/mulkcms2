@@ -1,10 +1,7 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
 import eu.mulk.mulkcms2.benki.posts.Post;
-import eu.mulk.mulkcms2.benki.users.User;
 import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
-import io.quarkus.security.identity.SecurityIdentity;
-import java.util.List;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.persistence.CollectionTable;
@@ -15,7 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import org.hibernate.Session;
 
 @Entity
 @Table(name = "bookmarks", schema = "benki")
@@ -43,18 +39,16 @@ public class Bookmark extends Post {
     return new MarkdownConverter().htmlify(description);
   }
 
-  public static List<Bookmark> findViewable(
-      Session session, SecurityIdentity viewer, @CheckForNull User owner) {
-    return findViewable(Bookmark.class, session, viewer, owner, null, null).posts;
+  @CheckForNull
+  @Override
+  public String getUri() {
+    return null;
   }
 
-  public static PostPage<Bookmark> findViewable(
-      Session session,
-      SecurityIdentity viewer,
-      @CheckForNull User owner,
-      @CheckForNull Integer cursor,
-      @CheckForNull Integer count) {
-    return findViewable(Bookmark.class, session, viewer, owner, cursor, count);
+  @CheckForNull
+  @Override
+  public String getTitle() {
+    return null;
   }
 
   @Override

@@ -79,6 +79,15 @@ public abstract class Post extends PanacheEntityBase {
 
   public abstract boolean isLazychatMessage();
 
+  @CheckForNull
+  public abstract String getTitle();
+
+  @CheckForNull
+  public abstract String getDescriptionHtml();
+
+  @CheckForNull
+  public abstract String getUri();
+
   protected static <T extends Post> CriteriaQuery<T> queryViewable(
       Class<T> entityClass,
       SecurityIdentity readerIdentity,
@@ -152,6 +161,11 @@ public abstract class Post extends PanacheEntityBase {
       this.nextCursor = c2;
       this.posts = resultList;
     }
+  }
+
+  public static List<Post> findViewable(
+      PostFilter postFilter, Session session, SecurityIdentity viewer, @CheckForNull User owner) {
+    return findViewable(postFilter, session, viewer, owner, null, null).posts;
   }
 
   public static PostPage<Post> findViewable(
