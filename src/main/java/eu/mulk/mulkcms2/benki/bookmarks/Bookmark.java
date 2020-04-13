@@ -42,13 +42,13 @@ public class Bookmark extends Post {
   @CheckForNull
   @Override
   public String getUri() {
-    return null;
+    return uri;
   }
 
   @CheckForNull
   @Override
   public String getTitle() {
-    return null;
+    return title;
   }
 
   @Override
