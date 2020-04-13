@@ -5,6 +5,7 @@ import eu.mulk.mulkcms2.benki.users.User;
 import eu.mulk.mulkcms2.benki.users.UserRole;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -77,5 +78,22 @@ public class Role extends PanacheEntityBase {
 
   public static Role getWorld() {
     return find("from Role r join r.tags tag where tag = 'world'").singleResult();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Role)) {
+      return false;
+    }
+    Role role = (Role) o;
+    return Objects.equals(id, role.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

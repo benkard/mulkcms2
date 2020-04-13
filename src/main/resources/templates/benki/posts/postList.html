@@ -1,4 +1,4 @@
-{@java.util.List<eu.mulk.mulkcms2.benki.bookmarks.Bookmark> posts}
+{@java.util.List<eu.mulk.mulkcms2.benki.posts.Post> posts}
 {@java.lang.String pageTitle}
 {@java.lang.Boolean showBookmarkForm}
 {@java.lang.Boolean hasPreviousPage}
@@ -69,14 +69,23 @@
       {#else}
         <article class="lazychat-message">
           <header>
-            <div class="lazychat-message-info">
+            <div class="lazychat-message-info" style="display: inline-block">
               <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
               <span class="lazychat-message-owner">{owner.firstName} {owner.lastName}</span>
             </div>
+  
+            {#if showLazychatForm}
+              <elix-expandable-section class="lazychat-editor-pane editor-pane">
+                <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>
+              </elix-expandable-section>
+            {/if}
           </header>
 
           <section class="lazychat-message-content">
             {contentHtml.raw}
+          </section>
+
+          <section class="lazychat-editor">
           </section>
         </article>
       {/if}

@@ -10,6 +10,7 @@ import com.rometools.rome.feed.atom.Link;
 import com.rometools.rome.feed.synd.SyndPersonImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
+import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
@@ -26,6 +27,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
@@ -33,6 +35,7 @@ import javax.inject.Inject;
 import javax.json.spi.JsonProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -70,7 +73,7 @@ public abstract class PostResource {
   @ConfigProperty(name = "mulkcms.tag-base")
   String tagBase;
 
-  @PersistenceContext EntityManager entityManager;
+  @PersistenceContext protected EntityManager entityManager;
 
   private final PostFilter postFilter;
   private final String pageTitle;
@@ -255,5 +258,30 @@ public abstract class PostResource {
       default:
         throw new IllegalStateException();
     }
+  }
+
+  protected Session getSession() {
+    return entityManager.unwrap(Session.class);
+  }
+
+  protected static void assignPostTargets(Post.Visibility visibility, User user, Post post) {
+    switch (visibility) {
+      case PUBLIC:
+        post.targets = Set.of(Role.getWorld());
+        break;
+      case SEMIPRIVATE:
+        post.targets = Set.copyOf(user.defaultTargets);
+        break;
+      case PRIVATE:
+        post.targets = Set.of();
+        break;
+      default:
+        throw new BadRequestException(String.format("invalid visibility “%s”", visibility));
+    }
+  }
+
+  protected User getCurrentUser() {
+    var userName = identity.getPrincipal().getName();
+    return User.findByNickname(userName);
   }
 }

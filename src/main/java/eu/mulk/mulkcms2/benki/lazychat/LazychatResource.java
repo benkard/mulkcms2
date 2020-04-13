@@ -1,21 +1,24 @@
 package eu.mulk.mulkcms2.benki.lazychat;
 
-import eu.mulk.mulkcms2.benki.accesscontrol.Role;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
+import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.benki.posts.PostFilter;
 import eu.mulk.mulkcms2.benki.posts.PostResource;
-import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.security.Authenticated;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
-import java.util.Set;
+import java.util.Objects;
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 @Path("/lazychat")
@@ -29,13 +32,10 @@ public class LazychatResource extends PostResource {
   @Transactional
   @Authenticated
   public Response postMessage(
-      @FormParam("text") String text,
-      @FormParam("visibility") @NotNull @Pattern(regexp = "public|semiprivate|private")
-          String visibility)
+      @FormParam("text") String text, @FormParam("visibility") Post.Visibility visibility)
       throws URISyntaxException {
 
-    var userName = identity.getPrincipal().getName();
-    var user = User.findByNickname(userName);
+    var user = getCurrentUser();
 
     var message = new LazychatMessage();
     message.content = text;
@@ -43,17 +43,57 @@ public class LazychatResource extends PostResource {
     message.owner = user;
     message.date = OffsetDateTime.now();
 
-    if (visibility.equals("public")) {
-      Role world = Role.find("from Role r join r.tags tag where tag = 'world'").singleResult();
-      message.targets = Set.of(world);
-    } else if (visibility.equals("semiprivate")) {
-      message.targets = Set.copyOf(user.defaultTargets);
-    } else if (!visibility.equals("private")) {
-      throw new BadRequestException(String.format("invalid visibility “%s”", visibility));
-    }
+    assignPostTargets(visibility, user, message);
 
     message.persistAndFlush();
 
     return Response.seeOther(new URI("/lazychat")).build();
+  }
+
+  @POST
+  @Transactional
+  @Authenticated
+  @Path("/p/{id}/edit")
+  public Response patchMessage(
+      @PathParam("id") int id,
+      @FormParam("text") String text,
+      @FormParam("visibility") Post.Visibility visibility)
+      throws URISyntaxException {
+
+    var user = getCurrentUser();
+
+    var message = getSession().byId(LazychatMessage.class).load(id);
+
+    if (message == null) {
+      throw new NotFoundException();
+    }
+
+    if (!Objects.equals(message.owner.id, user.id)) {
+      throw new ForbiddenException();
+    }
+
+    message.content = text;
+    message.format = "markdown";
+
+    assignPostTargets(visibility, user, message);
+
+    return Response.seeOther(new URI("/lazychat")).build();
+  }
+
+  @GET
+  @Transactional
+  @Produces(APPLICATION_JSON)
+  @Path("/p/{id}")
+  public LazychatMessage getMessage(@PathParam("id") int id) {
+
+    var user = getCurrentUser();
+
+    var message = getSession().byId(LazychatMessage.class).load(id);
+
+    if (!user.canSee(message)) {
+      throw new ForbiddenException();
+    }
+
+    return message;
   }
 }

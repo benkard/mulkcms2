@@ -4,6 +4,7 @@ import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import java.util.Collection;
 import javax.annotation.CheckForNull;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,9 +23,11 @@ public class LazychatMessage extends Post {
   public String format;
 
   @OneToMany(mappedBy = "referrer", fetch = FetchType.LAZY)
+  @JsonbTransient
   public Collection<LazychatReference> references;
 
   @Transient
+  @JsonbTransient
   public String getContentHtml() {
     return new MarkdownConverter().htmlify(content);
   }
@@ -43,6 +46,7 @@ public class LazychatMessage extends Post {
 
   @CheckForNull
   @Override
+  @JsonbTransient
   public String getDescriptionHtml() {
     return getContentHtml();
   }

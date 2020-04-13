@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -57,6 +58,7 @@ public abstract class Post extends PanacheEntityBase {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner", referencedColumnName = "id")
+  @JsonbTransient
   public User owner;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -65,6 +67,7 @@ public abstract class Post extends PanacheEntityBase {
       schema = "benki",
       joinColumns = @JoinColumn(name = "message"),
       inverseJoinColumns = @JoinColumn(name = "user"))
+  @JsonbTransient
   public Set<User> visibleTo;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -73,6 +76,7 @@ public abstract class Post extends PanacheEntityBase {
       schema = "benki",
       joinColumns = @JoinColumn(name = "message"),
       inverseJoinColumns = @JoinColumn(name = "target"))
+  @JsonbTransient
   public Set<Role> targets;
 
   public abstract boolean isBookmark();
@@ -87,6 +91,18 @@ public abstract class Post extends PanacheEntityBase {
 
   @CheckForNull
   public abstract String getUri();
+
+  public Visibility getVisibility() {
+    if (targets.isEmpty()) {
+      return Visibility.PRIVATE;
+    } else if (targets.contains(Role.getWorld())) {
+      return Visibility.PUBLIC;
+    } else {
+      // FIXME: There should really be a check whether targets.equals(owner.defaultTargets) here.
+      // Otherwise the actual visibility is DISCRETIONARY.
+      return Visibility.SEMIPRIVATE;
+    }
+  }
 
   protected static <T extends Post> CriteriaQuery<T> queryViewable(
       Class<T> entityClass,
@@ -235,5 +251,29 @@ public abstract class Post extends PanacheEntityBase {
     }
 
     return new PostPage<T>(prevCursor, cursor, nextCursor, forwardResults);
+  }
+
+  public enum Visibility {
+    PUBLIC,
+    SEMIPRIVATE,
+    DISCRETIONARY,
+    PRIVATE,
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Post)) {
+      return false;
+    }
+    Post post = (Post) o;
+    return Objects.equals(id, post.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

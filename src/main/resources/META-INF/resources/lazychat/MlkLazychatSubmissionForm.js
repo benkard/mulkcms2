@@ -8,18 +8,18 @@ template.innerHTML = `
   <link rel="stylesheet" type="text/css" href="/cms2/base.css" />
   <link rel="stylesheet" type="text/css" href="/lazychat/MlkLazychatSubmissionForm.css" />
 
-  <form class="pure-form" method="post" action="/lazychat">
+  <form id="main-form" class="pure-form" method="post" action="/lazychat">
     <fieldset>
-      <legend>New Message</legend>
+      <legend>Edit Message</legend>
 
       <label for="text-input">Text:</label>
       <textarea name="text" id="text-input" placeholder="Text"></textarea>
 
       <label for="visibility-input">Visibility:</label>
       <select id="visibility-input" name="visibility" required>
-        <option value="public">Public</option>
-        <option value="semiprivate" selected>Semiprivate</option>
-        <option value="private">Private</option>
+        <option value="PUBLIC">Public</option>
+        <option value="SEMIPRIVATE" selected>Semiprivate</option>
+        <option value="PRIVATE">Private</option>
       </select>
 
       <div class="controls">
@@ -31,6 +31,8 @@ template.innerHTML = `
 export class MlkLazychatSubmissionForm extends HTMLElement {
   /*::
   textInput: HTMLTextAreaElement;
+  visibilityInput: HTMLInputElement;
+  loaded: boolean;
   */
 
   constructor() {
@@ -41,20 +43,57 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
 
     this.textInput =
         cast(shadow.getElementById('text-input'));
+    this.visibilityInput =
+        cast(shadow.getElementById('visibility-input'));
+    this.loaded = false;
   }
 
   static get observedAttributes() {
     return [];
   }
 
-  connectedCallback () {}
+  get editedId() {
+    return this.getAttribute("edited-id");
+  }
 
-  disconnectedCallback () {}
+  get isEditor() {
+    return this.editedId !== null;
+  }
+
+  connectedCallback() {
+    if (this.isEditor) {
+      let form = this.shadowRoot.getElementById("main-form");
+      form.method = "post";
+      form.action = `/lazychat/p/${this.editedId}/edit`;
+    }
+  }
+
+  disconnectedCallback() {}
 
   attributeChangedCallback(name /*:string*/, oldValue /*:string*/, newValue /*:string*/) {}
 
   focus() {
     this.textInput.focus();
+    this.load();
+  }
+
+  async load() {
+    if (!this.editedId || this.loaded) {
+      return;
+    }
+
+    let fetchUrl = new URL(`/lazychat/p/${this.editedId}`, document.URL);
+    let r = await fetch(fetchUrl);
+
+    if (!r.ok) {
+      return;
+    }
+
+    let post = await r.json();
+    this.textInput.value = post.content;
+    this.visibilityInput.value = post.visibility;
+
+    this.loaded = true;
   }
 }
 

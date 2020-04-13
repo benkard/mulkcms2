@@ -5,6 +5,7 @@ import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.posts.Post;
+import eu.mulk.mulkcms2.benki.posts.Post.Visibility;
 import eu.mulk.mulkcms2.benki.wiki.WikiPageRevision;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
@@ -140,5 +141,10 @@ public class User extends PanacheEntityBase {
 
   public static User findByNickname(String nickname) {
     return User.find("from BenkiUser u join u.nicknames n where ?1 = n", nickname).singleResult();
+  }
+
+  public boolean canSee(Post message) {
+    // FIXME: Make this more efficient.
+    return message.getVisibility() == Visibility.PUBLIC || visiblePosts.contains(message);
   }
 }

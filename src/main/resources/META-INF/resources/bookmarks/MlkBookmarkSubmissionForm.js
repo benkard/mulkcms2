@@ -10,7 +10,7 @@ template.innerHTML = `
 
   <form class="pure-form" method="post" action="/bookmarks">
     <fieldset>
-      <legend>New Bookmark</legend>
+      <legend>Edit Bookmark</legend>
 
       <label for="uri-input">URI:</label>
       <input name="uri" id="uri-input" type="text" placeholder="URI" required />
@@ -24,9 +24,9 @@ template.innerHTML = `
 
       <label for="visibility-input">Visibility:</label>
       <select id="visibility-input" name="visibility" required>
-        <option value="public" selected>Public</option>
-        <option value="semiprivate">Semiprivate</option>
-        <option value="private">Private</option>
+        <option value="PUBLIC" selected>Public</option>
+        <option value="SEMIPRIVATE">Semiprivate</option>
+        <option value="PRIVATE">Private</option>
       </select>
 
       <div class="controls">

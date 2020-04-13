@@ -187,6 +187,15 @@ article.lazychat-message {
   min-width: calc(100% - 12em);
 }
 
+elix-expandable-section.editor-pane::part(toggle) {
+  margin: 0;
+  display: inline;
+}
+
+elix-expandable-section.editor-pane::part(header) {
+  display: inline-block;
+}
+
 .paging {
   display: flex;
   flex-direction: row;
