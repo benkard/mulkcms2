@@ -30,6 +30,7 @@ template.innerHTML = `
 
 export class MlkLazychatSubmissionForm extends HTMLElement {
   /*::
+  mainForm: HTMLFormElement;
   textInput: HTMLTextAreaElement;
   visibilityInput: HTMLInputElement;
   loaded: boolean;
@@ -41,10 +42,13 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
     let shadow = this.attachShadow({mode: "open"});
     shadow.appendChild(template.content.cloneNode(true));
 
+    this.mainForm =
+        cast(shadow.getElementById('main-form'));
     this.textInput =
         cast(shadow.getElementById('text-input'));
     this.visibilityInput =
         cast(shadow.getElementById('visibility-input'));
+
     this.loaded = false;
   }
 
@@ -52,8 +56,12 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
     return [];
   }
 
-  get editedId() {
-    return this.getAttribute("edited-id");
+  get editedId() /*:number | null*/ {
+    let attr = this.getAttribute("edited-id");
+    if (attr === undefined || attr === null) {
+      return null;
+    }
+    return parseInt(attr);
   }
 
   get isEditor() {
@@ -61,10 +69,9 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.isEditor) {
-      let form = this.shadowRoot.getElementById("main-form");
-      form.method = "post";
-      form.action = `/lazychat/p/${this.editedId}/edit`;
+    if (this.editedId !== null) {
+      this.mainForm.method = "post";
+      this.mainForm.action = `/lazychat/p/${this.editedId}/edit`;
     }
   }
 
@@ -78,7 +85,7 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
   }
 
   async load() {
-    if (!this.editedId || this.loaded) {
+    if (this.editedId === null || this.loaded) {
       return;
     }
 
