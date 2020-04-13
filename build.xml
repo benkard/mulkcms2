@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project default="package">
+
+  <property name="web-dir" location="src/main/resources/META-INF/resources"/>
+
+  <target name="yarn" depends="yarn.check" if="yarn.run">
+    <exec executable="yarn" dir="${web-dir}">
+      <arg value="install"/>
+    </exec>
+  </target>
+
+  <target name="yarn.check">
+    <condition property="yarn.run">
+      <not>
+        <available file="${web-dir}/node_modules"/>
+      </not>
+    </condition>
+  </target>
+
+  <target name="snowpack" depends="snowpack.check,yarn" if="snowpack.run">
+    <exec executable="yarn" dir="${web-dir}">
+      <arg value="run"/>
+      <arg value="snowpack"/>
+      <arg value="--optimize"/>
+    </exec>
+  </target>
+
+  <target name="snowpack.check">
+    <condition property="snowpack.run">
+      <not>
+        <available file="${web-dir}/web_modules"/>
+      </not>
+    </condition>
+  </target>
+
+  <target name="flow" depends="snowpack">
+    <exec executable="yarn" dir="${web-dir}">
+      <arg value="run"/>
+      <arg value="flow"/>
+      <arg value="--color=always"/>
+    </exec>
+  </target>
+
+  <target name="eslint" depends="snowpack">
+    <exec executable="yarn" dir="${web-dir}">
+      <arg value="run"/>
+      <arg value="eslint"/>
+      <arg value="cms2"/>
+      <arg value="bookmarks"/>
+      <arg value="--color"/>
+    </exec>
+  </target>
+
+  <target name="web.resources" depends="snowpack" unless="skip-web"/>
+  <target name="web.check" unless="skip-web" depends="web.resources,flow,eslint"/>
+  <target name="web" unless="skip-web" depends="web.resources,web.check"/>
+
+  <target name="package">
+    <exec executable="./mvnw">
+      <arg value="package"/>
+    </exec>
+  </target>
+
+  <target name="clean">
+    <exec executable="./mvnw">
+      <arg value="clean"/>
+    </exec>
+    <delete dir="${web-dir}/node_modules"/>
+    <delete dir="${web-dir}/web_modules"/>
+  </target>
+
+</project>
