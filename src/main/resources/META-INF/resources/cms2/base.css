@@ -174,6 +174,7 @@ article.bookmark {
   font-size: smaller;
   margin: 0;
   padding: 0;
+  flex: auto;
 }
 
 article.lazychat-message {
@@ -181,6 +182,10 @@ article.lazychat-message {
   border: 1px solid #a0c0c0;
   padding: 0.3em;
   background: #f0f8f0;
+}
+
+article.lazychat-message > header {
+  display: flex
 }
 
 #bookmark-submission textarea {
@@ -194,6 +199,14 @@ elix-expandable-section.editor-pane::part(toggle) {
 
 elix-expandable-section.editor-pane::part(header) {
   display: inline-block;
+}
+
+.lazychat-edit-button {
+  font-size: small;
+}
+
+.lazychat-message-controls {
+  flex: initial;
 }
 
 .paging {

@@ -17,6 +17,8 @@
 {#head}
   <link href="{feedUri}" rel="alternate" type="application/atom+xml" />
 
+  <script type="module" src="/web_modules/elix/define/Button.js"></script>
+  <script type="module" src="/web_modules/elix/define/ExpandablePanel.js"></script>
   <script type="module" src="/web_modules/elix/define/ExpandableSection.js"></script>
   <script type="module" src="/bookmarks/MlkBookmarkSubmissionForm.js"></script>
   <script type="module" src="/lazychat/MlkLazychatSubmissionForm.js"></script>
@@ -69,23 +71,28 @@
       {#else}
         <article class="lazychat-message">
           <header>
-            <div class="lazychat-message-info" style="display: inline-block">
+            <div class="lazychat-message-info">
               <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
               <span class="lazychat-message-owner">{owner.firstName} {owner.lastName}</span>
             </div>
 
-            {#if showLazychatForm}
-              <elix-expandable-section class="lazychat-editor-pane editor-pane">
-                <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>
-              </elix-expandable-section>
-            {/if}
+            <div class="lazychat-message-controls">
+              {#if showLazychatForm}
+                <button class="pure-button lazychat-edit-button">Edit</button>
+              {/if}
+            </div>
           </header>
+
+          <section class="lazychat-editor">
+            {#if showLazychatForm}
+              <elix-expandable-panel class="lazychat-editor-pane editor-pane">
+                <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>
+              </elix-expandable-panel>
+            {/if}
+          </section>
 
           <section class="lazychat-message-content">
             {contentHtml.raw}
-          </section>
-
-          <section class="lazychat-editor">
           </section>
         </article>
       {/if}

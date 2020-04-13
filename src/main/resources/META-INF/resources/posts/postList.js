@@ -11,9 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
     lazychatSubmissionPane.addEventListener('opened',() => lazychatSubmissionForm.focus());
   }
 
-  let lazychatEditorPanes = document.getElementsByClassName('lazychat-editor-pane');
-  for (let pane of lazychatEditorPanes) {
-    let form = pane.getElementsByTagName('mlk-lazychat-submission-form')[0];
-    pane.addEventListener('opened', () => form.focus());
+  let lazychatMessages = document.getElementsByClassName('lazychat-message');
+  for (let message of lazychatMessages) {
+    let editorPane = message.getElementsByClassName('lazychat-editor-pane')[0];
+    if (editorPane) {
+      let form = message.getElementsByTagName('mlk-lazychat-submission-form')[0];
+      let editButton = message.getElementsByClassName('lazychat-edit-button')[0];
+      editButton.addEventListener('click', () => {
+        editorPane.toggle();
+        form.focus();
+      });
+    }
   }
 });
