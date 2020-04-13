@@ -62,6 +62,24 @@
     </exec>
   </target>
 
+  <target name="deploy">
+    <exec executable="./mvnw">
+      <arg value="docker:build"/>
+      <arg value="docker:push"/>
+    </exec>
+    <exec executable="kubectl">
+      <arg value="delete"/>
+      <arg value="pods"/>
+      <arg value="-lapp=mulkcms2"/>
+    </exec>
+    <exec executable="kubectl">
+      <arg value="get"/>
+      <arg value="pods"/>
+      <arg value="-lapp=mulkcms2"/>
+      <arg value="-w"/>
+    </exec>
+  </target>
+
   <target name="clean">
     <exec executable="./mvnw">
       <arg value="clean"/>
