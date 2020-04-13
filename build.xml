@@ -54,15 +54,15 @@
 
   <target name="web.resources" depends="snowpack" unless="skip-web"/>
   <target name="web.check" unless="skip-web" depends="web.resources,flow,eslint"/>
-  <target name="web" unless="skip-web" depends="web.resources,web.check"/>
+  <target name="web" unless="skip-web" depends="web.resources,web.check" description="Generate web resources"/>
 
-  <target name="package">
+  <target name="package" description="Create executable JAR">
     <exec executable="./mvnw">
       <arg value="package"/>
     </exec>
   </target>
 
-  <target name="deploy">
+  <target name="deploy" description="Deploy JAR to Kubernetes">
     <exec executable="./mvnw">
       <arg value="docker:build"/>
       <arg value="docker:push"/>
