@@ -13,6 +13,8 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
 
+    <scala.version>2.13.3</scala.version>
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -21,6 +23,7 @@
     <quarkus.version>1.7.0.Final</quarkus.version>
     <resources-plugin.version>3.1.0</resources-plugin.version>
     <spotless-plugin.version>2.0.1</spotless-plugin.version>
+    <scala-plugin.version>4.4.0</scala-plugin.version>
 
     <!-- <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id> -->
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -35,6 +38,7 @@
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.6.0</jna.version>
     <jsoup.version>1.13.1</jsoup.version>
+    <kotlin-annotations.version>1.4.0</kotlin-annotations.version>
     <liquibase.version>3.9.0</liquibase.version>
     <postgresql.version>42.2.14</postgresql.version>
     <rome.version>1.15.0</rome.version>
@@ -122,8 +126,23 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-reflect</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-agroal</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-scala</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -366,6 +385,77 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>${scala-plugin.version}</version>
+
+        <executions>
+          <execution>
+            <id>scala-compile-first</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>add-source</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>scala-test-compile</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>add-source</goal>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+
+        <configuration>
+          <scalaVersion>${scala.version}</scalaVersion>
+          <localInstall>false</localInstall>
+          <!--<recompileMode>incremental</recompileMode>-->
+          <args>
+            <arg>-Xsource:3</arg>
+            <!--
+            <arg>-deprecation</arg>
+            <arg>-feature</arg>
+            <arg>-explaintypes</arg>
+            <arg>-target:jvm-1.8</arg>
+            <arg>-Ypartial-unification</arg>
+            -->
+          </args>
+
+          <javacArgs>
+            <javacArg>-Xlint:deprecation</javacArg>
+          </javacArgs>
+
+          <additionalDependencies>
+
+            <!-- Hibernate -->
+            <dependency>
+              <groupId>org.hibernate</groupId>
+              <artifactId>hibernate-jpamodelgen</artifactId>
+              <version>${hibernate.version}</version>
+            </dependency>
+
+            <!-- Quarkus -->
+            <dependency>
+              <groupId>io.quarkus</groupId>
+              <artifactId>quarkus-panache-common</artifactId>
+              <version>${quarkus.version}</version>
+            </dependency>
+
+            <!-- Annotations -->
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-annotations-jvm</artifactId>
+              <version>${kotlin-annotations.version}</version>
+            </dependency>
+
+          </additionalDependencies>
+        </configuration>
+
       </plugin>
 
     </plugins>
