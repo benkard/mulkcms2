@@ -197,6 +197,10 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-jwt</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-jib</artifactId>
+    </dependency>
 
     <!-- JNA -->
     <dependency>
@@ -345,47 +349,6 @@
             </googleJavaFormat>
           </java>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>${docker-plugin.version}</version>
-
-        <configuration>
-          <images>
-            <image>
-              <name>docker.benkard.de/mulk/mulkcms2</name>
-              <alias>master</alias>
-              <build>
-                <contextDir>${project.basedir}</contextDir>
-                <dockerFile>${project.basedir}/src/main/docker/Dockerfile.jvm</dockerFile>
-                <tags>
-                  <tag>latest</tag>
-                  <tag>${project.version}</tag>
-                </tags>
-              </build>
-            </image>
-          </images>
-        </configuration>
-
-        <executions>
-          <execution>
-            <id>build</id>
-            <phase>install</phase>
-            <goals>
-              <goal>build</goal>
-            </goals>
-          </execution>
-
-          <execution>
-            <id>deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>push</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
