@@ -192,6 +192,10 @@ article.lazychat-message > header {
   display: flex
 }
 
+a.post-link {
+  text-decoration: none;
+}
+
 #bookmark-submission textarea {
   min-width: calc(100% - 12em);
 }

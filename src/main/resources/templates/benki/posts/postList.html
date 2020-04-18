@@ -59,8 +59,10 @@
           <header>
             <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
             <div class="bookmark-info">
-              <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
-              <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
+              <a class="post-link" href="/posts/{post.id}">
+                <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
+                <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
+              </a>
             </div>
           </header>
 
@@ -72,8 +74,10 @@
         <article class="lazychat-message">
           <header>
             <div class="lazychat-message-info">
-              <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
-              <span class="lazychat-message-owner">{owner.firstName} {owner.lastName}</span>
+              <a class="post-link" href="/posts/{post.id}">
+                <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
+                <span class="lazychat-message-owner">{owner.firstName} {owner.lastName}</span>
+              </a>
             </div>
 
             <div class="lazychat-message-controls">
