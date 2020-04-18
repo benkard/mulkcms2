@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Post extends PanacheEntityBase {
 
-  private static Logger log = Logger.getLogger(Post.class);
+  private static final Logger log = Logger.getLogger(Post.class);
 
   @Id
   @SequenceGenerator(
@@ -171,10 +171,10 @@ public abstract class Post extends PanacheEntityBase {
   }
 
   public static class PostPage<T extends Post> {
-    public @CheckForNull Integer prevCursor;
-    public @CheckForNull Integer cursor;
-    public @CheckForNull Integer nextCursor;
-    public List<T> posts;
+    public @CheckForNull final Integer prevCursor;
+    public @CheckForNull final Integer cursor;
+    public @CheckForNull final Integer nextCursor;
+    public final List<T> posts;
 
     private PostPage(
         @CheckForNull Integer c0,
@@ -259,7 +259,7 @@ public abstract class Post extends PanacheEntityBase {
       }
     }
 
-    return new PostPage<T>(prevCursor, cursor, nextCursor, forwardResults);
+    return new PostPage<>(prevCursor, cursor, nextCursor, forwardResults);
   }
 
   public enum Visibility {

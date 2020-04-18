@@ -43,11 +43,7 @@ public class PostTargetPK implements Serializable {
     if (message != that.message) {
       return false;
     }
-    if (targetId != that.targetId) {
-      return false;
-    }
-
-    return true;
+    return targetId == that.targetId;
   }
 
   @Override

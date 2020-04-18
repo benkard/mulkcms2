@@ -95,10 +95,10 @@ public class WikiPageRevision extends PanacheEntityBase {
     return soup;
   }
 
-  private static Pattern WIKIWORD_REGEX =
+  private static final Pattern WIKIWORD_REGEX =
       Pattern.compile(
           "\\p{javaUpperCase}+\\p{javaLowerCase}+\\p{javaUpperCase}+\\p{javaLowerCase}+\\w+");
-  private static Pattern URL_REGEX =
+  private static final Pattern URL_REGEX =
       Pattern.compile("\\(?\\bhttps?://[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]");
 
   private static Document hrefify(Document soup) {

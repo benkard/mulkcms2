@@ -31,6 +31,7 @@
     <basic-annotations.version>0.2.0</basic-annotations.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
     <flexmark.version>0.61.10</flexmark.version>
+    <google.java.format.version>1.7</google.java.format.version>
     <hibernate.version>5.4.14.Final</hibernate.version>
     <hibernate-types.version>2.9.8</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>

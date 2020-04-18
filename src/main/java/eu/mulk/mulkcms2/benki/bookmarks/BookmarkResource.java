@@ -1,7 +1,10 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
+import static javax.ws.rs.core.MediaType.WILDCARD;
 
 import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.benki.posts.PostFilter;
@@ -22,6 +25,7 @@ import javax.json.JsonObject;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -45,6 +49,8 @@ public class BookmarkResource extends PostResource {
   @POST
   @Transactional
   @Authenticated
+  @Produces(WILDCARD)
+  @Consumes({APPLICATION_FORM_URLENCODED, MULTIPART_FORM_DATA})
   public Response postBookmark(
       @FormParam("uri") @NotNull URI uri,
       @FormParam("title") @NotEmpty String title,

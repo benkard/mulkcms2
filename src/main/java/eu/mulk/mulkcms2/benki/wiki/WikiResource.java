@@ -39,14 +39,14 @@ import org.jsoup.safety.Whitelist;
 @Path("/wiki")
 public class WikiResource {
 
-  private static Logger log = Logger.getLogger(WikiResource.class);
+  private static final Logger log = Logger.getLogger(WikiResource.class);
 
-  private static DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+  private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-  private static DateTimeFormatter humanDateFormatter =
+  private static final DateTimeFormatter humanDateFormatter =
       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
 
-  private static JsonProvider jsonProvider = JsonProvider.provider();
+  private static final JsonProvider jsonProvider = JsonProvider.provider();
 
   @ResourcePath("benki/wiki/wikiPage.html")
   @Inject

@@ -28,6 +28,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
@@ -169,6 +170,7 @@ public abstract class PostResource {
         Date.from(
             posts.stream()
                 .map(x -> x.date)
+                .filter(Objects::nonNull)
                 .max(Comparator.comparing(x -> x))
                 .orElse(OffsetDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC))
                 .toInstant()));
@@ -192,8 +194,10 @@ public abstract class PostResource {
                   var entry = new Entry();
 
                   entry.setId(String.format("tag:%s,2012:/marx/%d", tagBase, post.id));
-                  entry.setPublished(Date.from(post.date.toInstant()));
-                  entry.setUpdated(Date.from(post.date.toInstant()));
+                  if (post.date != null) {
+                    entry.setPublished(Date.from(post.date.toInstant()));
+                    entry.setUpdated(Date.from(post.date.toInstant()));
+                  }
 
                   var author = new SyndPersonImpl();
                   author.setName(post.owner.getFirstAndLastName());

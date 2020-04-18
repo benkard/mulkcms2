@@ -2,6 +2,7 @@ package eu.mulk.mulkcms2.benki.users;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
@@ -41,14 +42,10 @@ public class RsaKeyPK implements Serializable {
 
     RsaKeyPK rsaKeyPK = (RsaKeyPK) o;
 
-    if (modulus != null ? !modulus.equals(rsaKeyPK.modulus) : rsaKeyPK.modulus != null) {
+    if (!Objects.equals(modulus, rsaKeyPK.modulus)) {
       return false;
     }
-    if (exponent != null ? !exponent.equals(rsaKeyPK.exponent) : rsaKeyPK.exponent != null) {
-      return false;
-    }
-
-    return true;
+    return Objects.equals(exponent, rsaKeyPK.exponent);
   }
 
   @Override

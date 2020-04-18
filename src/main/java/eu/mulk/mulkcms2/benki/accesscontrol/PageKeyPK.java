@@ -2,6 +2,7 @@ package eu.mulk.mulkcms2.benki.accesscontrol;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
@@ -41,14 +42,10 @@ public class PageKeyPK implements Serializable {
 
     PageKeyPK pageKeyPK = (PageKeyPK) o;
 
-    if (page != null ? !page.equals(pageKeyPK.page) : pageKeyPK.page != null) {
+    if (!Objects.equals(page, pageKeyPK.page)) {
       return false;
     }
-    if (key != null ? !key.equals(pageKeyPK.key) : pageKeyPK.key != null) {
-      return false;
-    }
-
-    return true;
+    return Objects.equals(key, pageKeyPK.key);
   }
 
   @Override

@@ -43,11 +43,7 @@ public class LazychatReferencePK implements Serializable {
     if (referrerId != that.referrerId) {
       return false;
     }
-    if (refereeId != that.refereeId) {
-      return false;
-    }
-
-    return true;
+    return refereeId == that.refereeId;
   }
 
   @Override

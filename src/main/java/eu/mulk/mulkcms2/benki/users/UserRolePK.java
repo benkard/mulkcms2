@@ -43,11 +43,7 @@ public class UserRolePK implements Serializable {
     if (userId != that.userId) {
       return false;
     }
-    if (roleId != that.roleId) {
-      return false;
-    }
-
-    return true;
+    return roleId == that.roleId;
   }
 
   @Override
