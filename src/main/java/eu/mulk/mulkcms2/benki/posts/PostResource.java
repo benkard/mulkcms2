@@ -283,7 +283,7 @@ public abstract class PostResource {
   }
 
   @CheckForNull
-  protected User getCurrentUser() {
+  protected final User getCurrentUser() {
     if (identity.isAnonymous()) {
       return null;
     }
@@ -292,13 +292,8 @@ public abstract class PostResource {
     return User.findByNickname(userName);
   }
 
-  @GET
-  @Produces(APPLICATION_JSON)
-  @Path("/p/{id}")
-  public Post getPost(@PathParam("id") int id) {
-
+  protected final Post getPostIfVisible(int id) {
     var user = getCurrentUser();
-
     var message = getSession().byId(Post.class).load(id);
 
     if (!message.isVisibleTo(user)) {
@@ -306,5 +301,31 @@ public abstract class PostResource {
     }
 
     return message;
+  }
+
+  @GET
+  @Produces(APPLICATION_JSON)
+  @Path("{id}")
+  public Post getPostJson(@PathParam("id") int id) {
+    return getPostIfVisible(id);
+  }
+
+  @GET
+  @Produces(TEXT_HTML)
+  @Path("{id}")
+  public TemplateInstance getPostHtml(@PathParam("id") int id) {
+    var post = getPostIfVisible(id);
+
+    return postList
+        .data("posts", List.of(post))
+        .data("feedUri", "/bookmarks/feed")
+        .data("pageTitle", pageTitle)
+        .data("showBookmarkForm", false)
+        .data("showLazychatForm", false)
+        .data("hasPreviousPage", false)
+        .data("hasNextPage", false)
+        .data("previousCursor", null)
+        .data("nextCursor", null)
+        .data("pageSize", null);
   }
 }

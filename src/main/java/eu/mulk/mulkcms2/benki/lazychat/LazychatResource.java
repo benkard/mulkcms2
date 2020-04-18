@@ -49,7 +49,7 @@ public class LazychatResource extends PostResource {
   @POST
   @Transactional
   @Authenticated
-  @Path("/p/{id}/edit")
+  @Path("{id}/edit")
   public Response patchMessage(
       @PathParam("id") int id,
       @FormParam("text") String text,

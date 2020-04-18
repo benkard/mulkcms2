@@ -71,7 +71,7 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
   connectedCallback() {
     if (this.editedId !== null) {
       this.mainForm.method = "post";
-      this.mainForm.action = `/lazychat/p/${this.editedId}/edit`;
+      this.mainForm.action = `/lazychat/${this.editedId}/edit`;
     }
   }
 
@@ -89,7 +89,7 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
       return;
     }
 
-    let fetchUrl = new URL(`/lazychat/p/${this.editedId}`, document.URL);
+    let fetchUrl = new URL(`/posts/${this.editedId}`, document.URL);
     let r = await fetch(fetchUrl);
 
     if (!r.ok) {
