@@ -260,7 +260,7 @@ public abstract class PostResource {
     }
   }
 
-  protected Session getSession() {
+  protected final Session getSession() {
     return entityManager.unwrap(Session.class);
   }
 
