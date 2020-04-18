@@ -126,12 +126,14 @@ public abstract class Post extends PanacheEntityBase {
 
       var root = query.from(User.class);
       conditions.add(cb.equal(root, user));
-      if (entityClass.isAssignableFrom(Bookmark.class)) {
+      if (entityClass.isAssignableFrom(Post.class)) {
+        post = (From<?, T>) root.join(User_.visiblePosts);
+      } else if (entityClass.isAssignableFrom(Bookmark.class)) {
         post = (From<?, T>) root.join(User_.visibleBookmarks);
       } else if (entityClass.isAssignableFrom(LazychatMessage.class)) {
         post = (From<?, T>) root.join(User_.visibleLazychatMessages);
       } else {
-        post = (From<?, T>) root.join(User_.visiblePosts);
+        throw new IllegalArgumentException();
       }
     }
 
