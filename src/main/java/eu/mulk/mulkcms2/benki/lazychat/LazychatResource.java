@@ -1,7 +1,5 @@
 package eu.mulk.mulkcms2.benki.lazychat;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
 import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.benki.posts.PostFilter;
 import eu.mulk.mulkcms2.benki.posts.PostResource;
@@ -13,12 +11,10 @@ import java.util.Objects;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 @Path("/lazychat")
@@ -78,22 +74,5 @@ public class LazychatResource extends PostResource {
     assignPostTargets(visibility, user, message);
 
     return Response.seeOther(new URI("/lazychat")).build();
-  }
-
-  @GET
-  @Transactional
-  @Produces(APPLICATION_JSON)
-  @Path("/p/{id}")
-  public LazychatMessage getMessage(@PathParam("id") int id) {
-
-    var user = getCurrentUser();
-
-    var message = getSession().byId(LazychatMessage.class).load(id);
-
-    if (!user.canSee(message)) {
-      throw new ForbiddenException();
-    }
-
-    return message;
   }
 }

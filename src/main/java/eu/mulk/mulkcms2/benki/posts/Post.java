@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -161,6 +162,11 @@ public abstract class Post extends PanacheEntityBase {
     query.where(conditions.toArray(new Predicate[0]));
 
     return query;
+  }
+
+  public final boolean isVisibleTo(@Nullable User user) {
+    // FIXME: Make this more efficient.
+    return getVisibility() == Visibility.PUBLIC || (user != null && visibleTo.contains(user));
   }
 
   public static class PostPage<T extends Post> {

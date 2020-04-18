@@ -5,10 +5,10 @@ import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.posts.Post;
-import eu.mulk.mulkcms2.benki.posts.Post.Visibility;
 import eu.mulk.mulkcms2.benki.wiki.WikiPageRevision;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -143,8 +143,24 @@ public class User extends PanacheEntityBase {
     return User.find("from BenkiUser u join u.nicknames n where ?1 = n", nickname).singleResult();
   }
 
-  public boolean canSee(Post message) {
-    // FIXME: Make this more efficient.
-    return message.getVisibility() == Visibility.PUBLIC || visiblePosts.contains(message);
+  public final boolean canSee(Post message) {
+    return message.isVisibleTo(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof User)) {
+      return false;
+    }
+    User user = (User) o;
+    return Objects.equals(id, user.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

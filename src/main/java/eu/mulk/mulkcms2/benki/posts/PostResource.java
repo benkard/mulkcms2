@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.benki.posts;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_ATOM_XML;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
 import com.rometools.rome.feed.atom.Content;
@@ -36,6 +37,7 @@ import javax.json.spi.JsonProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -280,8 +282,29 @@ public abstract class PostResource {
     }
   }
 
+  @CheckForNull
   protected User getCurrentUser() {
+    if (identity.isAnonymous()) {
+      return null;
+    }
+
     var userName = identity.getPrincipal().getName();
     return User.findByNickname(userName);
+  }
+
+  @GET
+  @Produces(APPLICATION_JSON)
+  @Path("/p/{id}")
+  public Post getPost(@PathParam("id") int id) {
+
+    var user = getCurrentUser();
+
+    var message = getSession().byId(Post.class).load(id);
+
+    if (!message.isVisibleTo(user)) {
+      throw new ForbiddenException();
+    }
+
+    return message;
   }
 }
