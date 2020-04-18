@@ -229,12 +229,20 @@ public abstract class PostResource {
   }
 
   @TemplateExtension
-  static String humanDateTime(TemporalAccessor x) {
+  @CheckForNull
+  static String humanDateTime(@CheckForNull TemporalAccessor x) {
+    if (x == null) {
+      return null;
+    }
     return humanDateFormatter.format(x);
   }
 
   @TemplateExtension
-  static String htmlDateTime(TemporalAccessor x) {
+  @CheckForNull
+  static String htmlDateTime(@CheckForNull TemporalAccessor x) {
+    if (x == null) {
+      return null;
+    }
     return htmlDateFormatter.format(x);
   }
 
@@ -293,7 +301,7 @@ public abstract class PostResource {
   }
 
   protected final Post getPostIfVisible(int id) {
-    var user = getCurrentUser();
+    @CheckForNull var user = getCurrentUser();
     var message = getSession().byId(Post.class).load(id);
 
     if (!message.isVisibleTo(user)) {

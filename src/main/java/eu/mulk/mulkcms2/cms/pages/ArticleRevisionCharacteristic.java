@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.cms.pages;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,5 +34,6 @@ public class ArticleRevisionCharacteristic extends PanacheEntityBase {
   public ArticleRevision articleRevision;
 
   @Column(name = "value", nullable = true, length = -1)
+  @CheckForNull
   public String value;
 }

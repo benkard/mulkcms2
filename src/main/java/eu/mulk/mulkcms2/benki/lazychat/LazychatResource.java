@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.NotFoundException;
@@ -28,10 +29,11 @@ public class LazychatResource extends PostResource {
   @Transactional
   @Authenticated
   public Response postMessage(
-      @FormParam("text") String text, @FormParam("visibility") Post.Visibility visibility)
+      @FormParam("text") @NotNull String text,
+      @FormParam("visibility") @NotNull Post.Visibility visibility)
       throws URISyntaxException {
 
-    var user = getCurrentUser();
+    var user = Objects.requireNonNull(getCurrentUser());
 
     var message = new LazychatMessage();
     message.content = text;
@@ -56,7 +58,7 @@ public class LazychatResource extends PostResource {
       @FormParam("visibility") Post.Visibility visibility)
       throws URISyntaxException {
 
-    var user = getCurrentUser();
+    var user = Objects.requireNonNull(getCurrentUser());
 
     var message = getSession().byId(LazychatMessage.class).load(id);
 

@@ -21,9 +21,11 @@ public class Bookmark extends Post {
   public String uri;
 
   @Column(name = "title", nullable = true, length = -1)
+  @CheckForNull
   public String title;
 
   @Column(name = "description", nullable = true, length = -1)
+  @CheckForNull
   public String description;
 
   @ElementCollection(fetch = FetchType.LAZY)
@@ -35,7 +37,11 @@ public class Bookmark extends Post {
   public Set<String> tags;
 
   @Transient
+  @CheckForNull
   public String getDescriptionHtml() {
+    if (description == null) {
+      return null;
+    }
     return new MarkdownConverter().htmlify(description);
   }
 

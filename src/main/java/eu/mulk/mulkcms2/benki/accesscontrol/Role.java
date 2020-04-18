@@ -7,6 +7,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
+import javax.annotation.CheckForNull;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -32,6 +33,7 @@ public class Role extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "name", nullable = true, length = -1)
+  @CheckForNull
   public String name;
 
   @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)

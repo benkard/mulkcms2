@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.cms.legacyjournal;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,15 +31,19 @@ public class LegacyJournalTrackback extends PanacheEntityBase {
   public String excerpt;
 
   @Column(name = "title", nullable = true, length = -1)
+  @CheckForNull
   public String title;
 
   @Column(name = "blog_name", nullable = true, length = -1)
+  @CheckForNull
   public String blogName;
 
   @Column(name = "url", nullable = true, length = -1)
+  @CheckForNull
   public String url;
 
   @Column(name = "spam_p", nullable = true)
+  @CheckForNull
   public Boolean spamP;
 
   @Column(name = "submitter_ip", nullable = false, length = -1)

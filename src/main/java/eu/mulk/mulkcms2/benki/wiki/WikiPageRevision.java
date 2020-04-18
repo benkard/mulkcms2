@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,15 +32,19 @@ public class WikiPageRevision extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "date", nullable = true)
+  @CheckForNull
   public OffsetDateTime date;
 
   @Column(name = "title", nullable = true, length = -1)
+  @CheckForNull
   public String title;
 
   @Column(name = "content", nullable = true, length = -1)
+  @CheckForNull
   public String content;
 
   @Column(name = "format", nullable = true, length = -1)
+  @CheckForNull
   public String format;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -67,7 +72,11 @@ public class WikiPageRevision extends PanacheEntityBase {
     this.author = author;
   }
 
+  @CheckForNull
   public String enrichedContent() {
+    if (content == null) {
+      return null;
+    }
     return wikilinkify(hrefify(Jsoup.parse(content))).select("body").html();
   }
 

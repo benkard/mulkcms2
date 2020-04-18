@@ -2,6 +2,7 @@ package eu.mulk.mulkcms2.cms.journal;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,6 +22,7 @@ public class Journal extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "path_prefix", nullable = true, length = -1)
+  @CheckForNull
   public String pathPrefix;
 
   @OneToMany(mappedBy = "journal", fetch = FetchType.LAZY)

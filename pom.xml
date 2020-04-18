@@ -28,6 +28,7 @@
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <quarkus.platform.version>1.4.0.CR1</quarkus.platform.version>
 
+    <basic-annotations.version>0.2.0</basic-annotations.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
     <flexmark.version>0.61.10</flexmark.version>
     <hibernate.version>5.4.14.Final</hibernate.version>
@@ -56,6 +57,14 @@
         <groupId>com.vladmihalcea</groupId>
         <artifactId>hibernate-types-52</artifactId>
         <version>${hibernate-types.version}</version>
+      </dependency>
+
+      <!-- Annotations -->
+      <dependency>
+        <groupId>pl.tlinkowski.annotation</groupId>
+        <artifactId>pl.tlinkowski.annotation.basic</artifactId>
+        <version>${basic-annotations.version}</version>
+        <scope>provided</scope>
       </dependency>
 
       <!-- Jsoup -->
@@ -213,6 +222,13 @@
     <dependency>
       <groupId>com.vladmihalcea</groupId>
       <artifactId>hibernate-types-52</artifactId>
+    </dependency>
+
+    <!-- Annotations -->
+    <dependency>
+      <groupId>pl.tlinkowski.annotation</groupId>
+      <artifactId>pl.tlinkowski.annotation.basic</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Jsoup -->

@@ -2,6 +2,7 @@ package eu.mulk.mulkcms2.cms.legacyjournal;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +31,7 @@ public class LegacyJournalEntry extends PanacheEntityBase {
   public long date;
 
   @Column(name = "last_modification", nullable = true)
+  @CheckForNull
   public Long lastModification;
 
   @Column(name = "body", nullable = false, length = -1)

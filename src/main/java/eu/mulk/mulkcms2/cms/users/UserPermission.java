@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.cms.users;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,6 +25,7 @@ public class UserPermission extends PanacheEntityBase {
   public String permission;
 
   @Column(name = "status", nullable = true)
+  @CheckForNull
   public Boolean status;
 
   @ManyToOne(fetch = FetchType.LAZY)

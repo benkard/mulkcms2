@@ -3,6 +3,7 @@ package eu.mulk.mulkcms2.cms.comments;
 import eu.mulk.mulkcms2.cms.pages.Article;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,6 +25,7 @@ public class Comment extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "global_id", nullable = true, length = -1)
+  @CheckForNull
   public String globalId;
 
   @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)

@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 public class LazychatMessage extends Post {
 
   @Column(name = "content", nullable = true, length = -1)
+  @CheckForNull
   public String content;
 
   @Column(name = "format", nullable = false, length = -1)
@@ -28,7 +29,11 @@ public class LazychatMessage extends Post {
 
   @Transient
   @JsonbTransient
+  @CheckForNull
   public String getContentHtml() {
+    if (content == null) {
+      return null;
+    }
     return new MarkdownConverter().htmlify(content);
   }
 

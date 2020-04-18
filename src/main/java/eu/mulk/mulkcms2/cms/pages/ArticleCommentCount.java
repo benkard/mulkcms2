@@ -12,10 +12,10 @@ import org.hibernate.annotations.Immutable;
 @Immutable
 public class ArticleCommentCount extends PanacheEntityBase {
 
-  @Column(name = "article", nullable = true)
+  @Column(name = "article", nullable = false)
   @Id
-  public Integer article;
+  public int articleId;
 
-  @Column(name = "comment_count", nullable = true)
-  public Long commentCount;
+  @Column(name = "comment_count", nullable = false)
+  public long commentCount;
 }

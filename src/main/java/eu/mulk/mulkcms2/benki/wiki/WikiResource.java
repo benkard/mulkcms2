@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
 import java.util.Optional;
+import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
@@ -87,8 +88,8 @@ public class WikiResource {
   @Produces(APPLICATION_JSON)
   public JsonObject updatePage(
       @PathParam("pageName") String pageName,
-      @FormParam("wiki-title") String title,
-      @FormParam("wiki-content") String content) {
+      @FormParam("wiki-title") @CheckForNull String title,
+      @FormParam("wiki-content") @CheckForNull String content) {
 
     if (title == null && content == null) {
       // No changes, nothing to do.
@@ -163,12 +164,20 @@ public class WikiResource {
   }
 
   @TemplateExtension
-  static String humanDateTime(TemporalAccessor x) {
+  @CheckForNull
+  static String humanDateTime(@CheckForNull TemporalAccessor x) {
+    if (x == null) {
+      return null;
+    }
     return humanDateFormatter.format(x);
   }
 
   @TemplateExtension
-  static String htmlDateTime(TemporalAccessor x) {
+  @CheckForNull
+  static String htmlDateTime(@CheckForNull TemporalAccessor x) {
+    if (x == null) {
+      return null;
+    }
     return htmlDateFormatter.format(x);
   }
 }

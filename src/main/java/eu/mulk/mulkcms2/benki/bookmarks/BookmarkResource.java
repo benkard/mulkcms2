@@ -14,12 +14,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -44,19 +46,19 @@ public class BookmarkResource extends PostResource {
   @Transactional
   @Authenticated
   public Response postBookmark(
-      @FormParam("uri") URI uri,
+      @FormParam("uri") @NotNull URI uri,
       @FormParam("title") @NotEmpty String title,
-      @FormParam("description") String description,
-      @FormParam("visibility") Post.Visibility visibility)
+      @FormParam("description") @CheckForNull String description,
+      @FormParam("visibility") @NotNull Post.Visibility visibility)
       throws URISyntaxException {
 
-    var user = getCurrentUser();
+    var user = Objects.requireNonNull(getCurrentUser());
 
     var bookmark = new Bookmark();
     bookmark.uri = uri.toString();
     bookmark.title = title;
     bookmark.tags = Set.of();
-    bookmark.description = description != null ? description : "";
+    bookmark.description = description;
     bookmark.owner = user;
     bookmark.date = OffsetDateTime.now();
 

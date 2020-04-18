@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.cms.pages;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,11 +15,12 @@ import org.hibernate.annotations.Immutable;
 @Immutable
 public class ArticleBranchTip extends PanacheEntityBase {
 
-  @Column(name = "article", nullable = true)
+  @Column(name = "article", nullable = false)
   @Id
-  private Integer articleId;
+  private int articleId;
 
   @Column(name = "revision", nullable = true)
   @Id
+  @CheckForNull
   private Integer revisionId;
 }

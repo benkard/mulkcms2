@@ -5,6 +5,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Set;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +29,7 @@ public class ArticleRevision extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "date", nullable = true)
+  @CheckForNull
   public Timestamp date;
 
   @Column(name = "title", nullable = false, length = -1)
@@ -43,6 +45,7 @@ public class ArticleRevision extends PanacheEntityBase {
   public String status;
 
   @Column(name = "global_id", nullable = true, length = -1)
+  @CheckForNull
   public String globalId;
 
   @OneToMany(mappedBy = "articleRevision", fetch = FetchType.LAZY)

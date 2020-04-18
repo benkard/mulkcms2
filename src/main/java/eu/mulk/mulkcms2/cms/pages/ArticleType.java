@@ -2,6 +2,7 @@ package eu.mulk.mulkcms2.cms.pages;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,9 +22,11 @@ public class ArticleType extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "name", nullable = true, length = -1)
+  @CheckForNull
   public String name;
 
   @Column(name = "page_template", nullable = true, length = -1)
+  @CheckForNull
   public String pageTemplate;
 
   @OneToMany(mappedBy = "type", fetch = FetchType.LAZY)

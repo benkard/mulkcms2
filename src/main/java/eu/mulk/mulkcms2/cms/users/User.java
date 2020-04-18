@@ -4,6 +4,7 @@ import eu.mulk.mulkcms2.cms.comments.CommentRevision;
 import eu.mulk.mulkcms2.cms.pages.ArticleRevision;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,15 +24,18 @@ public class User extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "name", nullable = true, length = -1)
+  @CheckForNull
   public String name;
 
   @Column(name = "status", nullable = false, length = -1)
   public String status;
 
   @Column(name = "email", nullable = true, length = -1)
+  @CheckForNull
   public String email;
 
   @Column(name = "website", nullable = true, length = -1)
+  @CheckForNull
   public String website;
 
   @OneToMany(mappedBy = "authors", fetch = FetchType.LAZY)

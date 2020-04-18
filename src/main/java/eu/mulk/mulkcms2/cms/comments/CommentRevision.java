@@ -5,6 +5,7 @@ import com.vladmihalcea.hibernate.type.basic.PostgreSQLInetType;
 import eu.mulk.mulkcms2.cms.users.User;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.sql.Timestamp;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +28,7 @@ public class CommentRevision extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "date", nullable = true)
+  @CheckForNull
   public Timestamp date;
 
   @Column(name = "content", nullable = false, length = -1)
@@ -39,12 +41,15 @@ public class CommentRevision extends PanacheEntityBase {
   public String status;
 
   @Column(name = "article_revision", nullable = true)
+  @CheckForNull
   public Integer articleRevision;
 
   @Column(name = "submitter_ip", nullable = true, columnDefinition = "inet")
+  @CheckForNull
   public Inet submitterIp;
 
   @Column(name = "submitter_user_agent", nullable = true, length = -1)
+  @CheckForNull
   public String submitterUserAgent;
 
   @ManyToOne(fetch = FetchType.LAZY)

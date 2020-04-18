@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.cms.users;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,6 +25,7 @@ public class UserSetting extends PanacheEntityBase {
   public String setting;
 
   @Column(name = "value", nullable = true, length = -1)
+  @CheckForNull
   public String value;
 
   @ManyToOne(fetch = FetchType.LAZY)

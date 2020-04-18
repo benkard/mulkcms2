@@ -55,6 +55,7 @@ public abstract class Post extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "date", nullable = true)
+  @CheckForNull
   public OffsetDateTime date;
 
   @ManyToOne(fetch = FetchType.LAZY)

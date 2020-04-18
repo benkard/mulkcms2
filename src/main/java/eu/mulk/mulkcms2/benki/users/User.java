@@ -10,6 +10,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
+import javax.annotation.CheckForNull;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -36,21 +37,27 @@ public class User extends PanacheEntityBase {
   public Integer id;
 
   @Column(name = "first_name", nullable = true, length = -1)
+  @CheckForNull
   public String firstName;
 
   @Column(name = "middle_names", nullable = true, length = -1)
+  @CheckForNull
   public String middleNames;
 
   @Column(name = "last_name", nullable = true, length = -1)
+  @CheckForNull
   public String lastName;
 
   @Column(name = "email", nullable = true, length = -1)
+  @CheckForNull
   public String email;
 
   @Column(name = "website", nullable = true, length = -1)
+  @CheckForNull
   public String website;
 
   @Column(name = "status", nullable = true, length = -1)
+  @CheckForNull
   public String status;
 
   @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
