@@ -98,7 +98,7 @@ public abstract class PostResource {
 
     return postList
         .data("posts", q.posts)
-        .data("feedUri", "/bookmarks/feed")
+        .data("feedUri", "/posts/feed")
         .data("pageTitle", pageTitle)
         .data("showBookmarkForm", showBookmarkForm())
         .data("showLazychatForm", showLazychatForm())
@@ -125,7 +125,7 @@ public abstract class PostResource {
 
     return postList
         .data("posts", q.posts)
-        .data("feedUri", String.format("/bookmarks/~%s/feed", ownerName))
+        .data("feedUri", String.format("/posts/~%s/feed", ownerName))
         .data("pageTitle", pageTitle)
         .data("showBookmarkForm", showBookmarkForm())
         .data("showLazychatForm", showLazychatForm())
@@ -179,7 +179,7 @@ public abstract class PostResource {
     feed.setOtherLinks(List.of(selfLink));
 
     var htmlAltLink = new Link();
-    var htmlAltPath = owner == null ? "/bookmarks" : String.format("~%s/bookmarks", ownerName);
+    var htmlAltPath = owner == null ? "/posts" : String.format("~%s/posts", ownerName);
     htmlAltLink.setHref(uri.resolve(URI.create(htmlAltPath)).toString());
     htmlAltLink.setRel("alternate");
     htmlAltLink.setType("text/html");
@@ -318,7 +318,6 @@ public abstract class PostResource {
 
     return postList
         .data("posts", List.of(post))
-        .data("feedUri", "/bookmarks/feed")
         .data("pageTitle", pageTitle)
         .data("showBookmarkForm", false)
         .data("showLazychatForm", false)
