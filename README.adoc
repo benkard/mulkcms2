@@ -1,0 +1,59 @@
+= MulkCMS 2
+Matthias Andreas Benkard
+// Meta
+:experimental:
+:data-uri:
+:sectnums:
+:toc:
+:stem:
+:toclevels: 2
+:description: MulkCMS Manual
+:keywords: mulk
+// Settings
+:icons: font
+:source-highlighter: pygments
+
+== Resources
+
+|===
+|Resource |Links
+
+|Public Deployment
+|https://matthias.benkard.de/[mt.benkard.de]
+
+|Bug Tracker
+|MantisBT
+
+|Work Board
+|Kanboard: https://kanboard.benkard.de/board/4[private],
+ https://kanboard.benkard.de/public/board/4cb836c795ae131c33613d6d6fcbcc9f0a10ab30ad7b4bb1f0e7b847d5cf[public read-only]
+
+|Docker image
+|https://docker.benkard.de/repositories/10[Portus]
+|===
+
+
+== Running
+
+To run the application with live reloading enabled:
+
+[source]
+----
+./mvnw quarkus:dev
+----
+
+== Packaging
+
+Do build JARs and a JVM-based Docker image and push the Docker image to https://docker.benkard.de/repositories/10[Portus]:
+
+[source]
+----
+./mvnw package
+----
+
+To build a native image with https://graalvm.org[GraalVM] instead:
+
+[source]
+----
+./mvnw package -Pnative
+----
