@@ -16,6 +16,7 @@ import io.quarkus.security.Authenticated;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Set;
@@ -42,7 +43,7 @@ public class BookmarkResource extends PostResource {
   @Inject
   Template newBookmark;
 
-  public BookmarkResource() {
+  public BookmarkResource() throws NoSuchAlgorithmException {
     super(PostFilter.BOOKMARKS_ONLY, "Bookmarks");
   }
 

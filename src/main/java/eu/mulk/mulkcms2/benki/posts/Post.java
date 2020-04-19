@@ -6,7 +6,6 @@ import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.users.User;
 import eu.mulk.mulkcms2.benki.users.User_;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import io.quarkus.security.identity.SecurityIdentity;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +59,7 @@ public abstract class Post extends PanacheEntityBase {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner", referencedColumnName = "id")
+  @CheckForNull
   @JsonbTransient
   public User owner;
 
@@ -108,7 +108,7 @@ public abstract class Post extends PanacheEntityBase {
 
   protected static <T extends Post> CriteriaQuery<T> queryViewable(
       Class<T> entityClass,
-      SecurityIdentity readerIdentity,
+      @CheckForNull User reader,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
       CriteriaBuilder cb,
@@ -118,16 +118,13 @@ public abstract class Post extends PanacheEntityBase {
     var conditions = new ArrayList<Predicate>();
 
     From<?, T> post;
-    if (readerIdentity.isAnonymous()) {
+    if (reader == null) {
       post = query.from(entityClass);
       var target = post.join(Post_.targets);
       conditions.add(cb.equal(target, Role.getWorld()));
     } else {
-      var userName = readerIdentity.getPrincipal().getName();
-      var user = User.findByNickname(userName);
-
       var root = query.from(User.class);
-      conditions.add(cb.equal(root, user));
+      conditions.add(cb.equal(root, reader));
       if (entityClass.isAssignableFrom(Post.class)) {
         post = (From<?, T>) root.join(User_.visiblePosts);
       } else if (entityClass.isAssignableFrom(Bookmark.class)) {
@@ -189,14 +186,14 @@ public abstract class Post extends PanacheEntityBase {
   }
 
   public static List<Post> findViewable(
-      PostFilter postFilter, Session session, SecurityIdentity viewer, @CheckForNull User owner) {
+      PostFilter postFilter, Session session, @CheckForNull User viewer, @CheckForNull User owner) {
     return findViewable(postFilter, session, viewer, owner, null, null).posts;
   }
 
   public static PostPage<Post> findViewable(
       PostFilter postFilter,
       Session session,
-      SecurityIdentity viewer,
+      @CheckForNull User viewer,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
       @CheckForNull Integer count) {
@@ -217,7 +214,7 @@ public abstract class Post extends PanacheEntityBase {
   protected static <T extends Post> PostPage<T> findViewable(
       Class<? extends T> entityClass,
       Session session,
-      SecurityIdentity viewer,
+      @CheckForNull User viewer,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
       @CheckForNull Integer count) {

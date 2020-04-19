@@ -26,6 +26,6 @@ public class PageKey extends PanacheEntityBase {
   public BigInteger key;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
+  @JoinColumn(name = "\"user\"", referencedColumnName = "id", nullable = false)
   public User user;
 }

@@ -11,6 +11,7 @@ import com.rometools.rome.feed.atom.Link;
 import com.rometools.rome.feed.synd.SyndPersonImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
+import eu.mulk.mulkcms2.benki.accesscontrol.PageKey;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.qute.Template;
@@ -18,7 +19,10 @@ import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.identity.SecurityIdentity;
+import java.math.BigInteger;
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -29,6 +33,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
@@ -37,6 +42,7 @@ import javax.inject.Inject;
 import javax.json.spi.JsonProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
@@ -59,6 +65,8 @@ public abstract class PostResource {
   private static final DateTimeFormatter humanDateFormatter =
       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
 
+  private static final int pageKeyBytes = 32;
+
   protected static final JsonProvider jsonProvider = JsonProvider.provider();
 
   @ConfigProperty(name = "mulkcms.posts.default-max-results")
@@ -78,12 +86,15 @@ public abstract class PostResource {
 
   @PersistenceContext protected EntityManager entityManager;
 
+  private final SecureRandom secureRandom;
+
   private final PostFilter postFilter;
   private final String pageTitle;
 
-  public PostResource(PostFilter postFilter, String pageTitle) {
+  public PostResource(PostFilter postFilter, String pageTitle) throws NoSuchAlgorithmException {
     this.postFilter = postFilter;
     this.pageTitle = pageTitle;
+    secureRandom = SecureRandom.getInstanceStrong();
   }
 
   @GET
@@ -94,12 +105,19 @@ public abstract class PostResource {
 
     maxResults = maxResults == null ? defaultMaxResults : maxResults;
 
+    @CheckForNull var reader = getCurrentUser();
     var session = entityManager.unwrap(Session.class);
-    var q = Post.findViewable(postFilter, session, identity, null, cursor, maxResults);
+    var q = Post.findViewable(postFilter, session, reader, null, cursor, maxResults);
+
+    var feedUri = "/posts/feed";
+    if (reader != null) {
+      var pageKey = ensurePageKey(reader, feedUri);
+      feedUri += "?page-key=" + pageKey.key.toString(36);
+    }
 
     return postList
         .data("posts", q.posts)
-        .data("feedUri", "/posts/feed")
+        .data("feedUri", feedUri)
         .data("pageTitle", pageTitle)
         .data("showBookmarkForm", showBookmarkForm())
         .data("showLazychatForm", showLazychatForm())
@@ -120,13 +138,20 @@ public abstract class PostResource {
 
     maxResults = maxResults == null ? defaultMaxResults : maxResults;
 
+    @CheckForNull var reader = getCurrentUser();
     var owner = User.findByNickname(ownerName);
     var session = entityManager.unwrap(Session.class);
-    var q = Post.findViewable(postFilter, session, identity, owner, cursor, maxResults);
+    var q = Post.findViewable(postFilter, session, reader, owner, cursor, maxResults);
+
+    var feedUri = String.format("/posts/~%s/feed", ownerName);
+    if (reader != null) {
+      var pageKey = ensurePageKey(reader, feedUri);
+      feedUri += "?page-key=" + pageKey.key.toString(36);
+    }
 
     return postList
         .data("posts", q.posts)
-        .data("feedUri", String.format("/posts/~%s/feed", ownerName))
+        .data("feedUri", feedUri)
         .data("pageTitle", pageTitle)
         .data("showBookmarkForm", showBookmarkForm())
         .data("showLazychatForm", showLazychatForm())
@@ -137,23 +162,63 @@ public abstract class PostResource {
         .data("pageSize", maxResults);
   }
 
+  @Transactional
+  protected final PageKey ensurePageKey(User reader, String pagePath) {
+    PageKey pageKey = PageKey.find("page = ?1 AND user = ?2", pagePath, reader).firstResult();
+    if (pageKey == null) {
+      pageKey = new PageKey();
+      byte[] keyBytes = new byte[pageKeyBytes];
+      secureRandom.nextBytes(keyBytes);
+      pageKey.key = new BigInteger(keyBytes);
+      pageKey.page = pagePath;
+      pageKey.user = reader;
+      pageKey.persist();
+    }
+    return pageKey;
+  }
+
   @GET
   @Path("feed")
   @Produces(APPLICATION_ATOM_XML)
-  public String getFeed() throws FeedException {
-    return makeFeed(null, null);
+  public String getFeed(@QueryParam("page-key") @CheckForNull String pageKeyBase36)
+      throws FeedException {
+    @CheckForNull var pageKey = pageKeyBase36 == null ? null : new BigInteger(pageKeyBase36, 36);
+    return makeFeed(pageKey, null, null);
   }
 
   @GET
   @Path("~{ownerName}/feed")
   @Produces(APPLICATION_ATOM_XML)
-  public String getUserFeed(@PathParam("ownerName") String ownerName) throws FeedException {
+  public String getUserFeed(
+      @QueryParam("page-key") @CheckForNull String pageKeyBase36,
+      @PathParam("ownerName") String ownerName)
+      throws FeedException {
     var owner = User.findByNickname(ownerName);
-    return makeFeed(owner, ownerName);
+    @CheckForNull var pageKey = pageKeyBase36 == null ? null : new BigInteger(pageKeyBase36, 36);
+    return makeFeed(pageKey, ownerName, owner);
   }
 
-  private String makeFeed(@Nullable User owner, @Nullable String ownerName) throws FeedException {
-    var posts = Post.findViewable(postFilter, entityManager.unwrap(Session.class), identity, owner);
+  private String makeFeed(
+      @CheckForNull BigInteger pageKey, @CheckForNull String ownerName, @CheckForNull User owner)
+      throws FeedException {
+    if (pageKey == null) {
+      return makeFeed(getCurrentUser(), owner, ownerName);
+    }
+
+    Optional<PageKey> pageKeyInfo =
+        PageKey.find("page = ?1 AND key = ?2", uri.getPath(), pageKey).singleResultOptional();
+    if (pageKeyInfo.isEmpty()) {
+      throw new ForbiddenException();
+    }
+
+    var pageKeyOwner = pageKeyInfo.get().user;
+    return makeFeed(pageKeyOwner, owner, ownerName);
+  }
+
+  private String makeFeed(
+      @CheckForNull User reader, @Nullable User owner, @Nullable String ownerName)
+      throws FeedException {
+    var posts = Post.findViewable(postFilter, entityManager.unwrap(Session.class), reader, owner);
     var feed = new Feed("atom_1.0");
 
     var feedSubId = owner == null ? "" : String.format("/%d", owner.id);
@@ -181,7 +246,7 @@ public abstract class PostResource {
     feed.setOtherLinks(List.of(selfLink));
 
     var htmlAltLink = new Link();
-    var htmlAltPath = owner == null ? "/posts" : String.format("~%s/posts", ownerName);
+    var htmlAltPath = ownerName == null ? "/posts" : String.format("~%s/posts", ownerName);
     htmlAltLink.setHref(uri.resolve(URI.create(htmlAltPath)).toString());
     htmlAltLink.setRel("alternate");
     htmlAltLink.setType("text/html");
@@ -199,9 +264,11 @@ public abstract class PostResource {
                     entry.setUpdated(Date.from(post.date.toInstant()));
                   }
 
-                  var author = new SyndPersonImpl();
-                  author.setName(post.owner.getFirstAndLastName());
-                  entry.setAuthors(List.of(author));
+                  if (post.owner != null) {
+                    var author = new SyndPersonImpl();
+                    author.setName(post.owner.getFirstAndLastName());
+                    entry.setAuthors(List.of(author));
+                  }
 
                   if (post.getTitle() != null) {
                     var title = new Content();
@@ -294,16 +361,6 @@ public abstract class PostResource {
     }
   }
 
-  @CheckForNull
-  protected final User getCurrentUser() {
-    if (identity.isAnonymous()) {
-      return null;
-    }
-
-    var userName = identity.getPrincipal().getName();
-    return User.findByNickname(userName);
-  }
-
   protected final Post getPostIfVisible(int id) {
     @CheckForNull var user = getCurrentUser();
     var message = getSession().byId(Post.class).load(id);
@@ -313,6 +370,11 @@ public abstract class PostResource {
     }
 
     return message;
+  }
+
+  @CheckForNull
+  protected final User getCurrentUser() {
+    return identity.isAnonymous() ? null : User.findByNickname(identity.getPrincipal().getName());
   }
 
   @GET

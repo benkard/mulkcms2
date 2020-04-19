@@ -10,6 +10,7 @@ import eu.mulk.mulkcms2.benki.posts.PostResource;
 import io.quarkus.security.Authenticated;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import javax.transaction.Transactional;
@@ -27,7 +28,7 @@ import javax.ws.rs.core.Response;
 @Path("/lazychat")
 public class LazychatResource extends PostResource {
 
-  public LazychatResource() {
+  public LazychatResource() throws NoSuchAlgorithmException {
     super(PostFilter.LAZYCHAT_MESSAGES_ONLY, "Lazy Chat");
   }
 
@@ -76,7 +77,7 @@ public class LazychatResource extends PostResource {
       throw new NotFoundException();
     }
 
-    if (!Objects.equals(message.owner.id, user.id)) {
+    if (message.owner == null || !Objects.equals(message.owner.id, user.id)) {
       throw new ForbiddenException();
     }
 
