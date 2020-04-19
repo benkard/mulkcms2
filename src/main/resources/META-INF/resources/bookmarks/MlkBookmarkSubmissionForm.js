@@ -8,7 +8,7 @@ template.innerHTML = `
   <link rel="stylesheet" type="text/css" href="/cms2/base.css" />
   <link rel="stylesheet" type="text/css" href="/bookmarks/MlkBookmarkSubmissionForm.css" />
 
-  <form class="pure-form" method="post" action="/bookmarks">
+  <form id="main-form" class="pure-form" method="post" action="/bookmarks">
     <fieldset>
       <legend>Edit Bookmark</legend>
 
@@ -37,10 +37,13 @@ template.innerHTML = `
 
 export class MlkBookmarkSubmissionForm extends HTMLElement {
   /*::
+  mainForm: HTMLFormElement;
   descriptionInput: HTMLTextAreaElement;
   titleInput: HTMLInputElement;
   uriInput: HTMLInputElement;
   uriSpinner: ProgressSpinner;
+  visibilityInput: HTMLInputElement;
+  loaded: boolean;
   */
 
   constructor() {
@@ -49,6 +52,8 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     let shadow = this.attachShadow({mode: "open"});
     shadow.appendChild(template.content.cloneNode(true));
 
+    this.mainForm =
+        cast(shadow.getElementById('main-form'));
     this.descriptionInput =
         cast(shadow.getElementById('description-input'));
     this.titleInput =
@@ -57,13 +62,34 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
         cast(shadow.getElementById('uri-input'));
     this.uriSpinner =
         cast(shadow.getElementById('uri-spinner'));
+    this.visibilityInput =
+        cast(shadow.getElementById('visibility-input'));
+
+    this.loaded = false;
   }
 
   static get observedAttributes() {
     return [];
   }
 
-  connectedCallback () {
+  get editedId() /*:number | null*/ {
+    let attr = this.getAttribute("edited-id");
+    if (attr === undefined || attr === null) {
+      return null;
+    }
+    return parseInt(attr, 10);
+  }
+
+  get isEditor() {
+    return this.editedId !== null;
+  }
+
+  connectedCallback() {
+    if (this.editedId !== null) {
+      this.mainForm.method = "post";
+      this.mainForm.action = `/bookmarks/${this.editedId}/edit`;
+    }
+
     this.uriInput.addEventListener('blur', this.onUriBlur.bind(this));
     this.uriInput.value = this.uri || "";
     this.titleInput.value = this.titleText || "";
@@ -98,10 +124,11 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     } else {
       this.descriptionInput.focus();
     }
+    this.load();
   }
 
   async onUriBlur() {
-    if (!this.uriInput.value) {
+    if (this.isEditor || !this.uriInput.value) {
       return;
     }
 
@@ -120,6 +147,27 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
 
     let pageInfo = await r.json();
     this.titleInput.value = pageInfo.title;
+  }
+
+  async load() {
+    if (this.editedId === null || this.loaded) {
+      return;
+    }
+
+    let fetchUrl = new URL(`/posts/${this.editedId}`, document.URL);
+    let r = await fetch(fetchUrl);
+
+    if (!r.ok) {
+      return;
+    }
+
+    let post = await r.json();
+    this.uriInput.value = post.uri;
+    this.titleInput.value = post.title;
+    this.descriptionInput.innerText = post.description;
+    this.visibilityInput.value = post.visibility;
+
+    this.loaded = true;
   }
 }
 

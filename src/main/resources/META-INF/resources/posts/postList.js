@@ -23,4 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }
+
+  let bookmarks = document.getElementsByClassName('bookmark');
+  for (let bookmark of bookmarks) {
+    let editorPane = bookmark.getElementsByClassName('editor-pane')[0];
+    if (editorPane) {
+      let form = bookmark.getElementsByTagName('mlk-bookmark-submission-form')[0];
+      let editButton = bookmark.getElementsByClassName('bookmark-edit-button')[0];
+      editButton.addEventListener('click', () => {
+        editorPane.toggle();
+        form.focus();
+      });
+    }
+  }
 });

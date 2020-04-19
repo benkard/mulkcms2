@@ -153,10 +153,15 @@ body > footer {
   border-top: lightgray solid 1px;
 }
 
+a.bookmark-title {
+  text-decoration: none;
+}
+
 h1.bookmark-title {
   font-size: 1em;
   margin: 0;
   padding: 0;
+  display: inline;
 }
 
 .bookmark-info {
@@ -164,6 +169,7 @@ h1.bookmark-title {
   font-size: smaller;
   margin: 0;
   padding: 0;
+  flex: auto;
 }
 
 article.bookmark {
@@ -171,6 +177,10 @@ article.bookmark {
   border: 1px solid #e0b0b0;
   padding: 0.3em;
   background: #f8f0f0;
+}
+
+article.bookmark > header {
+  display: flex
 }
 
 .lazychat-message-info {
@@ -207,6 +217,14 @@ elix-expandable-section.editor-pane::part(toggle) {
 
 elix-expandable-section.editor-pane::part(header) {
   display: inline-block;
+}
+
+.bookmark-edit-button {
+  font-size: small;
+}
+
+.bookmark-message-controls {
+  flex: initial;
 }
 
 .lazychat-edit-button {

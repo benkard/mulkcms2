@@ -57,14 +57,31 @@
       {#if post.isBookmark}
         <article class="bookmark">
           <header>
-            <a href="{uri}"><h1 class="bookmark-title">{title}</h1></a>
             <div class="bookmark-info">
               <a class="post-link" href="/posts/{post.id}">
                 <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
                 <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
               </a>
             </div>
+
+            <div class="bookmark-controls">
+              {#if showBookmarkForm}
+              <button class="pure-button bookmark-edit-button">Edit</button>
+              {/if}
+            </div>
           </header>
+
+          <section class="bookmark-editor post-editor">
+            {#if showBookmarkForm}
+            <elix-expandable-panel class="bookmark-editor-pane editor-pane">
+              <mlk-bookmark-submission-form edited-id="{post.id}"></mlk-bookmark-submission-form>
+            </elix-expandable-panel>
+            {/if}
+          </section>
+
+          <section class="bookmark-title-section">
+            <a href="{uri}" class="bookmark-title"><h1 class="bookmark-title">⇢&nbsp;{title}</h1></a>
+          </section>
 
           <section class="bookmark-description">
             {descriptionHtml.raw}
@@ -87,7 +104,7 @@
             </div>
           </header>
 
-          <section class="lazychat-editor">
+          <section class="lazychat-editor post-editor">
             {#if showLazychatForm}
               <elix-expandable-panel class="lazychat-editor-pane editor-pane">
                 <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>

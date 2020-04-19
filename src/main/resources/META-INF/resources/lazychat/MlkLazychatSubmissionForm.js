@@ -61,7 +61,7 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
     if (attr === undefined || attr === null) {
       return null;
     }
-    return parseInt(attr);
+    return parseInt(attr, 10);
   }
 
   get isEditor() {
