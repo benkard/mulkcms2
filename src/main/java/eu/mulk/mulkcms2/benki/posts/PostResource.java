@@ -109,7 +109,7 @@ public abstract class PostResource {
     var session = entityManager.unwrap(Session.class);
     var q = Post.findViewable(postFilter, session, reader, null, cursor, maxResults);
 
-    var feedUri = "/posts/feed";
+    var feedUri = uri.getPath() + "/feed";
     if (reader != null) {
       var pageKey = ensurePageKey(reader, feedUri);
       feedUri += "?page-key=" + pageKey.key.toString(36);
@@ -143,7 +143,7 @@ public abstract class PostResource {
     var session = entityManager.unwrap(Session.class);
     var q = Post.findViewable(postFilter, session, reader, owner, cursor, maxResults);
 
-    var feedUri = String.format("/posts/~%s/feed", ownerName);
+    var feedUri = uri.getPath() + "/feed";
     if (reader != null) {
       var pageKey = ensurePageKey(reader, feedUri);
       feedUri += "?page-key=" + pageKey.key.toString(36);
