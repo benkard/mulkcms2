@@ -46,8 +46,10 @@
     <exec executable="yarn" dir="${web-dir}">
       <arg value="run"/>
       <arg value="eslint"/>
-      <arg value="cms2"/>
       <arg value="bookmarks"/>
+      <arg value="cms2"/>
+      <arg value="lazychat"/>
+      <arg value="posts"/>
       <arg value="--color"/>
     </exec>
   </target>
