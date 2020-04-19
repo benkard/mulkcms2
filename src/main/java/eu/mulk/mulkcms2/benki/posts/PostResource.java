@@ -178,6 +178,31 @@ public abstract class PostResource {
   }
 
   @GET
+  @Produces(APPLICATION_JSON)
+  @Path("{id}")
+  public Post getPostJson(@PathParam("id") int id) {
+    return getPostIfVisible(id);
+  }
+
+  @GET
+  @Produces(TEXT_HTML)
+  @Path("{id}")
+  public TemplateInstance getPostHtml(@PathParam("id") int id) {
+    var post = getPostIfVisible(id);
+
+    return postList
+        .data("posts", List.of(post))
+        .data("pageTitle", pageTitle)
+        .data("showBookmarkForm", false)
+        .data("showLazychatForm", false)
+        .data("hasPreviousPage", false)
+        .data("hasNextPage", false)
+        .data("previousCursor", null)
+        .data("nextCursor", null)
+        .data("pageSize", null);
+  }
+
+  @GET
   @Path("feed")
   @Produces(APPLICATION_ATOM_XML)
   public String getFeed(@QueryParam("page-key") @CheckForNull String pageKeyBase36)
@@ -375,30 +400,5 @@ public abstract class PostResource {
   @CheckForNull
   protected final User getCurrentUser() {
     return identity.isAnonymous() ? null : User.findByNickname(identity.getPrincipal().getName());
-  }
-
-  @GET
-  @Produces(APPLICATION_JSON)
-  @Path("{id}")
-  public Post getPostJson(@PathParam("id") int id) {
-    return getPostIfVisible(id);
-  }
-
-  @GET
-  @Produces(TEXT_HTML)
-  @Path("{id}")
-  public TemplateInstance getPostHtml(@PathParam("id") int id) {
-    var post = getPostIfVisible(id);
-
-    return postList
-        .data("posts", List.of(post))
-        .data("pageTitle", pageTitle)
-        .data("showBookmarkForm", false)
-        .data("showLazychatForm", false)
-        .data("hasPreviousPage", false)
-        .data("hasNextPage", false)
-        .data("previousCursor", null)
-        .data("nextCursor", null)
-        .data("pageSize", null);
   }
 }
