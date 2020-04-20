@@ -18,10 +18,10 @@
 
     <antrun-plugin.version>1.8</antrun-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
-    <docker-plugin.version>0.33.0</docker-plugin.version>
     <quarkus-plugin.version>1.4.0.CR1</quarkus-plugin.version>
     <spotless-plugin.version>1.30.0</spotless-plugin.version>
     <surefire-plugin.version>3.0.0-M4</surefire-plugin.version>
+    <failsafe-plugin.version>3.0.0-M4</failsafe-plugin.version>
 
     <!-- <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id> -->
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -30,7 +30,7 @@
 
     <basic-annotations.version>0.2.0</basic-annotations.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
-    <flexmark.version>0.61.10</flexmark.version>
+    <flexmark.version>0.61.16</flexmark.version>
     <google.java.format.version>1.7</google.java.format.version>
     <hibernate.version>5.4.14.Final</hibernate.version>
     <hibernate-types.version>2.9.8</hibernate-types.version>
@@ -174,10 +174,12 @@
       <artifactId>quarkus-kubernetes</artifactId>
     </dependency>
     -->
+    <!--
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-mailer</artifactId>
     </dependency>
+    -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-oidc</artifactId>
@@ -194,10 +196,12 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-qute</artifactId>
     </dependency>
+    <!--
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-scheduler</artifactId>
     </dependency>
+    -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-jwt</artifactId>
@@ -420,7 +424,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-failsafe-plugin</artifactId>
-            <version>${surefire-plugin.version}</version>
+            <version>${failsafe-plugin.version}</version>
             <executions>
               <execution>
                 <goals>
