@@ -21,7 +21,6 @@
     <quarkus-plugin.version>1.4.0.CR1</quarkus-plugin.version>
     <spotless-plugin.version>1.30.0</spotless-plugin.version>
     <surefire-plugin.version>3.0.0-M4</surefire-plugin.version>
-    <failsafe-plugin.version>3.0.0-M4</failsafe-plugin.version>
 
     <!-- <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id> -->
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -401,28 +400,6 @@
           <name>native</name>
         </property>
       </activation>
-
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>${failsafe-plugin.version}</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
-                <configuration>
-                  <systemProperties>
-                    <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-                  </systemProperties>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
 
       <properties>
         <quarkus.package.type>native</quarkus.package.type>
