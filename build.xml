@@ -61,13 +61,14 @@
   <target name="package" description="Create executable JAR">
     <exec executable="./mvnw">
       <arg value="package"/>
+      <arg value="-Dquarkus.container-image.push=false"/>
     </exec>
   </target>
 
   <target name="deploy" description="Deploy JAR to Kubernetes">
     <exec executable="./mvnw">
-      <arg value="docker:build"/>
-      <arg value="docker:push"/>
+      <arg value="package"/>
+      <arg value="-Dquarkus.container-image.push=true"/>
     </exec>
     <exec executable="kubectl">
       <arg value="delete"/>
