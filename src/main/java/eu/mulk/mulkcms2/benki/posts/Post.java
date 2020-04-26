@@ -6,11 +6,15 @@ import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.users.User;
 import eu.mulk.mulkcms2.benki.users.User_;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import javax.json.bind.annotation.JsonbTransient;
@@ -173,7 +177,9 @@ public abstract class Post extends PanacheEntityBase {
     public @CheckForNull final Integer nextCursor;
     public final List<T> posts;
 
-    private PostPage(
+    private static final TimeZone timeZone = TimeZone.getDefault();
+
+    public PostPage(
         @CheckForNull Integer c0,
         @CheckForNull Integer c1,
         @CheckForNull Integer c2,
@@ -182,6 +188,26 @@ public abstract class Post extends PanacheEntityBase {
       this.cursor = c1;
       this.nextCursor = c2;
       this.posts = resultList;
+    }
+
+    public class Day {
+      public final @CheckForNull LocalDate date;
+      public final List<T> posts;
+
+      private Day(LocalDate date, List<T> posts) {
+        this.date = date;
+        this.posts = posts;
+      }
+    }
+
+    public List<Day> days() {
+      return posts.stream()
+          .collect(Collectors.groupingBy(post -> post.date.toLocalDate()))
+          .entrySet()
+          .stream()
+          .map(x -> new Day(x.getKey(), x.getValue()))
+          .sorted(Comparator.comparing((Day day) -> day.date).reversed())
+          .collect(Collectors.toUnmodifiableList());
     }
   }
 

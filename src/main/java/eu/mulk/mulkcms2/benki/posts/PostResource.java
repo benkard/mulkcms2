@@ -13,6 +13,7 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
 import eu.mulk.mulkcms2.benki.accesscontrol.PageKey;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
+import eu.mulk.mulkcms2.benki.posts.Post.PostPage;
 import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
@@ -116,7 +117,7 @@ public abstract class PostResource {
     }
 
     return postList
-        .data("posts", q.posts)
+        .data("postDays", q.days())
         .data("feedUri", feedUri)
         .data("pageTitle", pageTitle)
         .data("showBookmarkForm", showBookmarkForm())
@@ -150,7 +151,7 @@ public abstract class PostResource {
     }
 
     return postList
-        .data("posts", q.posts)
+        .data("postDays", q.days())
         .data("feedUri", feedUri)
         .data("pageTitle", pageTitle)
         .data("showBookmarkForm", showBookmarkForm())
@@ -191,7 +192,7 @@ public abstract class PostResource {
     var post = getPostIfVisible(id);
 
     return postList
-        .data("posts", List.of(post))
+        .data("postDays", new PostPage<>(null, null, null, List.of(post)).days())
         .data("pageTitle", pageTitle)
         .data("showBookmarkForm", false)
         .data("showLazychatForm", false)
