@@ -184,11 +184,16 @@ a.bookmark-title {
   margin-right: 1em;
 }
 
-h1.bookmark-title {
+.bookmark-title {
   font-size: 1em;
   margin: 0;
   padding: 0;
   display: inline;
+  font-weight: normal;
+}
+
+.bookmark-symbol {
+  font-size: smaller;
 }
 
 .post-day-info {
@@ -226,6 +231,7 @@ article.bookmark {
 article.bookmark > header {
   display: inline-flex;
   margin-right: 5px;
+  line-height: 1em;
 }
 
 .post-with-nonempty-body > header {
@@ -249,6 +255,7 @@ article.lazychat-message > header {
   display: flex;
   float: left;
   margin-right: 5px;
+  line-height: 1em;
 }
 
 a.post-link {
