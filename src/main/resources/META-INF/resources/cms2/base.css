@@ -9,16 +9,34 @@
 @import "../web_modules/normalize-opentype.css/normalize-opentype.css";
 
 /* Sanitize.css */
-@import "../web_modules/sanitize.css/sanitize.css";
 @import "../web_modules/sanitize.css/forms.css";
 @import "../web_modules/sanitize.css/typography.css";
 /* */
+
+@import "fonts/source.css";
+
+@viewport {
+    width: device-width;
+    zoom:  1; }
 
 html {
   --main-bg-color: #f8f8f8;
   --header-bg-color: #ffffff;
   --nav-bg-color: #ffffff;
   --footer-bg-color: #ffffff;
+
+  /*background-color: #f8f8f8;*/
+  font-family: 'Source Sans Pro', Optima, 'MgOpen Cosmetica', Candara, Palatino, 'Palatino Linotype', 'Book Antiqua', 'URW Palladio L', 'Gentium Alt', 'Gentium', Geneva, Georgia, serif;
+}
+
+nav ol,
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+code, kbd, samp, pre {
+  font-family: 'Source Code Pro', monospace;
 }
 
 body {
