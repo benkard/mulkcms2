@@ -54,25 +54,14 @@
 <section id="main-content">
   {#for day in postDays}
     <div class="post-day">
+      <div class="post-day-info">
+        <time datetime="{day.date.htmlDate}">{day.date.humanDate}</time>
+      </div>
+
       {#for post in day.posts}
         {#with post}
           {#if post.isBookmark}
-            <article class="bookmark">
-              <header>
-                <div class="bookmark-info">
-                  <a class="post-link" href="/posts/{post.id}">
-                    <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
-                    <span class="bookmark-owner">{owner.firstName} {owner.lastName}</span>
-                  </a>
-                </div>
-
-                <div class="bookmark-controls">
-                  {#if showBookmarkForm}
-                  <button class="pure-button bookmark-edit-button">Edit</button>
-                  {/if}
-                </div>
-              </header>
-
+            <article class="bookmark {#if descriptionHtml != ""}post-with-nonempty-body{/if}">
               <section class="bookmark-editor post-editor">
                 {#if showBookmarkForm}
                 <elix-expandable-panel class="bookmark-editor-pane editor-pane">
@@ -81,40 +70,55 @@
                 {/if}
               </section>
 
-              <section class="bookmark-title-section">
-                <a href="{uri}" class="bookmark-title"><h1 class="bookmark-title">⇢&nbsp;{title}</h1></a>
-              </section>
+              <header>
+                <div class="bookmark-info">
+                  <span class="bookmark-owner post-owner">{owner.firstName}</span>
+                  <a class="post-link" href="/posts/{post.id}">
+                    <span class="post-self-link">#</span>
+                  </a>
 
-              <section class="bookmark-description">
+                  <a href="{uri}" class="bookmark-title">
+                    <h1 class="bookmark-title">⇢&nbsp;{title}</h1>.
+                  </a>
+                </div>
+              </header>
+
+              <div class="bookmark-controls">
+                {#if showBookmarkForm}
+                <button class="pure-button bookmark-edit-button">Edit</button>
+                {/if}
+              </div>
+
+              <section class="bookmark-description post-content">
                 {descriptionHtml.raw}
               </section>
             </article>
           {#else}
             <article class="lazychat-message">
-              <header>
-                <div class="lazychat-message-info">
-                  <a class="post-link" href="/posts/{post.id}">
-                    <time datetime="{date.htmlDateTime}">{date.humanDateTime}</time>
-                    <span class="lazychat-message-owner">{owner.firstName} {owner.lastName}</span>
-                  </a>
-                </div>
-
-                <div class="lazychat-message-controls">
-                  {#if showLazychatForm}
-                    <button class="pure-button lazychat-edit-button">Edit</button>
-                  {/if}
-                </div>
-              </header>
-
               <section class="lazychat-editor post-editor">
                 {#if showLazychatForm}
-                  <elix-expandable-panel class="lazychat-editor-pane editor-pane">
-                    <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>
-                  </elix-expandable-panel>
+                <elix-expandable-panel class="lazychat-editor-pane editor-pane">
+                  <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>
+                </elix-expandable-panel>
                 {/if}
               </section>
 
-              <section class="lazychat-message-content">
+              <header>
+                <div class="lazychat-message-info">
+                  <span class="lazychat-message-owner post-owner">{owner.firstName}</span>
+                  <a class="post-link" href="/posts/{post.id}">
+                    <span class="post-self-link">#</span>
+                  </a>
+                </div>
+              </header>
+
+              <div class="lazychat-message-controls">
+                {#if showLazychatForm}
+                <button class="pure-button lazychat-edit-button">Edit</button>
+                {/if}
+              </div>
+
+              <section class="lazychat-message-content post-content">
                 {contentHtml.raw}
               </section>
             </article>

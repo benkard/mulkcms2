@@ -61,10 +61,17 @@ public abstract class PostResource {
 
   private static final Logger log = Logger.getLogger(PostResource.class);
 
-  private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+  private static final DateTimeFormatter htmlDateTimeFormatter =
+      DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+  private static final DateTimeFormatter humanDateTimeFormatter =
+      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
+
+  private static final DateTimeFormatter htmlDateFormatter =
+      DateTimeFormatter.ISO_LOCAL_DATE;
 
   private static final DateTimeFormatter humanDateFormatter =
-      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
+      DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
 
   private static final int pageKeyBytes = 32;
 
@@ -331,12 +338,30 @@ public abstract class PostResource {
     if (x == null) {
       return null;
     }
-    return humanDateFormatter.format(x);
+    return humanDateTimeFormatter.format(x);
   }
 
   @TemplateExtension
   @CheckForNull
   static String htmlDateTime(@CheckForNull TemporalAccessor x) {
+    if (x == null) {
+      return null;
+    }
+    return htmlDateTimeFormatter.format(x);
+  }
+
+  @TemplateExtension
+  @CheckForNull
+  static String humanDate(@CheckForNull TemporalAccessor x) {
+    if (x == null) {
+      return null;
+    }
+    return humanDateFormatter.format(x);
+  }
+
+  @TemplateExtension
+  @CheckForNull
+  static String htmlDate(@CheckForNull TemporalAccessor x) {
     if (x == null) {
       return null;
     }

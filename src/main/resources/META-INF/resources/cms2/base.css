@@ -171,8 +171,17 @@ body > footer {
   border-top: lightgray solid 1px;
 }
 
+.post-day {
+  margin: 0.5em 0;
+}
+
+.bookmark-title-section {
+  display: inline;
+}
+
 a.bookmark-title {
   text-decoration: none;
+  margin-right: 1em;
 }
 
 h1.bookmark-title {
@@ -182,42 +191,64 @@ h1.bookmark-title {
   display: inline;
 }
 
+.post-day-info {
+  font-size: smaller;
+  font-style: italic;
+}
+
+.post-owner {
+  font-size: smaller;
+  color: #555;
+}
+
+.post-self-link {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .bookmark-info {
   font-style: italic;
-  font-size: smaller;
   margin: 0;
   padding: 0;
   flex: auto;
 }
 
+.bookmark-controls {
+  float: right;
+}
+
 article.bookmark {
-  margin: 0.5em 0;
   border: 1px solid #e0b0b0;
   padding: 0.3em;
   background: #f8f0f0;
 }
 
 article.bookmark > header {
-  display: flex
+  display: inline-flex;
+  margin-right: 5px;
+}
+
+.post-with-nonempty-body > header {
+  float: left;
 }
 
 .lazychat-message-info {
   font-style: italic;
-  font-size: smaller;
   margin: 0;
   padding: 0;
   flex: auto;
 }
 
 article.lazychat-message {
-  margin: 0.5em 0;
   border: 1px solid #a0c0c0;
   padding: 0.3em;
   background: #f0f8f0;
 }
 
 article.lazychat-message > header {
-  display: flex
+  display: flex;
+  float: left;
+  margin-right: 5px;
 }
 
 a.post-link {
@@ -250,7 +281,27 @@ elix-expandable-section.editor-pane::part(header) {
 }
 
 .lazychat-message-controls {
-  flex: initial;
+  float: right;
+}
+
+.post-content > :first-child {
+  margin-top: 0;
+}
+
+.post-content > :last-child {
+  margin-bottom: 0;
+}
+
+.bookmark-description > :nth-child(2) {
+  margin-top: 0;
+}
+
+.bookmark-description > blockquote :first-child {
+  margin-top: 0;
+}
+
+.bookmark-description > blockquote :last-child {
+  margin-bottom: 0;
 }
 
 .paging {
