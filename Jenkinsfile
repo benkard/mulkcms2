@@ -36,7 +36,7 @@ pipeline {
                 apt-get -y install --no-install-recommends npm
                 npm install -g yarn
                 yarn config set cache-folder $HOME/.yarn-cache
-                ./mvnw package -Dquarkus.container-image.build=false -Dquarkus.container-image.push=false
+                ./mvnw package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true
               """
             }
           }
