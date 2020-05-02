@@ -32,6 +32,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +59,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.Session;
 import org.jboss.logging.Logger;
+import org.jsoup.Jsoup;
 
 public abstract class PostResource {
 
@@ -75,6 +77,8 @@ public abstract class PostResource {
       DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
 
   private static final int pageKeyBytes = 32;
+
+  private static final int AUTOTITLE_WORDS = 10;
 
   protected static final JsonProvider jsonProvider = JsonProvider.provider();
 
@@ -314,6 +318,14 @@ public abstract class PostResource {
                     var title = new Content();
                     title.setType("text");
                     title.setValue(post.getTitle());
+                    entry.setTitleEx(title);
+                  } else if (post.getDescriptionHtml() != null) {
+                    var title = new Content();
+                    title.setType("text");
+                    var words =
+                        Jsoup.parse(post.getDescriptionHtml()).text().split("\\s", AUTOTITLE_WORDS);
+                    var titleWords = Arrays.asList(words).subList(0, words.length - 1);
+                    title.setValue(String.join(" ", titleWords) + " ...");
                     entry.setTitleEx(title);
                   }
 
