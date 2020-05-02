@@ -32,6 +32,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
@@ -330,18 +331,31 @@ public abstract class PostResource {
                   }
 
                   if (post.getDescriptionHtml() != null) {
-                    var summary = new Content();
-                    summary.setType("html");
-                    summary.setValue(post.getDescriptionHtml());
-                    entry.setSummary(summary);
+                    var description = new Content();
+                    description.setType("html");
+                    description.setValue(post.getDescriptionHtml());
+                    if (post.getUri() != null) {
+                      entry.setSummary(description);
+                    } else {
+                      entry.setContents(List.of(description));
+                    }
                   }
 
+                  var alternateLinks = new ArrayList<Link>();
                   if (post.getUri() != null) {
-                    var link = new Link();
-                    link.setHref(post.getUri());
-                    link.setRel("alternate");
-                    entry.setAlternateLinks(List.of(link));
+                    var postUriLink = new Link();
+                    postUriLink.setRel("alternate");
+                    postUriLink.setHref(post.getUri());
+                    alternateLinks.add(postUriLink);
+                  } else {
+                    var postSelfHref =
+                        uri.resolve(URI.create(String.format("/posts/%d", post.id))).toString();
+                    var postSelfLink = new Link();
+                    postSelfLink.setRel("alternate");
+                    postSelfLink.setHref(postSelfHref);
+                    alternateLinks.add(postSelfLink);
                   }
+                  entry.setAlternateLinks(alternateLinks);
 
                   return entry;
                 })
