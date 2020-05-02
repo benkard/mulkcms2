@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki.posts;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.ws.rs.core.MediaType.APPLICATION_ATOM_XML;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
@@ -22,6 +23,7 @@ import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.identity.SecurityIdentity;
 import java.math.BigInteger;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -67,8 +69,7 @@ public abstract class PostResource {
   private static final DateTimeFormatter humanDateTimeFormatter =
       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
 
-  private static final DateTimeFormatter htmlDateFormatter =
-      DateTimeFormatter.ISO_LOCAL_DATE;
+  private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
   private static final DateTimeFormatter humanDateFormatter =
       DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
@@ -260,10 +261,11 @@ public abstract class PostResource {
     feed.setId(
         String.format(
             "tag:%s,2019:%s:%s:%s",
-            tagBase,
-            pageTitle,
-            feedSubId,
-            identity.isAnonymous() ? "world" : identity.getPrincipal().getName()));
+            URLEncoder.encode(tagBase, UTF_8),
+            URLEncoder.encode(pageTitle, UTF_8),
+            URLEncoder.encode(feedSubId, UTF_8),
+            URLEncoder.encode(
+                identity.isAnonymous() ? "world" : identity.getPrincipal().getName(), UTF_8)));
     feed.setUpdated(
         Date.from(
             posts.stream()
@@ -279,7 +281,10 @@ public abstract class PostResource {
     feed.setOtherLinks(List.of(selfLink));
 
     var htmlAltLink = new Link();
-    var htmlAltPath = ownerName == null ? "/posts" : String.format("~%s/posts", ownerName);
+    var htmlAltPath =
+        ownerName == null
+            ? "/posts"
+            : String.format("~%s/posts", URLEncoder.encode(ownerName, UTF_8));
     htmlAltLink.setHref(uri.resolve(URI.create(htmlAltPath)).toString());
     htmlAltLink.setRel("alternate");
     htmlAltLink.setType("text/html");
@@ -291,7 +296,9 @@ public abstract class PostResource {
                 post -> {
                   var entry = new Entry();
 
-                  entry.setId(String.format("tag:%s,2012:/marx/%d", tagBase, post.id));
+                  entry.setId(
+                      String.format(
+                          "tag:%s,2012:/marx/%d", URLEncoder.encode(tagBase, UTF_8), post.id));
                   if (post.date != null) {
                     entry.setPublished(Date.from(post.date.toInstant()));
                     entry.setUpdated(Date.from(post.date.toInstant()));
