@@ -1,0 +1,1163 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/pro
+    http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+  <changeSet author="mulk (generated)" id="1592058325319-1">
+    <createTable tableName="article_types">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="article_types_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR"/>
+      <column name="page_template" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-2">
+    <createTable tableName="cached_pages">
+      <column name="alias" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="cached_pages_pkey"/>
+      </column>
+      <column name="characteristic_hash" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="cached_pages_pkey"/>
+      </column>
+      <column defaultValueComputed="now()" name="date" type="TIMESTAMP WITHOUT TIME ZONE">
+        <constraints nullable="false"/>
+      </column>
+      <column name="content" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-3">
+    <createTable tableName="used_transaction_keys">
+      <column name="key" type="BIGINT">
+        <constraints nullable="false" primaryKey="true"
+          primaryKeyName="used_transaction_keys_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-4">
+    <createTable tableName="users">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR"/>
+      <column name="status" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="VARCHAR"/>
+      <column name="website" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-5">
+    <createTable tableName="openids">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="openids_pkey"/>
+      </column>
+      <column name="openid" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="openids_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-6">
+    <createTable tableName="passwords">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="passwords_pkey"/>
+      </column>
+      <column name="password" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="passwords_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-7">
+    <createTable tableName="articles">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="articles_pkey"/>
+      </column>
+      <column name="type" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-8">
+    <createTable tableName="journal_pingback">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="journal_pingbackpk"/>
+      </column>
+      <column name="entry_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="uuid" type="CHAR(36)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="date" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="url" type="TEXT"/>
+      <column name="spam_p" type="BOOLEAN"/>
+      <column name="submitter_ip" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="submitter_user_agent" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-9">
+    <createTable tableName="article_revisions">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="article_revisions_pkey"/>
+      </column>
+      <column name="article" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValueComputed="now()" name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+      <column name="title" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="content" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="author" type="INTEGER"/>
+      <column name="format" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="global_id" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-10">
+    <createTable tableName="article_revision_parenthood">
+      <column name="parent" type="INTEGER">
+        <constraints nullable="false" primaryKey="true"
+          primaryKeyName="article_revision_parenthood_pkey"/>
+      </column>
+      <column name="child" type="INTEGER">
+        <constraints nullable="false" primaryKey="true"
+          primaryKeyName="article_revision_parenthood_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-11">
+    <createTable tableName="journal_comment">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="JOURNAL_COMMENTPK"/>
+      </column>
+      <column name="entry_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="uuid" type="CHAR(36)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="date" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="body" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="author" type="TEXT"/>
+      <column name="email" type="TEXT"/>
+      <column name="website" type="TEXT"/>
+      <column name="spam_p" type="BOOLEAN"/>
+      <column defaultValue="0.0.0.0" name="submitter_ip" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="submitter_user_agent" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-12">
+    <createTable tableName="user_permissions">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_permissions_pkey"/>
+      </column>
+      <column name="permission" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_permissions_pkey"/>
+      </column>
+      <column name="status" type="BOOLEAN"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-13">
+    <createTable tableName="journal_category">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="journal_categorypk"/>
+      </column>
+      <column name="uuid" type="CHAR(36)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-14">
+    <createTable tableName="journals">
+      <column name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="journals_pkey"/>
+      </column>
+      <column name="path_prefix" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-15">
+    <createTable tableName="category_inclusions">
+      <column name="category" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="category_inclusions_pkey"/>
+      </column>
+      <column name="supercategory" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="category_inclusions_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-16">
+    <createTable tableName="journal_entry">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="journal_entrypk"/>
+      </column>
+      <column name="uuid" type="CHAR(36)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="title" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="date" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_modification" type="BIGINT"/>
+      <column name="body" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValue="markdown" name="type" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-17">
+    <createTable tableName="journal_trackback">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="journal_trackbackpk"/>
+      </column>
+      <column name="entry_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="uuid" type="CHAR(36)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="date" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="excerpt" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="title" type="TEXT"/>
+      <column name="blog_name" type="TEXT"/>
+      <column name="url" type="TEXT"/>
+      <column name="spam_p" type="BOOLEAN"/>
+      <column name="submitter_ip" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="submitter_user_agent" type="TEXT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-18">
+    <createTable tableName="user_settings">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_settings_pkey"/>
+      </column>
+      <column name="setting" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_settings_pkey"/>
+      </column>
+      <column name="value" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-19">
+    <createTable tableName="article_category_memberships">
+      <column name="article" type="INTEGER">
+        <constraints nullable="false" primaryKey="true"
+          primaryKeyName="article_category_memberships_pkey"/>
+      </column>
+      <column name="category" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true"
+          primaryKeyName="article_category_memberships_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-20">
+    <createTable tableName="categories">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="categories_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-21">
+    <createTable tableName="journal_entries">
+      <column name="journal" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="journal_entries_pkey"/>
+      </column>
+      <column name="index" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="journal_entries_pkey"/>
+      </column>
+      <column name="article" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-22">
+    <createTable tableName="article_aliases">
+      <column name="alias" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="article_aliases_pkey"/>
+      </column>
+      <column name="article" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-23">
+    <createTable tableName="comment_revisions">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="comment_revisions_pkey"/>
+      </column>
+      <column name="comment" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValueComputed="now()" name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+      <column name="content" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="author" type="INTEGER"/>
+      <column name="format" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="article_revision" type="INTEGER"/>
+      <column name="submitter_ip" type="INET"/>
+      <column name="submitter_user_agent" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-24">
+    <createTable tableName="article_revision_characteristics">
+      <column name="revision" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="characteristic" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="value" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-25">
+    <createTable tableName="comments">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="comments_pkey"/>
+      </column>
+      <column name="article" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="global_id" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-26">
+    <createTable tableName="login_certificates">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="login_certificates_pkey"/>
+      </column>
+      <column name="certificate" type="BYTEA">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="login_certificates_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-27">
+    <addForeignKeyConstraint baseColumnNames="type" baseTableName="articles"
+      constraintName="articles_type_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="article_types" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-28">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="openids"
+      constraintName="openids_user_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-29">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="passwords"
+      constraintName="passwords_user_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-30">
+    <createView fullDefinition="false" viewName="article_comment_counts">SELECT a.id AS article,
+      count(c.*) AS comment_count
+      FROM (articles a
+      LEFT JOIN comments c ON (((c.article = a.id) AND (EXISTS ( SELECT comment_revisions.id,
+      comment_revisions.comment,
+      comment_revisions.date,
+      comment_revisions.content,
+      comment_revisions.author,
+      comment_revisions.format,
+      comment_revisions.status,
+      comment_revisions.article_revision,
+      comment_revisions.submitter_ip,
+      comment_revisions.submitter_user_agent
+      FROM comment_revisions
+      WHERE ((comment_revisions.comment = c.id) AND ((comment_revisions.status)::text = ANY
+      (ARRAY[('approved'::character varying)::text, ('trusted'::character varying)::text]))))))))
+      GROUP BY a.id;
+    </createView>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-31">
+    <addForeignKeyConstraint baseColumnNames="article" baseTableName="comments"
+      constraintName="comments_article_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="articles" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-32">
+    <addForeignKeyConstraint baseColumnNames="article" baseTableName="journal_entries"
+      constraintName="journal_entries_article_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="articles" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-33">
+    <createView fullDefinition="false" viewName="article_branch_tips">SELECT
+      article_revisions.article,
+      article_revisions.id AS revision
+      FROM (( SELECT article_revisions_1.id
+      FROM article_revisions article_revisions_1
+      EXCEPT
+      SELECT article_revision_parenthood.parent
+      FROM article_revision_parenthood) branch_tips
+      JOIN article_revisions USING (id));
+    </createView>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-34">
+    <createView fullDefinition="false" viewName="article_publishing_dates">SELECT
+      article_revisions.article,
+      min(article_revisions.date) AS publishing_date
+      FROM article_revisions
+      WHERE ((article_revisions.status)::text = ANY (ARRAY[('published'::character varying)::text,
+      ('syndicated'::character varying)::text]))
+      GROUP BY article_revisions.article;
+    </createView>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-35">
+    <addForeignKeyConstraint baseColumnNames="article" baseTableName="article_revisions"
+      constraintName="article_revisions_article_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="articles" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-36">
+    <addForeignKeyConstraint baseColumnNames="author" baseTableName="article_revisions"
+      constraintName="article_revisions_author_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-37">
+    <createIndex indexName="article_revisions_english_ts_idx" tableName="article_revisions">
+      <column computed="true"
+        name="((setweight(to_tsvector('english'::regconfig, (title)::text), 'A'::char) || setweight(to_tsvector('english'::regconfig, (content)::text), 'D'::char)))"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-38">
+    <createIndex indexName="article_revisions_french_ts_idx" tableName="article_revisions">
+      <column computed="true"
+        name="((setweight(to_tsvector('french'::regconfig, (title)::text), 'A'::char) || setweight(to_tsvector('french'::regconfig, (content)::text), 'D'::char)))"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-39">
+    <createIndex indexName="article_revisions_german_ts_idx" tableName="article_revisions">
+      <column computed="true"
+        name="((setweight(to_tsvector('german'::regconfig, (title)::text), 'A'::char) || setweight(to_tsvector('german'::regconfig, (content)::text), 'D'::char)))"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-40">
+    <addUniqueConstraint columnNames="global_id" constraintName="article_revisions_global_id_key"
+      tableName="article_revisions"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-41">
+    <addForeignKeyConstraint baseColumnNames="child" baseTableName="article_revision_parenthood"
+      constraintName="article_revision_parenthood_child_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="article_revisions" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-42">
+    <addForeignKeyConstraint baseColumnNames="parent" baseTableName="article_revision_parenthood"
+      constraintName="article_revision_parenthood_parent_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="article_revisions" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-43">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_permissions"
+      constraintName="user_permissions_user_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-44">
+    <addForeignKeyConstraint baseColumnNames="entry_id" baseTableName="journal_pingback"
+      constraintName="journal_pingback_journal_entryfk" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="journal_entry" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-45">
+    <addForeignKeyConstraint baseColumnNames="entry_id" baseTableName="journal_trackback"
+      constraintName="journal_trackback_journal_entryfk" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="journal_entry" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-46">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_settings"
+      constraintName="user_settings_user_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-47">
+    <addForeignKeyConstraint baseColumnNames="article" baseTableName="article_category_memberships"
+      constraintName="article_category_memberships_article_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="articles" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-48">
+    <addForeignKeyConstraint baseColumnNames="category" baseTableName="category_inclusions"
+      constraintName="category_inclusions_category_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="categories" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-49">
+    <addForeignKeyConstraint baseColumnNames="supercategory" baseTableName="category_inclusions"
+      constraintName="category_inclusions_supercategory_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="categories" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-50">
+    <addForeignKeyConstraint baseColumnNames="journal" baseTableName="journal_entries"
+      constraintName="journal_entries_journal_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="journals" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-51">
+    <addForeignKeyConstraint baseColumnNames="article" baseTableName="article_aliases"
+      constraintName="article_aliases_article_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="articles" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-52">
+    <addForeignKeyConstraint baseColumnNames="author" baseTableName="comment_revisions"
+      constraintName="comment_revisions_author_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-53">
+    <addForeignKeyConstraint baseColumnNames="revision"
+      baseTableName="article_revision_characteristics"
+      constraintName="article_revision_characteristics_revision_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="article_revisions" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-54">
+    <addUniqueConstraint columnNames="revision, characteristic, value"
+      constraintName="article_revision_characteristics_revision_key"
+      tableName="article_revision_characteristics"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-55">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="login_certificates"
+      constraintName="login_certificates_user_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-56">
+    <addForeignKeyConstraint baseColumnNames="entry_id" baseTableName="journal_comment"
+      constraintName="journal_comment_journal_entryfk" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="journal_entry" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-57">
+    <addForeignKeyConstraint baseColumnNames="comment" baseTableName="comment_revisions"
+      constraintName="comment_revisions_comment_fkey" deferrable="false" initiallyDeferred="false"
+      onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="comments" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592058325319-58">
+    <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1"
+      maxValue="9223372036854775807" minValue="1" sequenceName="transaction_key_seq"
+      startValue="1"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-1">
+    <createTable schemaName="benki" tableName="openids">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="openid" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="openids_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-2">
+    <createTable schemaName="benki" tableName="lazychat_references">
+      <column name="referrer" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="lazychat_references_pkey"/>
+      </column>
+      <column name="referee" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="lazychat_references_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-3">
+    <createTable schemaName="benki" tableName="rsa_keys">
+      <column name="modulus" type="numeric">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="rsa_keys_pkey"/>
+      </column>
+      <column name="exponent" type="numeric">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="rsa_keys_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-4">
+    <createTable schemaName="benki" tableName="user_jids">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_jids_pkey"/>
+      </column>
+      <column name="jid" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_jids_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-5">
+    <createTable schemaName="benki" tableName="wiki_page_revisions">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="wiki_page_revisions_pkey"/>
+      </column>
+      <column name="page" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValueComputed="now()" name="date" type="TIMESTAMP WITH TIME ZONE"/>
+      <column name="title" type="VARCHAR"/>
+      <column name="content" type="VARCHAR"/>
+      <column name="author" type="INTEGER"/>
+      <column name="format" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-6">
+    <createTable schemaName="benki" tableName="user_roles">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_roles_pkey"/>
+      </column>
+      <column name="role" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_roles_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-7">
+    <createTable schemaName="benki" tableName="post_targets">
+      <column name="message" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="lazychat_targets_pkey"/>
+      </column>
+      <column name="target" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="lazychat_targets_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-8">
+    <createTable schemaName="benki" tableName="user_nicknames">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="nickname" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_nicknames_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-9">
+    <createTable schemaName="benki" tableName="posts">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="posts_pkey"/>
+      </column>
+      <column name="owner" type="INTEGER"/>
+      <column defaultValueComputed="now()" name="date" type="TIMESTAMP WITH TIME ZONE"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-10">
+    <createTable schemaName="benki" tableName="users">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
+      </column>
+      <column name="first_name" type="VARCHAR"/>
+      <column name="middle_names" type="VARCHAR"/>
+      <column name="last_name" type="VARCHAR"/>
+      <column name="email" type="VARCHAR"/>
+      <column name="website" type="VARCHAR"/>
+      <column name="status" type="VARCHAR"/>
+      <column name="role" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-11">
+    <createTable schemaName="benki" tableName="webids">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="webid" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="webids_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-12">
+    <createTable schemaName="benki" tableName="page_keys">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="page" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="page_keys_pkey"/>
+      </column>
+      <column name="key" type="numeric">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="page_keys_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-13">
+    <createTable schemaName="benki" tableName="role_tags">
+      <column name="role" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="role_tags_pkey"/>
+      </column>
+      <column name="tag" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="role_tags_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-14">
+    <createTable schemaName="benki" tableName="user_rsa_keys">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_rsa_keys_pkey"/>
+      </column>
+      <column name="modulus" type="numeric">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_rsa_keys_pkey"/>
+      </column>
+      <column name="exponent" type="numeric">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_rsa_keys_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-15">
+    <createTable schemaName="benki" tableName="user_email_addresses">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_email_addresses_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-16">
+    <createTable schemaName="benki" tableName="role_subroles">
+      <column name="superrole" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="role_subroles_pkey"/>
+      </column>
+      <column name="subrole" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="role_subroles_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-17">
+    <createTable schemaName="benki" tableName="roles">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="roles_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-18">
+    <createTable schemaName="benki" tableName="bookmark_tags">
+      <column name="bookmark" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="bookmark_tags_pkey"/>
+      </column>
+      <column name="tag" type="VARCHAR">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="bookmark_tags_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-19">
+    <createTable schemaName="benki" tableName="user_default_target">
+      <column name="user" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_default_target_pkey"/>
+      </column>
+      <column name="target" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_default_target_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-20">
+    <createTable schemaName="benki" tableName="wiki_pages">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="wiki_pages_pkey"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-21">
+    <addForeignKeyConstraint baseColumnNames="modulus,exponent" baseTableName="user_rsa_keys"
+      baseTableSchemaName="benki" constraintName="user_rsa_keys_modulus_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+      referencedColumnNames="modulus,exponent" referencedTableName="rsa_keys"
+      referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-22">
+    <createIndex indexName="user_jids_user" schemaName="benki" tableName="user_jids">
+      <column name="user"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-23">
+    <createIndex indexName="user_nicknames_user" schemaName="benki" tableName="user_nicknames">
+      <column name="user"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-24">
+    <createTable schemaName="benki" tableName="bookmarks">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="bookmarks_pkey"/>
+      </column>
+      <column name="owner" type="INTEGER"/>
+      <column defaultValueComputed="now()" name="date" type="TIMESTAMP WITH TIME ZONE"/>
+      <column name="uri" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="title" type="VARCHAR"/>
+      <column name="description" type="VARCHAR"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-25">
+    <createTable schemaName="benki" tableName="lazychat_messages">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="lazychat_messages_pkey"/>
+      </column>
+      <column name="owner" type="INTEGER"/>
+      <column defaultValueComputed="now()" name="date" type="TIMESTAMP WITH TIME ZONE"/>
+      <column name="content" type="VARCHAR"/>
+      <column name="format" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-26">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="webids"
+      baseTableSchemaName="benki" constraintName="webids_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-27">
+    <addForeignKeyConstraint baseColumnNames="author" baseTableName="wiki_page_revisions"
+      baseTableSchemaName="benki" constraintName="wiki_page_revisions_author_fkey"
+      deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+      referencedColumnNames="id" referencedTableName="users" referencedTableSchemaName="benki"
+      validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-28">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="page_keys"
+      baseTableSchemaName="benki" constraintName="page_keys_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-29">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_rsa_keys"
+      baseTableSchemaName="benki" constraintName="user_rsa_keys_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-30">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_email_addresses"
+      baseTableSchemaName="benki" constraintName="user_email_addresses_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-31">
+    <createView fullDefinition="false" schemaName="benki" viewName="effective_role_subroles">WITH
+      RECURSIVE t(superrole, subrole) AS (
+      SELECT roles.id,
+      roles.id
+      FROM roles
+      UNION
+      SELECT t_1.superrole,
+      rs.subrole
+      FROM (t t_1
+      JOIN role_subroles rs ON ((rs.superrole = t_1.subrole)))
+      )
+      SELECT t.superrole,
+      t.subrole
+      FROM t;
+    </createView>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-32">
+    <addForeignKeyConstraint baseColumnNames="target" baseTableName="user_default_target"
+      baseTableSchemaName="benki" constraintName="user_default_target_target_fkey"
+      deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+      referencedColumnNames="id" referencedTableName="roles" referencedTableSchemaName="benki"
+      validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-33">
+    <addForeignKeyConstraint baseColumnNames="role" baseTableName="user_roles"
+      baseTableSchemaName="benki" constraintName="user_roles_role_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="roles" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-34">
+    <addForeignKeyConstraint baseColumnNames="role" baseTableName="users"
+      baseTableSchemaName="benki" constraintName="users_role_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="roles" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-35">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_default_target"
+      baseTableSchemaName="benki" constraintName="user_default_target_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-36">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="openids"
+      baseTableSchemaName="benki" constraintName="openids_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-37">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_jids"
+      baseTableSchemaName="benki" constraintName="user_jids_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-38">
+    <addForeignKeyConstraint baseColumnNames="page" baseTableName="wiki_page_revisions"
+      baseTableSchemaName="benki" constraintName="wiki_page_revisions_page_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="wiki_pages" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-39">
+    <createView fullDefinition="false" schemaName="benki" viewName="effective_user_roles">SELECT
+      ur."user",
+      er.subrole AS role
+      FROM (user_roles ur
+      JOIN effective_role_subroles er ON ((er.superrole = ur.role)))
+      UNION
+      SELECT u.id AS "user",
+      rt.role
+      FROM users u,
+      role_tags rt
+      WHERE ((rt.tag)::text = ANY (ARRAY[('everyone'::character varying)::text, ('world'::character
+      varying)::text]))
+      UNION
+      SELECT NULL::integer AS "user",
+      rt.role
+      FROM role_tags rt
+      WHERE ((rt.tag)::text = 'world'::text);
+    </createView>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-40">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_roles"
+      baseTableSchemaName="benki" constraintName="user_roles_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-41">
+    <addForeignKeyConstraint baseColumnNames="target" baseTableName="post_targets"
+      baseTableSchemaName="benki" constraintName="lazychat_targets_target_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="roles" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-42">
+    <createView fullDefinition="false" schemaName="benki" viewName="user_visible_posts">SELECT
+      eur."user",
+      t.message
+      FROM effective_user_roles eur,
+      post_targets t
+      WHERE (t.target = eur.role)
+      UNION
+      SELECT m.owner AS "user",
+      m.id AS message
+      FROM posts m;
+    </createView>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-43">
+    <addForeignKeyConstraint baseColumnNames="user" baseTableName="user_nicknames"
+      baseTableSchemaName="benki" constraintName="user_nicknames_user_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-44">
+    <addForeignKeyConstraint baseColumnNames="owner" baseTableName="bookmarks"
+      baseTableSchemaName="benki" constraintName="bookmarks_owner_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-45">
+    <createView fullDefinition="false" schemaName="benki" viewName="user_visible_bookmarks">SELECT
+      uvp."user",
+      uvp.message
+      FROM (user_visible_posts uvp
+      JOIN bookmarks bm ON ((bm.id = uvp.message)));
+    </createView>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-46">
+    <addForeignKeyConstraint baseColumnNames="owner" baseTableName="lazychat_messages"
+      baseTableSchemaName="benki" constraintName="lazychat_messages_author_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-47">
+    <addForeignKeyConstraint baseColumnNames="referrer" baseTableName="lazychat_references"
+      baseTableSchemaName="benki" constraintName="lazychat_references_referrer_fkey"
+      deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+      referencedColumnNames="id" referencedTableName="lazychat_messages"
+      referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-48">
+    <createView fullDefinition="false" schemaName="benki" viewName="user_visible_lazychat_messages">
+      SELECT uvp."user",
+      uvp.message
+      FROM (user_visible_posts uvp
+      JOIN lazychat_messages lm ON ((lm.id = uvp.message)));
+    </createView>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-49">
+    <addForeignKeyConstraint baseColumnNames="owner" baseTableName="posts"
+      baseTableSchemaName="benki" constraintName="posts_owner_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-50">
+    <addForeignKeyConstraint baseColumnNames="subrole" baseTableName="role_subroles"
+      baseTableSchemaName="benki" constraintName="role_subroles_subrole_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="roles" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-51">
+    <addForeignKeyConstraint baseColumnNames="superrole" baseTableName="role_subroles"
+      baseTableSchemaName="benki" constraintName="role_subroles_superrole_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+      referencedTableName="roles" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+  <changeSet author="mulk (generated)" id="1592059602097-52">
+    <addForeignKeyConstraint baseColumnNames="bookmark" baseTableName="bookmark_tags"
+      baseTableSchemaName="benki" constraintName="bookmark_tags_bookmark_fkey" deferrable="false"
+      initiallyDeferred="false" onDelete="NO ACTION" onUpdate="CASCADE" referencedColumnNames="id"
+      referencedTableName="bookmarks" referencedTableSchemaName="benki" validate="true"/>
+  </changeSet>
+
+</databaseChangeLog>
