@@ -36,9 +36,7 @@
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.5.0</jna.version>
     <jsoup.version>1.13.1</jsoup.version>
-    <mapstruct.version>1.4.0.Beta1</mapstruct.version>
     <rome.version>1.13.0</rome.version>
-    <testcontainers.version>1.14.3</testcontainers.version>
   </properties>
 
   <dependencyManagement>
@@ -109,33 +107,12 @@
         <version>0.7.0</version>
       </dependency>
 
-      <!-- MapStruct -->
-      <dependency>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct</artifactId>
-        <version>${mapstruct.version}</version>
-      </dependency>
-
       <!-- Annotations -->
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>${findbugs-jsr305.version}</version>
         <scope>provided</scope>
-      </dependency>
-
-      <!-- Testing -->
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers</artifactId>
-        <version>${testcontainers.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>${testcontainers.version}</version>
-        <scope>test</scope>
       </dependency>
 
     </dependencies>
@@ -241,12 +218,6 @@
       <artifactId>jose4j</artifactId>
     </dependency>
 
-    <!-- MapStruct -->
-    <dependency>
-      <groupId>org.mapstruct</groupId>
-      <artifactId>mapstruct</artifactId>
-    </dependency>
-
     <!-- Annotations -->
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -263,21 +234,6 @@
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>testcontainers</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>postgresql</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -312,13 +268,6 @@
               <artifactId>hibernate-jpamodelgen</artifactId>
               <version>${hibernate.version}</version>
             </annotationProcessorPath>
-
-            <!-- MapStruct -->
-            <annotationProcessorPath>
-              <groupId>org.mapstruct</groupId>
-              <artifactId>mapstruct-processor</artifactId>
-              <version>${mapstruct.version}</version>
-            </annotationProcessorPath>
           </annotationProcessorPaths>
         </configuration>
       </plugin>
@@ -329,9 +278,6 @@
         <configuration>
           <systemProperties>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <compilerArgs>
-              <compilerArg>-Amapstruct.defaultComponentModel=cdi</compilerArg>
-            </compilerArgs>
           </systemProperties>
         </configuration>
       </plugin>
