@@ -82,6 +82,7 @@ public class LazychatResource extends PostResource {
     }
 
     message.content = text;
+    message.cachedDescriptionHtml = null;
     message.format = "markdown";
 
     assignPostTargets(visibility, user, message);

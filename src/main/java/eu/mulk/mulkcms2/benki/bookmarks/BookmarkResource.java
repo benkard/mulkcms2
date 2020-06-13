@@ -109,6 +109,7 @@ public class BookmarkResource extends PostResource {
     bookmark.title = title;
     bookmark.tags = Set.of();
     bookmark.description = description;
+    bookmark.cachedDescriptionHtml = null;
     bookmark.owner = user;
 
     assignPostTargets(visibility, user, bookmark);

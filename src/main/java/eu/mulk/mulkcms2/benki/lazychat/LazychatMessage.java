@@ -31,10 +31,7 @@ public class LazychatMessage extends Post {
   @JsonbTransient
   @CheckForNull
   public String getContentHtml() {
-    if (content == null) {
-      return null;
-    }
-    return new MarkdownConverter().htmlify(content);
+    return getDescriptionHtml();
   }
 
   @CheckForNull
@@ -52,8 +49,11 @@ public class LazychatMessage extends Post {
   @CheckForNull
   @Override
   @JsonbTransient
-  public String getDescriptionHtml() {
-    return getContentHtml();
+  protected String computeDescriptionHtml() {
+    if (content == null) {
+      return null;
+    }
+    return new MarkdownConverter().htmlify(content);
   }
 
   @Override

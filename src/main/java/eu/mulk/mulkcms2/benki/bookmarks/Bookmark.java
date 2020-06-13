@@ -38,7 +38,7 @@ public class Bookmark extends Post {
 
   @Transient
   @CheckForNull
-  public String getDescriptionHtml() {
+  protected String computeDescriptionHtml() {
     if (description == null) {
       return null;
     }

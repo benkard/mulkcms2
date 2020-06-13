@@ -113,6 +113,7 @@ public abstract class PostResource {
 
   @GET
   @Produces(TEXT_HTML)
+  @Transactional
   public TemplateInstance getIndex(
       @QueryParam("i") @CheckForNull Integer cursor,
       @QueryParam("n") @CheckForNull Integer maxResults) {
@@ -122,6 +123,8 @@ public abstract class PostResource {
     @CheckForNull var reader = getCurrentUser();
     var session = entityManager.unwrap(Session.class);
     var q = Post.findViewable(postFilter, session, reader, null, cursor, maxResults);
+
+    q.cacheDescriptions();
 
     var feedUri = uri.getPath() + "/feed";
     if (reader != null) {
@@ -145,6 +148,7 @@ public abstract class PostResource {
   @GET
   @Path("~{ownerName}")
   @Produces(TEXT_HTML)
+  @Transactional
   public TemplateInstance getUserIndex(
       @PathParam("ownerName") String ownerName,
       @QueryParam("i") @CheckForNull Integer cursor,
@@ -156,6 +160,8 @@ public abstract class PostResource {
     var owner = User.findByNickname(ownerName);
     var session = entityManager.unwrap(Session.class);
     var q = Post.findViewable(postFilter, session, reader, owner, cursor, maxResults);
+
+    q.cacheDescriptions();
 
     var feedUri = uri.getPath() + "/feed";
     if (reader != null) {
@@ -219,6 +225,7 @@ public abstract class PostResource {
   @GET
   @Path("feed")
   @Produces(APPLICATION_ATOM_XML)
+  @Transactional
   public String getFeed(@QueryParam("page-key") @CheckForNull String pageKeyBase36)
       throws FeedException {
     @CheckForNull var pageKey = pageKeyBase36 == null ? null : new BigInteger(pageKeyBase36, 36);
@@ -228,6 +235,7 @@ public abstract class PostResource {
   @GET
   @Path("~{ownerName}/feed")
   @Produces(APPLICATION_ATOM_XML)
+  @Transactional
   public String getUserFeed(
       @QueryParam("page-key") @CheckForNull String pageKeyBase36,
       @PathParam("ownerName") String ownerName)
@@ -257,7 +265,10 @@ public abstract class PostResource {
   private String makeFeed(
       @CheckForNull User reader, @Nullable User owner, @Nullable String ownerName)
       throws FeedException {
-    var posts = Post.findViewable(postFilter, entityManager.unwrap(Session.class), reader, owner);
+    var q = Post.findViewable(postFilter, entityManager.unwrap(Session.class), reader, owner);
+    q.cacheDescriptions();
+    var posts = q.posts;
+
     var feed = new Feed("atom_1.0");
 
     var feedSubId = owner == null ? "" : String.format("/%d", owner.id);

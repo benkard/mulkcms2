@@ -47,6 +47,8 @@ public abstract class Post extends PanacheEntityBase {
 
   private static final Logger log = Logger.getLogger(Post.class);
 
+  private static final int DESCRIPTION_CACHE_VERSION = 1;
+
   @Id
   @SequenceGenerator(
       allocationSize = 1,
@@ -60,6 +62,14 @@ public abstract class Post extends PanacheEntityBase {
   @Column(name = "date", nullable = true)
   @CheckForNull
   public OffsetDateTime date;
+
+  @Column(name = "cached_description_version", nullable = true)
+  @CheckForNull
+  public Integer cachedDescriptionVersion;
+
+  @Column(name = "cached_description_html", nullable = true)
+  @CheckForNull
+  public String cachedDescriptionHtml;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner", referencedColumnName = "id")
@@ -93,7 +103,21 @@ public abstract class Post extends PanacheEntityBase {
   public abstract String getTitle();
 
   @CheckForNull
-  public abstract String getDescriptionHtml();
+  public final String getDescriptionHtml() {
+    if (cachedDescriptionHtml != null &&
+        cachedDescriptionVersion != null &&
+        cachedDescriptionVersion >= DESCRIPTION_CACHE_VERSION){
+      return cachedDescriptionHtml;
+    } else {
+      @CheckForNull var descriptionHtml = computeDescriptionHtml();
+      cachedDescriptionHtml = descriptionHtml;
+      cachedDescriptionVersion = DESCRIPTION_CACHE_VERSION;
+      return descriptionHtml;
+    }
+  }
+
+  @CheckForNull
+  protected abstract String computeDescriptionHtml();
 
   @CheckForNull
   public abstract String getUri();
@@ -190,6 +214,10 @@ public abstract class Post extends PanacheEntityBase {
       this.posts = resultList;
     }
 
+    public void cacheDescriptions() {
+      days().forEach(Day::cacheDescriptions);
+    }
+
     public class Day {
       public final @CheckForNull LocalDate date;
       public final List<T> posts;
@@ -197,6 +225,12 @@ public abstract class Post extends PanacheEntityBase {
       private Day(LocalDate date, List<T> posts) {
         this.date = date;
         this.posts = posts;
+      }
+
+      public void cacheDescriptions() {
+        for (var post : posts) {
+          post.getDescriptionHtml();
+        }
       }
     }
 
@@ -211,9 +245,9 @@ public abstract class Post extends PanacheEntityBase {
     }
   }
 
-  public static List<Post> findViewable(
+  public static PostPage<Post> findViewable(
       PostFilter postFilter, Session session, @CheckForNull User viewer, @CheckForNull User owner) {
-    return findViewable(postFilter, session, viewer, owner, null, null).posts;
+    return findViewable(postFilter, session, viewer, owner, null, null);
   }
 
   public static PostPage<Post> findViewable(
