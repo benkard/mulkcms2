@@ -20,7 +20,6 @@
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <quarkus-plugin.version>1.5.0.Final</quarkus-plugin.version>
     <spotless-plugin.version>1.30.0</spotless-plugin.version>
-    <surefire-plugin.version>3.0.0-M4</surefire-plugin.version>
 
     <!-- <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id> -->
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -225,18 +224,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Testing -->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>rest-assured</artifactId>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
 
   <build>
@@ -269,16 +256,6 @@
               <version>${hibernate.version}</version>
             </annotationProcessorPath>
           </annotationProcessorPaths>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire-plugin.version}</version>
-        <configuration>
-          <systemProperties>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-          </systemProperties>
         </configuration>
       </plugin>
 
