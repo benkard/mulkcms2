@@ -2,20 +2,21 @@
   "dependencies": {
     "ContentTools": "^1.6.10",
     "bosonic": "^1.0.0",
-    "elix": "^9.0.3",
+    "elix": "^14.0.0",
     "normalize-opentype.css": "^0.2.4",
     "normalize.css": "^8.0.1",
-    "prismjs": "^1.19.0",
-    "purecss": "^1.0.1",
-    "sanitize.css": "^11.0.0"
+    "prismjs": "^1.20.0",
+    "purecss": "^2.0.3",
+    "sanitize.css": "^11.0.1"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "flow-bin": "^0.118.0",
-    "snowpack": "^1.1.0"
+    "eslint": "^7.2.0",
+    "flow-bin": "^0.127.0",
+    "snowpack": "^2.0.0"
   },
   "snowpack": {
-    "webDependencies": [
+    "plugins": [],
+    "install": [
       "ContentTools",
       "ContentTools/build/content-tools.min.css",
       "ContentTools/build/images/*",
