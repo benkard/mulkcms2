@@ -38,6 +38,21 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
 
   constructor() {
     super();
+    this.loaded = false;
+  }
+
+  static get observedAttributes() {
+    return [];
+  }
+
+  show() {
+    this.createShadow();
+  }
+
+  createShadow() {
+    if (this.shadowRoot !== null) {
+      return;
+    }
 
     let shadow = this.attachShadow({mode: "open"});
     shadow.appendChild(template.content.cloneNode(true));
@@ -49,11 +64,10 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
     this.visibilityInput =
         cast(shadow.getElementById('visibility-input'));
 
-    this.loaded = false;
-  }
-
-  static get observedAttributes() {
-    return [];
+    if (this.editedId !== null) {
+      this.mainForm.method = "post";
+      this.mainForm.action = `/lazychat/${this.editedId}/edit`;
+    }
   }
 
   get editedId() /*:number | null*/ {
@@ -69,18 +83,14 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
     return this.editedId !== null;
   }
 
-  connectedCallback() {
-    if (this.editedId !== null) {
-      this.mainForm.method = "post";
-      this.mainForm.action = `/lazychat/${this.editedId}/edit`;
-    }
-  }
+  connectedCallback() {}
 
   disconnectedCallback() {}
 
   attributeChangedCallback(name /*:string*/, oldValue /*:string*/, newValue /*:string*/) {}
 
   focus() {
+    this.show();
     this.textInput.focus();
     this.load();
   }

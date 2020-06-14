@@ -48,6 +48,21 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
 
   constructor() {
     super();
+    this.loaded = false;
+  }
+
+  static get observedAttributes() {
+    return [];
+  }
+
+  show() {
+    this.createShadow();
+  }
+
+  createShadow() {
+    if (this.shadowRoot !== null) {
+      return;
+    }
 
     let shadow = this.attachShadow({mode: "open"});
     shadow.appendChild(template.content.cloneNode(true));
@@ -65,11 +80,15 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     this.visibilityInput =
         cast(shadow.getElementById('visibility-input'));
 
-    this.loaded = false;
-  }
+    if (this.editedId !== null) {
+      this.mainForm.method = "post";
+      this.mainForm.action = `/bookmarks/${this.editedId}/edit`;
+    }
 
-  static get observedAttributes() {
-    return [];
+    this.uriInput.addEventListener('blur', this.onUriBlur.bind(this));
+    this.uriInput.value = this.uri || "";
+    this.titleInput.value = this.titleText || "";
+    this.descriptionInput.innerText = this.description || "";
   }
 
   get editedId() /*:number | null*/ {
@@ -85,17 +104,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     return this.editedId !== null;
   }
 
-  connectedCallback() {
-    if (this.editedId !== null) {
-      this.mainForm.method = "post";
-      this.mainForm.action = `/bookmarks/${this.editedId}/edit`;
-    }
-
-    this.uriInput.addEventListener('blur', this.onUriBlur.bind(this));
-    this.uriInput.value = this.uri || "";
-    this.titleInput.value = this.titleText || "";
-    this.descriptionInput.innerText = this.description || "";
-  }
+  connectedCallback() {}
 
   disconnectedCallback () {
     this.uriInput.removeEventListener('blur', this.onUriBlur.bind(this));
@@ -117,6 +126,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
   }
 
   focus() {
+    this.show();
     if (!this.uriInput.value) {
       this.uriInput.focus();
     } else if (!this.titleInput.value) {
