@@ -2,35 +2,35 @@
   font-family: 'Source Code Pro';
   font-style: normal;
   font-weight: 400;
-  src: local('Source Code Pro'), local('SourceCodePro-Regular'), url(source/mrl8jkM18OlOQN8JLgasD9zbP97U9sKh0jjxbPbfOKg.ttf) format('truetype');
+  src: local('Source Code Pro'), local('SourceCodePro-Regular'), url(source/mrl8jkM18OlOQN8JLgasD9zbP97U9sKh0jjxbPbfOKg.ttf) format('truetype'), url(https://matthias.benkard.de/cms2/fonts/source/mrl8jkM18OlOQN8JLgasD9zbP97U9sKh0jjxbPbfOKg.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Code Pro';
   font-style: normal;
   font-weight: 700;
-  src: local('Source Code Pro Bold'), local('SourceCodePro-Bold'), url(source/leqv3v-yTsJNC7nFznSMqbsbIrGiHa6JIepkyt5c0A0.ttf) format('truetype');
+  src: local('Source Code Pro Bold'), local('SourceCodePro-Bold'), url(source/leqv3v-yTsJNC7nFznSMqbsbIrGiHa6JIepkyt5c0A0.ttf) format('truetype'), url(https://matthias.benkard.de/cms2/fonts/source/leqv3v-yTsJNC7nFznSMqbsbIrGiHa6JIepkyt5c0A0.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(source/ODelI1aHBYDBqgeIAH2zlNzbP97U9sKh0jjxbPbfOKg.ttf) format('truetype');
+  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(source/ODelI1aHBYDBqgeIAH2zlNzbP97U9sKh0jjxbPbfOKg.ttf) format('truetype'), url(https://matthias.benkard.de/cms2/fonts/source/ODelI1aHBYDBqgeIAH2zlNzbP97U9sKh0jjxbPbfOKg.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 700;
-  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(source/toadOcfmlt9b38dHJxOBGLsbIrGiHa6JIepkyt5c0A0.ttf) format('truetype');
+  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(source/toadOcfmlt9b38dHJxOBGLsbIrGiHa6JIepkyt5c0A0.ttf) format('truetype'), url(https://matthias.benkard.de/cms2/fonts/source/toadOcfmlt9b38dHJxOBGLsbIrGiHa6JIepkyt5c0A0.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: italic;
   font-weight: 400;
-  src: local('Source Sans Pro Italic'), local('SourceSansPro-It'), url(source/M2Jd71oPJhLKp0zdtTvoM0DauxaEVho0aInXGvhmB4k.ttf) format('truetype');
+  src: local('Source Sans Pro Italic'), local('SourceSansPro-It'), url(source/M2Jd71oPJhLKp0zdtTvoM0DauxaEVho0aInXGvhmB4k.ttf) format('truetype'), url(https://matthias.benkard.de/cms2/fonts/source/M2Jd71oPJhLKp0zdtTvoM0DauxaEVho0aInXGvhmB4k.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: italic;
   font-weight: 700;
-  src: local('Source Sans Pro Bold Italic'), local('SourceSansPro-BoldIt'), url(source/fpTVHK8qsXbIeTHTrnQH6Edtd7Dq2ZflsctMEexj2lw.ttf) format('truetype');
+  src: local('Source Sans Pro Bold Italic'), local('SourceSansPro-BoldIt'), url(source/fpTVHK8qsXbIeTHTrnQH6Edtd7Dq2ZflsctMEexj2lw.ttf) format('truetype'), url(https://matthias.benkard.de/cms2/fonts/source/fpTVHK8qsXbIeTHTrnQH6Edtd7Dq2ZflsctMEexj2lw.ttf) format('truetype');
 }

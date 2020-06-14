@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  let bookmarkSubmissionForm = document.getElementById('lazychat-submission-form');
-  bookmarkSubmissionForm.focus();
+  let lazychatSubmissionForm = document.getElementById('lazychat-submission-form');
+  if (lazychatSubmissionForm) {
+    lazychatSubmissionForm.focus();
+  }
 });

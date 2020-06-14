@@ -5,8 +5,7 @@ import { cast } from "../cms2/types.js";
 
 const template = document.createElement('template');
 template.innerHTML = `
-  <link rel="stylesheet" type="text/css" href="/cms2/base.css" />
-  <link rel="stylesheet" type="text/css" href="/lazychat/MlkLazychatSubmissionForm.css" />
+  <link rel="stylesheet" type="text/css" href="/lib.css" />
 
   <form id="main-form" class="pure-form" method="post" action="/lazychat">
     <fieldset>

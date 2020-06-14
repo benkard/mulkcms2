@@ -34,6 +34,28 @@
     </condition>
   </target>
 
+  <target name="parcel" depends="parcel.check,yarn" if="parcel.run">
+    <exec executable="yarn" dir="${web-dir}">
+      <arg value="parcel"/>
+      <arg value="build"/>
+      <arg value="lib.css"/>
+      <arg value="lib.js"/>
+      <arg value="lazychat/newLazychatMessage.js"/>
+      <arg value="bookmarks/newBookmark.js"/>
+      <arg value="posts/postList.js"/>
+      <arg value="web_modules/ContentTools.js"/>
+      <arg value="web_modules/ContentTools/build/content-tools.min.css"/>
+    </exec>
+  </target>
+
+  <target name="parcel.check">
+    <condition property="parcel.run">
+      <not>
+        <available file="${web-dir}/dist"/>
+      </not>
+    </condition>
+  </target>
+
   <target name="flow" depends="snowpack">
     <exec executable="yarn" dir="${web-dir}">
       <arg value="run"/>
@@ -56,7 +78,8 @@
 
   <target name="web.resources" depends="snowpack" unless="skip-web"/>
   <target name="web.check" unless="skip-web" depends="web.resources,flow,eslint"/>
-  <target name="web" unless="skip-web" depends="web.resources,web.check" description="Generate web resources"/>
+  <target name="web.bundle" unless="skip-web" depends="web.resources,parcel"/>
+  <target name="web" unless="skip-web" depends="web.resources,web.check,web.bundle" description="Generate web resources"/>
 
   <target name="package" description="Create executable JAR">
     <exec executable="./mvnw">

@@ -12,8 +12,16 @@
   "devDependencies": {
     "eslint": "^7.2.0",
     "flow-bin": "^0.127.0",
-    "snowpack": "^2.0.0"
+    "snowpack": "^2.0.0",
+    "cssnano": "^4.1.10",
+    "parcel": "^2.0.0-alpha.3.2"
   },
+  "browserslist": [
+    "last 1 Firefox version",
+    "last 1 iOS version",
+    "last 1 Safari version",
+    "last 1 Chrome version"
+  ],
   "snowpack": {
     "plugins": [],
     "install": [

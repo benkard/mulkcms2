@@ -13,7 +13,7 @@
 @import "../web_modules/sanitize.css/typography.css";
 /* */
 
-@import "fonts/source.css";
+@import "./fonts/source.css";
 
 @viewport {
     width: device-width;

@@ -46,6 +46,10 @@ target/
 node_modules
 web_modules
 
+# Parcel
+.parcel-cache/
+/src/main/resources/META-INF/resources/dist/
+
 # Unknown
 out/
 
