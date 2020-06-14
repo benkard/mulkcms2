@@ -74,9 +74,10 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
 
   get editedId() /*:number | null*/ {
     let attr = this.getAttribute("edited-id");
-    if (attr === undefined || attr === null) {
+    if (attr === null) {
       return null;
     }
+
     return parseInt(attr, 10);
   }
 
