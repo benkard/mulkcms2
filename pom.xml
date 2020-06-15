@@ -366,6 +366,7 @@
       <resource>
         <directory>src/main/resources</directory>
         <excludes>
+          <exclude>META-INF/resources/.parcel-cache/**/*</exclude>
           <exclude>META-INF/resources/node_modules/**/*</exclude>
           <exclude>META-INF/resources/package.json</exclude>
           <exclude>META-INF/resources/yarn.lock</exclude>
