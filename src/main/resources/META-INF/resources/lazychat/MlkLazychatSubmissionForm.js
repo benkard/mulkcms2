@@ -100,7 +100,7 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
     }
 
     let fetchUrl = new URL(`/posts/${this.editedId}`, document.URL);
-    let r = await fetch(fetchUrl);
+    let r = await fetch(fetchUrl, {headers: {"accept": "application/json"}});
 
     if (!r.ok) {
       return;

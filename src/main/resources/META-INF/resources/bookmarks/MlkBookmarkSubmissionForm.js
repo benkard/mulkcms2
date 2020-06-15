@@ -147,7 +147,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     let searchParams = new URLSearchParams({'uri': this.uriInput.value});
     console.log(`/bookmarks/page-info?${searchParams.toString()}`);
     let fetchUrl = new URL(`/bookmarks/page-info?${searchParams.toString()}`, document.URL);
-    let r = await fetch(fetchUrl);
+    let r = await fetch(fetchUrl, {headers: {"accept": "application/json"}});
     this.uriSpinner.hidden = true;
     this.uriSpinner.playing = false;
 
@@ -165,7 +165,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     }
 
     let fetchUrl = new URL(`/posts/${this.editedId}`, document.URL);
-    let r = await fetch(fetchUrl);
+    let r = await fetch(fetchUrl, {headers: {"accept": "application/json"}});
 
     if (!r.ok) {
       return;
