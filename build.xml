@@ -88,6 +88,7 @@
   <target name="deploy" description="Deploy JAR to Kubernetes">
     <exec executable="./mvnw">
       <arg value="package"/>
+      <arg value="-Dquarkus.container-image.build=true"/>
       <arg value="-Dquarkus.container-image.push=true"/>
     </exec>
     <exec executable="kubectl">
