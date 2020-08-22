@@ -12,10 +12,10 @@ import javax.ws.rs.core.MediaType;
 class AboutResource {
 
   @ResourcePath("benki/about/index.html")
-  var index: Template = null;
+  var index: Template = _
 
   @GET
   @Produces(Array(MediaType.TEXT_HTML))
-  def getIndex(): TemplateInstance =
-    index.instance();
+  def getIndex: TemplateInstance =
+    index.instance()
 }
