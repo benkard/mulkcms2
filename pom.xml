@@ -20,6 +20,7 @@
 
     <antrun-plugin.version>3.0.0</antrun-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
+    <processor-plugin.version>4.2</processor-plugin.version>
     <quarkus.version>1.7.0.Final</quarkus.version>
     <resources-plugin.version>3.1.0</resources-plugin.version>
     <scalafmt.version>2.6.3</scalafmt.version>
@@ -250,6 +251,20 @@
       <artifactId>jsr305</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-annotations-jvm</artifactId>
+      <version>${kotlin-annotations.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Hibernate -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
+      <version>${hibernate.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
   </dependencies>
 
@@ -273,25 +288,10 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
-
         <configuration>
-          <annotationProcessorPaths>
-
-            <!-- Hibernate -->
-            <annotationProcessorPath>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-jpamodelgen</artifactId>
-              <version>${hibernate.version}</version>
-            </annotationProcessorPath>
-
-            <!-- Quarkus -->
-            <annotationProcessorPath>
-              <groupId>io.quarkus</groupId>
-              <artifactId>quarkus-panache-common</artifactId>
-              <version>${quarkus.version}</version>
-            </annotationProcessorPath>
-
-          </annotationProcessorPaths>
+          <compilerArgs>
+            <arg>-proc:none</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
 
@@ -401,6 +401,28 @@
       </plugin>
 
       <plugin>
+        <groupId>org.bsc.maven</groupId>
+        <artifactId>maven-processor-plugin</artifactId>
+        <version>${processor-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>process</id>
+            <goals>
+              <goal>process</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+          <execution>
+            <id>process-test</id>
+            <goals>
+              <goal>process-test</goal>
+            </goals>
+            <phase>generate-test-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
         <version>${scala-plugin.version}</version>
@@ -435,38 +457,13 @@
             <arg>-feature</arg>
             <arg>-explaintypes</arg>
             <arg>-target:jvm-1.8</arg>
-            <arg>-Ypartial-unification</arg>
             -->
           </args>
 
           <javacArgs>
             <javacArg>-Xlint:deprecation</javacArg>
+            <javacArg>-proc:none</javacArg>
           </javacArgs>
-
-          <additionalDependencies>
-
-            <!-- Hibernate -->
-            <dependency>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-jpamodelgen</artifactId>
-              <version>${hibernate.version}</version>
-            </dependency>
-
-            <!-- Quarkus -->
-            <dependency>
-              <groupId>io.quarkus</groupId>
-              <artifactId>quarkus-panache-common</artifactId>
-              <version>${quarkus.version}</version>
-            </dependency>
-
-            <!-- Annotations -->
-            <dependency>
-              <groupId>org.jetbrains.kotlin</groupId>
-              <artifactId>kotlin-annotations-jvm</artifactId>
-              <version>${kotlin-annotations.version}</version>
-            </dependency>
-
-          </additionalDependencies>
         </configuration>
 
       </plugin>
