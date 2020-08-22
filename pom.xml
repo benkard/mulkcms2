@@ -22,7 +22,8 @@
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <quarkus.version>1.7.0.Final</quarkus.version>
     <resources-plugin.version>3.1.0</resources-plugin.version>
-    <spotless-plugin.version>2.0.1</spotless-plugin.version>
+    <scalafmt.version>2.6.3</scalafmt.version>
+    <spotless-plugin.version>2.0.3</spotless-plugin.version>
     <scala-plugin.version>4.4.0</scala-plugin.version>
 
     <!-- <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id> -->
@@ -366,6 +367,13 @@
               <style>GOOGLE</style>
             </googleJavaFormat>
           </java>
+
+          <scala>
+            <scalafmt>
+              <version>${scalafmt.version}</version>
+              <file>${basedir}/.scalafmt.conf</file>
+            </scalafmt>
+          </scala>
         </configuration>
       </plugin>
 

@@ -104,9 +104,9 @@ public abstract class Post extends PanacheEntityBase {
 
   @CheckForNull
   public final String getDescriptionHtml() {
-    if (cachedDescriptionHtml != null &&
-        cachedDescriptionVersion != null &&
-        cachedDescriptionVersion >= DESCRIPTION_CACHE_VERSION){
+    if (cachedDescriptionHtml != null
+        && cachedDescriptionVersion != null
+        && cachedDescriptionVersion >= DESCRIPTION_CACHE_VERSION) {
       return cachedDescriptionHtml;
     } else {
       @CheckForNull var descriptionHtml = computeDescriptionHtml();
