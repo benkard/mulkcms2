@@ -1,11 +1,9 @@
 package eu.mulk.mulkcms2.benki.lazychat;
 
 import eu.mulk.mulkcms2.benki.posts.Post;
-import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import java.util.Collection;
 import javax.annotation.CheckForNull;
 import javax.json.bind.annotation.JsonbTransient;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -14,14 +12,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "lazychat_messages", schema = "benki")
-public class LazychatMessage extends Post {
-
-  @Column(name = "content", nullable = true, length = -1)
-  @CheckForNull
-  public String content;
-
-  @Column(name = "format", nullable = false, length = -1)
-  public String format;
+public class LazychatMessage extends Post<LazychatMessageText> {
 
   @OneToMany(mappedBy = "referrer", fetch = FetchType.LAZY)
   @JsonbTransient
@@ -46,16 +37,6 @@ public class LazychatMessage extends Post {
     return null;
   }
 
-  @CheckForNull
-  @Override
-  @JsonbTransient
-  protected String computeDescriptionHtml() {
-    if (content == null) {
-      return null;
-    }
-    return new MarkdownConverter().htmlify(content);
-  }
-
   @Override
   public boolean isBookmark() {
     return false;
@@ -64,5 +45,18 @@ public class LazychatMessage extends Post {
   @Override
   public boolean isLazychatMessage() {
     return true;
+  }
+
+  public void setContent(String x) {
+    var text = getText();
+    if (text == null) {
+      text = new LazychatMessageText();
+      text.post = this;
+      text.language = "";
+      texts.put(text.language, text);
+    }
+
+    text.cachedDescriptionHtml = null;
+    text.content = x;
   }
 }

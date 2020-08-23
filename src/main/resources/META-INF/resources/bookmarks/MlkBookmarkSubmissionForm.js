@@ -173,9 +173,11 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
 
     let post = await r.json();
     this.uriInput.value = post.uri;
-    this.titleInput.value = post.title;
-    this.descriptionInput.innerText = post.description;
     this.visibilityInput.value = post.visibility;
+    if (post.texts['']) {
+      this.titleInput.value = post.texts[''].title;
+      this.descriptionInput.innerText = post.texts[''].description;
+    }
 
     this.loaded = true;
   }

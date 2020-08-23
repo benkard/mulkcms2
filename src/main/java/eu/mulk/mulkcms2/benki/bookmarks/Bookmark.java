@@ -1,7 +1,6 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
 import eu.mulk.mulkcms2.benki.posts.Post;
-import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.persistence.CollectionTable;
@@ -11,22 +10,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "bookmarks", schema = "benki")
-public class Bookmark extends Post {
+public class Bookmark extends Post<BookmarkText> {
 
   @Column(name = "uri", nullable = false, length = -1)
   public String uri;
-
-  @Column(name = "title", nullable = true, length = -1)
-  @CheckForNull
-  public String title;
-
-  @Column(name = "description", nullable = true, length = -1)
-  @CheckForNull
-  public String description;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(
@@ -36,13 +26,10 @@ public class Bookmark extends Post {
   @Column(name = "tag")
   public Set<String> tags;
 
-  @Transient
   @CheckForNull
-  protected String computeDescriptionHtml() {
-    if (description == null) {
-      return null;
-    }
-    return new MarkdownConverter().htmlify(description);
+  private String getDescription() {
+    var text = getText();
+    return text == null ? null : text.description;
   }
 
   @CheckForNull
@@ -54,7 +41,8 @@ public class Bookmark extends Post {
   @CheckForNull
   @Override
   public String getTitle() {
-    return title;
+    var text = getText();
+    return text == null ? null : text.title;
   }
 
   @Override
@@ -65,5 +53,30 @@ public class Bookmark extends Post {
   @Override
   public boolean isLazychatMessage() {
     return false;
+  }
+
+  public void setTitle(String x) {
+    var text = getText();
+    if (text == null) {
+      text = new BookmarkText();
+      text.post = this;
+      text.language = "";
+      texts.put(text.language, text);
+    }
+
+    text.title = x;
+  }
+
+  public void setDescription(String x) {
+    var text = getText();
+    if (text == null) {
+      text = new BookmarkText();
+      text.post = this;
+      text.language = "";
+      texts.put(text.language, text);
+    }
+
+    text.description = x;
+    text.cachedDescriptionHtml = null;
   }
 }

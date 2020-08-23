@@ -107,8 +107,10 @@ export class MlkLazychatSubmissionForm extends HTMLElement {
     }
 
     let post = await r.json();
-    this.textInput.value = post.content;
     this.visibilityInput.value = post.visibility;
+    if (post.texts['']) {
+      this.textInput.value = post.texts[''].content;
+    }
 
     this.loaded = true;
   }

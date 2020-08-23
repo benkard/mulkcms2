@@ -1,0 +1,79 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+  <changeSet author="mulk" id="1.3-1">
+    <createTable tableName="lazychat_message_texts" schemaName="benki">
+      <column name="lazychat_message" type="integer">
+        <constraints
+          nullable="false"
+          primaryKeyName="lazychat_message_texts_pkey"
+          primaryKey="true"
+          foreignKeyName="lazychat_message_texts_lazychat_message_fkey"
+          referencedTableSchemaName="benki"
+          referencedTableName="lazychat_messages"
+          referencedColumnNames="id"/>
+      </column>
+
+      <column name="language" type="varchar">
+        <constraints
+          nullable="false"
+          primaryKeyName="lazychat_message_texts_pkey"
+          primaryKey="true"
+          checkConstraint="IN ('', 'de', 'en', 'fr', 'ja', 'la')"/>
+      </column>
+
+      <column name="content" type="varchar">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <sql>
+      insert into benki.lazychat_message_texts(lazychat_message, language, content)
+        select id, '', content from benki.lazychat_messages;
+    </sql>
+
+    <dropColumn tableName="lazychat_messages" schemaName="benki">
+      <column name="content"/>
+    </dropColumn>
+
+    <createTable tableName="bookmark_texts" schemaName="benki">
+      <column name="bookmark" type="integer">
+        <constraints
+          nullable="false"
+          primaryKeyName="bookmark_texts_pkey"
+          primaryKey="true"
+          foreignKeyName="bookmark_texts_bookmark_fkey"
+          referencedTableSchemaName="benki"
+          referencedTableName="bookmarks"
+          referencedColumnNames="id"/>
+      </column>
+
+      <column name="language" type="varchar">
+        <constraints
+          nullable="false"
+          primaryKeyName="bookmark_texts_pkey"
+          primaryKey="true"
+          checkConstraint="IN ('', 'de', 'en', 'fr', 'ja', 'la')"/>
+      </column>
+
+      <column name="title" type="varchar"/>
+      <column name="description" type="varchar"/>
+    </createTable>
+
+    <sql>
+      insert into benki.bookmark_texts(bookmark, language, title, description)
+        select id, '', title, description from benki.bookmarks;
+    </sql>
+
+    <dropColumn tableName="bookmarks" schemaName="benki">
+      <column name="title"/>
+      <column name="description"/>
+    </dropColumn>
+  </changeSet>
+
+</databaseChangeLog>

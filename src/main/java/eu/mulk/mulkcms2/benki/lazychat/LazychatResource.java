@@ -45,8 +45,7 @@ public class LazychatResource extends PostResource {
     var user = Objects.requireNonNull(getCurrentUser());
 
     var message = new LazychatMessage();
-    message.content = text;
-    message.format = "markdown";
+    message.setContent(text);
     message.owner = user;
     message.date = OffsetDateTime.now();
 
@@ -81,9 +80,7 @@ public class LazychatResource extends PostResource {
       throw new ForbiddenException();
     }
 
-    message.content = text;
-    message.cachedDescriptionHtml = null;
-    message.format = "markdown";
+    message.setContent(text);
 
     assignPostTargets(visibility, user, message);
 

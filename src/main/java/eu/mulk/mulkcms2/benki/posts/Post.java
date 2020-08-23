@@ -1,5 +1,7 @@
 package eu.mulk.mulkcms2.benki.posts;
 
+import static java.util.stream.Collectors.toList;
+
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
@@ -10,7 +12,9 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import javax.json.bind.annotation.JsonbTransient;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +35,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -43,11 +50,9 @@ import org.jboss.logging.Logger;
 @Entity
 @Table(name = "posts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Post extends PanacheEntityBase {
+public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
   private static final Logger log = Logger.getLogger(Post.class);
-
-  private static final int DESCRIPTION_CACHE_VERSION = 1;
 
   @Id
   @SequenceGenerator(
@@ -62,14 +67,6 @@ public abstract class Post extends PanacheEntityBase {
   @Column(name = "date", nullable = true)
   @CheckForNull
   public OffsetDateTime date;
-
-  @Column(name = "cached_description_version", nullable = true)
-  @CheckForNull
-  public Integer cachedDescriptionVersion;
-
-  @Column(name = "cached_description_html", nullable = true)
-  @CheckForNull
-  public String cachedDescriptionHtml;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner", referencedColumnName = "id")
@@ -95,29 +92,24 @@ public abstract class Post extends PanacheEntityBase {
   @JsonbTransient
   public Set<Role> targets;
 
+  @OneToMany(
+      mappedBy = "post",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      targetEntity = PostText.class)
+  @MapKey(name = "language")
+  public Map<String, Text> texts = new HashMap<>();
+
+  public Map<String, Text> getTexts() {
+    return texts;
+  }
+
   public abstract boolean isBookmark();
 
   public abstract boolean isLazychatMessage();
 
   @CheckForNull
   public abstract String getTitle();
-
-  @CheckForNull
-  public final String getDescriptionHtml() {
-    if (cachedDescriptionHtml != null
-        && cachedDescriptionVersion != null
-        && cachedDescriptionVersion >= DESCRIPTION_CACHE_VERSION) {
-      return cachedDescriptionHtml;
-    } else {
-      @CheckForNull var descriptionHtml = computeDescriptionHtml();
-      cachedDescriptionHtml = descriptionHtml;
-      cachedDescriptionVersion = DESCRIPTION_CACHE_VERSION;
-      return descriptionHtml;
-    }
-  }
-
-  @CheckForNull
-  protected abstract String computeDescriptionHtml();
 
   @CheckForNull
   public abstract String getUri();
@@ -195,7 +187,16 @@ public abstract class Post extends PanacheEntityBase {
     return getVisibility() == Visibility.PUBLIC || (user != null && visibleTo.contains(user));
   }
 
-  public static class PostPage<T extends Post> {
+  @CheckForNull
+  public final String getDescriptionHtml() {
+    var text = getText();
+    if (text == null) {
+      return null;
+    }
+    return text.getDescriptionHtml();
+  }
+
+  public static class PostPage<T extends Post<? extends PostText>> {
     public @CheckForNull final Integer prevCursor;
     public @CheckForNull final Integer cursor;
     public @CheckForNull final Integer nextCursor;
@@ -229,7 +230,7 @@ public abstract class Post extends PanacheEntityBase {
 
       public void cacheDescriptions() {
         for (var post : posts) {
-          post.getDescriptionHtml();
+          post.getTexts().values().forEach(PostText::getDescriptionHtml);
         }
       }
     }
@@ -245,12 +246,12 @@ public abstract class Post extends PanacheEntityBase {
     }
   }
 
-  public static PostPage<Post> findViewable(
+  public static PostPage<Post<? extends PostText>> findViewable(
       PostFilter postFilter, Session session, @CheckForNull User viewer, @CheckForNull User owner) {
     return findViewable(postFilter, session, viewer, owner, null, null);
   }
 
-  public static PostPage<Post> findViewable(
+  public static PostPage<Post<? extends PostText>> findViewable(
       PostFilter postFilter,
       Session session,
       @CheckForNull User viewer,
@@ -271,7 +272,7 @@ public abstract class Post extends PanacheEntityBase {
     return findViewable(entityClass, session, viewer, owner, cursor, count);
   }
 
-  protected static <T extends Post> PostPage<T> findViewable(
+  protected static <T extends Post<? extends PostText>> PostPage<T> findViewable(
       Class<? extends T> entityClass,
       Session session,
       @CheckForNull User viewer,
@@ -316,7 +317,29 @@ public abstract class Post extends PanacheEntityBase {
       }
     }
 
+    // Fetch texts (to avoid n+1 selects).
+    var postIds = forwardResults.stream().map(x -> x.id).collect(toList());
+
+    if (!postIds.isEmpty()) {
+      find("SELECT p FROM Post p LEFT JOIN FETCH p.texts WHERE p.id IN (?1)", postIds).stream()
+          .count();
+    }
+
     return new PostPage<>(prevCursor, cursor, nextCursor, forwardResults);
+  }
+
+  @CheckForNull
+  protected Text getText() {
+    var texts = getTexts();
+    if (texts.isEmpty()) {
+      return null;
+    } else if (texts.containsKey("")) {
+      return texts.get("");
+    } else if (texts.containsKey("en")) {
+      return texts.get("en");
+    } else {
+      return texts.values().stream().findAny().get();
+    }
   }
 
   public enum Visibility {
