@@ -13,8 +13,6 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
 
-    <scala.version>2.13.3</scala.version>
-
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -23,9 +21,7 @@
     <processor-plugin.version>4.2</processor-plugin.version>
     <quarkus.version>1.7.0.Final</quarkus.version>
     <resources-plugin.version>3.1.0</resources-plugin.version>
-    <scalafmt.version>2.6.3</scalafmt.version>
     <spotless-plugin.version>2.0.3</spotless-plugin.version>
-    <scala-plugin.version>4.4.0</scala-plugin.version>
 
     <!-- <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id> -->
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -128,28 +124,8 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>${scala.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-reflect</artifactId>
-      <version>${scala.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-compiler</artifactId>
-      <version>${scala.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-agroal</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-scala</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -372,13 +348,6 @@
               <style>GOOGLE</style>
             </googleJavaFormat>
           </java>
-
-          <scala>
-            <scalafmt>
-              <version>${scalafmt.version}</version>
-              <file>${basedir}/.scalafmt.conf</file>
-            </scalafmt>
-          </scala>
         </configuration>
       </plugin>
 
@@ -420,52 +389,6 @@
             <phase>generate-test-sources</phase>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>net.alchim31.maven</groupId>
-        <artifactId>scala-maven-plugin</artifactId>
-        <version>${scala-plugin.version}</version>
-
-        <executions>
-          <execution>
-            <id>scala-compile-first</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>add-source</goal>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>scala-test-compile</id>
-            <phase>process-test-resources</phase>
-            <goals>
-              <goal>add-source</goal>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
-
-        <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
-          <localInstall>false</localInstall>
-          <!--<recompileMode>incremental</recompileMode>-->
-          <args>
-            <arg>-Xsource:3</arg>
-            <!--
-            <arg>-deprecation</arg>
-            <arg>-feature</arg>
-            <arg>-explaintypes</arg>
-            <arg>-target:jvm-1.8</arg>
-            -->
-          </args>
-
-          <javacArgs>
-            <javacArg>-Xlint:deprecation</javacArg>
-            <javacArg>-proc:none</javacArg>
-          </javacArgs>
-        </configuration>
-
       </plugin>
 
     </plugins>
