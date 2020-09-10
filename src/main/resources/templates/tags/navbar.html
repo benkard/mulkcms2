@@ -5,5 +5,17 @@
   <li class='{#if siteSection == "Bookmarks"}this-page{/} indented' data-site-section="Bookmarks"><a href="/bookmarks">Bookmarks</a></li>
   <li class='{#if siteSection == "Lazy Chat"}this-page{/} indented' data-site-section="Lazy Chat"><a href="/lazychat">Lazy Chat</a></li>
   <li class='{#if siteSection == "Wiki"}this-page{/}' data-site-section="Wiki"><a href="/wiki/Home">Wiki</a></li>
+
   <li class='{#if siteSection == "About"}this-page{/}' data-site-section="About"><a href="/about">Contact Info</a></li>
+
+  {#if inject:LoginStatus.loggedIn}
+  <li class='{#if siteSection == "Login"}this-page{/} login-box logged-in' data-site-section="Login">
+    <div class="login-text">Logged in as: <span class="login-name">{inject:LoginStatus.userName}</span></div>
+  </li>
+  {#else}
+  <li class='{#if siteSection == "Login"}this-page{/} login-box logged-out' data-site-section="Login">
+    <div class="login-text">Not logged in.</div>
+    <a href="/login">Log In</a>
+  </li>
+  {/if}
 </ol>

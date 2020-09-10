@@ -125,7 +125,7 @@ body > nav > ol > li.this-page {
   z-index: 1;
 }
 
-body > nav > ol > li > a {
+body > nav > ol > li > * {
   text-decoration: none;
   display: block;
   padding: 5px;
@@ -136,8 +136,17 @@ body > nav a:hover {
   background-color: #f8f8f8;
 }
 
-body > nav li[data-site-section="About"] {
+body > nav li[data-site-section="About"], body > nav li[data-site-section="Login"] {
   margin-top: 1em;
+}
+
+.login-text {
+  font-style: italic;
+}
+
+.login-name {
+  font-style: normal;
+  font-family: cursive;
 }
 
 body > main {

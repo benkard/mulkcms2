@@ -64,7 +64,7 @@ public class WikiResource {
   }
 
   @GET
-  @Path("/{pageName}")
+  @Path("{pageName}")
   @Produces(TEXT_HTML)
   @Authenticated
   public TemplateInstance getPage(@PathParam("pageName") String pageName) {
@@ -82,7 +82,7 @@ public class WikiResource {
   }
 
   @POST
-  @Path("/{pageName}")
+  @Path("{pageName}")
   @Authenticated
   @Transactional
   @Produces(APPLICATION_JSON)
@@ -136,7 +136,7 @@ public class WikiResource {
   }
 
   @GET
-  @Path("/{pageName}/revisions")
+  @Path("{pageName}/revisions")
   @Produces(TEXT_HTML)
   @Authenticated
   public TemplateInstance getPageRevisions(@PathParam("pageName") String pageName) {
