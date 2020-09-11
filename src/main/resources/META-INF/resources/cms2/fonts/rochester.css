@@ -1,0 +1,6 @@
+@font-face {
+  font-family: 'Rochester';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rochester'), local('Rochester-Regular'), url(rochester/Rochester-Regular.ttf) format('truetype'), url(https://matthias.benkard.de/cms2/fonts/rochester/Rochester-Regular.ttf) format('truetype');
+}

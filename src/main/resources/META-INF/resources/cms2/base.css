@@ -13,6 +13,7 @@
 @import "../web_modules/sanitize.css/typography.css";
 /* */
 
+@import "./fonts/rochester.css";
 @import "./fonts/source.css";
 
 @viewport {
@@ -146,7 +147,8 @@ body > nav li[data-site-section="About"], body > nav li[data-site-section="Login
 
 .login-name {
   font-style: normal;
-  font-family: cursive;
+  font-size: larger;
+  font-family: Rochester, cursive;
 }
 
 body > main {

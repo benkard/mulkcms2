@@ -13,7 +13,7 @@
 
   {#if inject:LoginStatus.loggedIn}
   <li class='{#if siteSection == "Login"}this-page{/} login-box logged-in' data-site-section="Login">
-    <div class="login-text">Logged in as: <span class="login-name">{inject:LoginStatus.userName}</span></div>
+    <div class="login-text">Logged in as:&ensp;<span class="login-name">{inject:LoginStatus.userName}</span></div>
   </li>
   {#else}
   <li class='{#if siteSection == "Login"}this-page{/} login-box logged-out' data-site-section="Login">
