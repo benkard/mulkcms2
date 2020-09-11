@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki.posts;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.annotation.CheckForNull;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 @Table(name = "post_texts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @IdClass(PostTextPK.class)
-public abstract class PostText<OwningPost extends Post<?>> {
+public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntityBase {
 
   private static final int DESCRIPTION_CACHE_VERSION = 1;
 
