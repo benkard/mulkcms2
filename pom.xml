@@ -284,6 +284,7 @@
             </goals>
             <configuration>
               <outputDirectory>${basedir}/target/classes/META-INF/resources</outputDirectory>
+              <overwrite>true</overwrite>
               <resources>
                 <resource>
                   <directory>${basedir}/src/main/resources/META-INF/resources/dist</directory>
@@ -306,7 +307,7 @@
         <dependencies>
           <dependency>
             <groupId>org.liquibase.ext</groupId>
-            <artifactId>liquibase-hibernate5</artifactId> <!-- note: I tried hibernate4 release version as well -->
+            <artifactId>liquibase-hibernate5</artifactId>
             <version>${liquibase.version}</version>
           </dependency>
           <dependency>
