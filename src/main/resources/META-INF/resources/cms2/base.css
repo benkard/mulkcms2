@@ -48,7 +48,8 @@ nav ul {
 }
 
 code, kbd, samp, pre {
-  font-family: 'Iosevka Web', monospace;
+  font-family: 'Iosevka Web', 'Source Code Pro', 'Fira Code', 'Fira Mono', monospace;
+  font-feature-settings: "calt" off, "dlig" on;
 }
 
 body {
