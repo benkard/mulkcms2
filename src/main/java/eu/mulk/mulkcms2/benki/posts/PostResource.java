@@ -212,7 +212,7 @@ public abstract class PostResource {
 
     return postList
         .data("postDays", new PostPage<>(null, null, null, List.of(post)).days())
-        .data("pageTitle", pageTitle)
+        .data("pageTitle", String.format("Post #%d", id))
         .data("showBookmarkForm", false)
         .data("showLazychatForm", false)
         .data("hasPreviousPage", false)
