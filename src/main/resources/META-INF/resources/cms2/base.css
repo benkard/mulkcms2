@@ -30,10 +30,10 @@ html {
   --footer-bg-color: #ffffff;
 
   --normal-font-weight: 300;
-  --bold-font-weight: 400;
+  --bold-font-weight: 600;
 
   /*background-color: #f8f8f8;*/
-  font-family: 'Fira Sans', 'Source Sans Pro', Optima, 'MgOpen Cosmetica', Candara, Palatino, 'Palatino Linotype', 'Book Antiqua', 'URW Palladio L', 'Gentium Alt', 'Gentium', Geneva, Georgia, serif;
+  font-family: 'Source Sans Pro', 'Fira Sans', Optima, 'MgOpen Cosmetica', Candara, Palatino, 'Palatino Linotype', 'Book Antiqua', 'URW Palladio L', 'Gentium Alt', 'Gentium', Geneva, Georgia, serif;
   font-weight: var(--normal-font-weight);
 }
 
