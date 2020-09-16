@@ -1,0 +1,139 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+  <changeSet author="mulk" id="1.6-1">
+    <sql>
+      CREATE FUNCTION language_regconfig(language VARCHAR)
+      RETURNS regconfig
+      AS $$
+        SELECT CASE
+          WHEN $1 = 'de' THEN 'german'
+          WHEN $1 = 'en' THEN 'english'
+          WHEN $1 = 'fr' THEN 'french'
+          ELSE 'simple'
+        END :: regconfig
+      $$ IMMUTABLE LANGUAGE SQL;
+    </sql>
+
+    <sql>
+      CREATE INDEX bookmark_texts_search_idx ON benki.bookmark_texts
+        USING GIN (to_tsvector(language_regconfig(language), title || ' ' || description));
+    </sql>
+
+    <sql>
+      CREATE INDEX lazychat_message_texts_search_idx ON benki.lazychat_message_texts
+        USING GIN (to_tsvector(language_regconfig(language), content));
+    </sql>
+  </changeSet>
+
+  <changeSet id="1.6-2" author="mulk">
+    <createProcedure procedureName="post_matches_websearch">
+      CREATE FUNCTION post_matches_websearch(
+        post_language      TEXT,
+        post_text          TEXT,
+        websearch_language TEXT,
+        websearch_text     TEXT)
+      RETURNS BOOLEAN
+      AS $$
+        SELECT to_tsvector(language_regconfig($1), $2) @@ websearch_to_tsquery(language_regconfig($3), $4)
+      $$ LANGUAGE SQL IMMUTABLE;
+    </createProcedure>
+
+    <createProcedure procedureName="post_matches_websearch">
+      CREATE FUNCTION post_matches_websearch(
+        post_tsvector      tsvector,
+        websearch_language TEXT,
+        websearch_text     TEXT)
+      RETURNS BOOLEAN
+      AS $$
+        SELECT $1 @@ websearch_to_tsquery(language_regconfig($2), $3)
+      $$ LANGUAGE SQL IMMUTABLE;
+    </createProcedure>
+  </changeSet>
+
+  <changeSet id="1.6-3" author="mulk">
+    <addColumn tableName="bookmark_texts" schemaName="benki">
+      <column name="search_terms" type="tsvector"/>
+    </addColumn>
+    <sql>
+      CREATE INDEX bookmark_texts_search_terms_idx ON benki.bookmark_texts
+        USING GIN (search_terms);
+    </sql>
+
+    <addColumn tableName="lazychat_message_texts" schemaName="benki">
+      <column name="search_terms" type="tsvector"/>
+    </addColumn>
+    <sql>
+      CREATE INDEX lazychat_message_texts_search_terms_idx ON benki.lazychat_message_texts
+        USING GIN (search_terms);
+    </sql>
+
+    <addColumn tableName="post_texts" schemaName="benki">
+      <column name="search_terms" type="tsvector"/>
+    </addColumn>
+
+    <createProcedure procedureName="bookmark_search_term_update_trigger">
+      CREATE FUNCTION bookmark_search_term_update_trigger()
+      RETURNS trigger
+      AS $$
+      BEGIN
+        NEW.search_terms :=
+          setweight(to_tsvector(language_regconfig(NEW.language), coalesce(NEW.title, '')), 'A') ||
+          setweight(to_tsvector(language_regconfig(NEW.language), coalesce(NEW.description, '')), 'B');
+        RETURN NEW;
+      END
+      $$ LANGUAGE plpgsql;
+    </createProcedure>
+
+    <createProcedure procedureName="lazychat_message_search_term_update_trigger">
+      CREATE FUNCTION lazychat_message_search_term_update_trigger()
+      RETURNS trigger
+      AS $$
+      BEGIN
+        NEW.search_terms :=
+          to_tsvector(language_regconfig(NEW.language), coalesce(NEW.content,''));
+        RETURN NEW;
+      END
+      $$ LANGUAGE plpgsql;
+    </createProcedure>
+
+    <sql>
+      CREATE TRIGGER bookmark_search_term_update
+      BEFORE INSERT OR UPDATE
+      ON benki.bookmark_texts
+      FOR EACH ROW
+      EXECUTE FUNCTION
+        bookmark_search_term_update_trigger();
+    </sql>
+
+    <sql>
+      CREATE TRIGGER lazychat_message_search_term_update
+      BEFORE INSERT OR UPDATE
+      ON benki.lazychat_message_texts
+      FOR EACH ROW
+      EXECUTE FUNCTION
+        lazychat_message_search_term_update_trigger();
+    </sql>
+  </changeSet>
+
+  <changeSet id="1.6-4" author="mulk">
+    <sql>
+      UPDATE benki.bookmark_texts
+        SET search_terms =
+          setweight(to_tsvector(language_regconfig(language), coalesce(title, '')), 'A') ||
+          setweight(to_tsvector(language_regconfig(language), coalesce(description, '')), 'B');
+    </sql>
+
+    <sql>
+      UPDATE benki.lazychat_message_texts
+        SET search_terms =
+          to_tsvector(language_regconfig(language), coalesce(content,''));
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

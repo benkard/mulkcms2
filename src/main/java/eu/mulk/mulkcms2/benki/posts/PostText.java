@@ -13,6 +13,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 @Entity
 @Table(name = "post_texts", schema = "benki")
@@ -37,6 +39,10 @@ public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntity
   @Column(name = "cached_description_html", nullable = true)
   @CheckForNull
   public String cachedDescriptionHtml;
+
+  @Column(name = "search_terms")
+  @Generated(GenerationTime.ALWAYS)
+  public String searchTerms;
 
   @ManyToOne(fetch = FetchType.LAZY, targetEntity = Post.class)
   @JoinColumn(name = "post", referencedColumnName = "id", nullable = false)

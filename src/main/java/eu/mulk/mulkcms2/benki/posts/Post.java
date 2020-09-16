@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import javax.json.bind.annotation.JsonbTransient;
@@ -132,7 +133,8 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
       CriteriaBuilder cb,
-      boolean forward) {
+      boolean forward,
+      @CheckForNull String searchQuery) {
     CriteriaQuery<T> query = cb.createQuery(entityClass);
 
     var conditions = new ArrayList<Predicate>();
@@ -175,6 +177,23 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       } else {
         conditions.add(cb.gt(post.get(Post_.id), cursor));
       }
+    }
+
+    if (searchQuery != null && !searchQuery.isBlank()) {
+      var postTexts = post.join(Post_.texts);
+      var localizedSearches =
+          Stream.of("de", "en")
+              .map(
+                  language ->
+                      cb.isTrue(
+                          cb.function(
+                              "post_matches_websearch",
+                              Boolean.class,
+                              postTexts.get(PostText_.searchTerms),
+                              cb.literal(language),
+                              cb.literal(searchQuery))))
+              .toArray(n -> new Predicate[n]);
+      conditions.add(cb.or(localizedSearches));
     }
 
     query.where(conditions.toArray(new Predicate[0]));
@@ -248,7 +267,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
   public static PostPage<Post<? extends PostText>> findViewable(
       PostFilter postFilter, Session session, @CheckForNull User viewer, @CheckForNull User owner) {
-    return findViewable(postFilter, session, viewer, owner, null, null);
+    return findViewable(postFilter, session, viewer, owner, null, null, null);
   }
 
   public static PostPage<Post<? extends PostText>> findViewable(
@@ -257,7 +276,8 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       @CheckForNull User viewer,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
-      @CheckForNull Integer count) {
+      @CheckForNull Integer count,
+      @CheckForNull String searchQuery) {
     Class<? extends Post> entityClass;
     switch (postFilter) {
       case BOOKMARKS_ONLY:
@@ -269,7 +289,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       default:
         entityClass = Post.class;
     }
-    return findViewable(entityClass, session, viewer, owner, cursor, count);
+    return findViewable(entityClass, session, viewer, owner, cursor, count, searchQuery);
   }
 
   protected static <T extends Post<? extends PostText>> PostPage<T> findViewable(
@@ -278,7 +298,8 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       @CheckForNull User viewer,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
-      @CheckForNull Integer count) {
+      @CheckForNull Integer count,
+      @CheckForNull String searchQuery) {
 
     if (cursor != null) {
       Objects.requireNonNull(count);
@@ -286,7 +307,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
     var cb = session.getCriteriaBuilder();
 
-    var forwardCriteria = queryViewable(entityClass, viewer, owner, cursor, cb, true);
+    var forwardCriteria = queryViewable(entityClass, viewer, owner, cursor, cb, true, searchQuery);
     var forwardQuery = session.createQuery(forwardCriteria);
 
     if (count != null) {
@@ -300,7 +321,8 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
     if (cursor != null) {
       // Look backwards as well so we can find the prevCursor.
-      var backwardCriteria = queryViewable(entityClass, viewer, owner, cursor, cb, false);
+      var backwardCriteria =
+          queryViewable(entityClass, viewer, owner, cursor, cb, false, searchQuery);
       var backwardQuery = session.createQuery(backwardCriteria);
       backwardQuery.setMaxResults(count);
       var backwardResults = backwardQuery.getResultList();

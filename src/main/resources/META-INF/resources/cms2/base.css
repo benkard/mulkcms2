@@ -353,6 +353,27 @@ elix-expandable-section.editor-pane::part(header) {
   flex-basis: content;
 }
 
+#post-search-bar {
+  flex: 1;
+
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  min-width: 5em;
+}
+
+#post-search-query {
+  flex: 1;
+  flex-basis: content;
+  min-width: 0;
+}
+
+#post-search-bar input[type=submit] {
+  flex: 1;
+  flex-grow: 0;
+  flex-basis: content;
+}
+
 elix-expandable-section .expandable-section-title {
   margin-top: 0;
   margin-bottom: 0;

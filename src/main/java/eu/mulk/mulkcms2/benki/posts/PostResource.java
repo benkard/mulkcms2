@@ -116,13 +116,14 @@ public abstract class PostResource {
   @Transactional
   public TemplateInstance getIndex(
       @QueryParam("i") @CheckForNull Integer cursor,
-      @QueryParam("n") @CheckForNull Integer maxResults) {
+      @QueryParam("n") @CheckForNull Integer maxResults,
+      @QueryParam("search-query") @CheckForNull String searchQuery) {
 
     maxResults = maxResults == null ? defaultMaxResults : maxResults;
 
     @CheckForNull var reader = getCurrentUser();
     var session = entityManager.unwrap(Session.class);
-    var q = Post.findViewable(postFilter, session, reader, null, cursor, maxResults);
+    var q = Post.findViewable(postFilter, session, reader, null, cursor, maxResults, searchQuery);
 
     q.cacheDescriptions();
 
@@ -142,7 +143,8 @@ public abstract class PostResource {
         .data("hasNextPage", q.nextCursor != null)
         .data("previousCursor", q.prevCursor)
         .data("nextCursor", q.nextCursor)
-        .data("pageSize", maxResults);
+        .data("pageSize", maxResults)
+        .data("searchQuery", searchQuery);
   }
 
   @GET
@@ -159,7 +161,7 @@ public abstract class PostResource {
     @CheckForNull var reader = getCurrentUser();
     var owner = User.findByNickname(ownerName);
     var session = entityManager.unwrap(Session.class);
-    var q = Post.findViewable(postFilter, session, reader, owner, cursor, maxResults);
+    var q = Post.findViewable(postFilter, session, reader, owner, cursor, maxResults, null);
 
     q.cacheDescriptions();
 

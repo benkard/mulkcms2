@@ -6,6 +6,7 @@
 {@java.lang.Integer previousCursor}
 {@java.lang.Integer nextCursor}
 {@java.lang.Integer pageSize}
+{@java.lang.String searchQuery}
 
 {#include base.html}
 
@@ -43,9 +44,12 @@
 {/if}
 
 <div class="paging">
-  {#if hasPreviousPage}<a href="?i={previousCursor}&n={pageSize}" class="pure-button">⇠ previous page</a>{/if}
-  <span class="filler"></span>
-  {#if hasNextPage}<a href="?i={nextCursor}&n={pageSize}" class="pure-button">next page ⇢</a>{/if}
+  <form id="post-search-bar" method="get" class="pure-form">
+    <input placeholder="Search..." value="{searchQuery}" aria-label="Search" id="post-search-query" name="search-query" type="search"/>
+    <input type="submit" aria-label="Submit search query" class="pure-button pure-button-primary" value="&#x1f50e;"/>
+  </form>
+  {#if hasPreviousPage}<a href="?i={previousCursor}&n={pageSize}&search-query={searchQuery}" class="pure-button">⇠ previous page</a>{/if}
+  {#if hasNextPage}<a href="?i={nextCursor}&n={pageSize}&search-query={searchQuery}" class="pure-button">next page ⇢</a>{/if}
 </div>
 
 <section id="main-content">
@@ -127,9 +131,9 @@
 </section>
 
 <div class="paging">
-  {#if hasPreviousPage}<a href="?i={previousCursor}&n={pageSize}" class="pure-button">⇠ previous page</a>{/if}
+  {#if hasPreviousPage}<a href="?i={previousCursor}&n={pageSize}&search-query={searchQuery}" class="pure-button">⇠ previous page</a>{/if}
   <span class="filler"></span>
-  {#if hasNextPage}<a href="?i={nextCursor}&n={pageSize}" class="pure-button">next page ⇢</a>{/if}
+  {#if hasNextPage}<a href="?i={nextCursor}&n={pageSize}&search-query={searchQuery}" class="pure-button">next page ⇢</a>{/if}
 </div>
 
 {/body}
