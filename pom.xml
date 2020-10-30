@@ -103,13 +103,6 @@
         <version>${jakarta-jacc-api.version}</version>
       </dependency>
 
-      <!-- JOSE for Java -->
-      <dependency>
-        <groupId>org.bitbucket.b_c</groupId>
-        <artifactId>jose4j</artifactId>
-        <version>0.7.2</version>
-      </dependency>
-
       <!-- Annotations -->
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
@@ -217,12 +210,6 @@
     <dependency>
       <groupId>com.rometools</groupId>
       <artifactId>rome</artifactId>
-    </dependency>
-
-    <!-- JOSE for Java -->
-    <dependency>
-      <groupId>org.bitbucket.b_c</groupId>
-      <artifactId>jose4j</artifactId>
     </dependency>
 
     <!-- Annotations -->
