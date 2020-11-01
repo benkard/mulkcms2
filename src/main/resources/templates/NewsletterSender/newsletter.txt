@@ -1,0 +1,38 @@
+{@int newsletterNumber}
+{@java.time.LocalDate date}
+{@java.util.List<eu.mulk.mulkcms2.benki.bookmarks.Bookmark> bookmarks}
+{@java.util.List<eu.mulk.mulkcms2.benki.lazychat.LazychatMessage> lazychatMessages}
+{@java.lang.String unsubscribeUri}
+New Blog Posts
+==============
+
+{#for post in lazychatMessages}
+* {post.date.humanDate}  <https://matthias.benkard.de/posts/{post.id}>
+{post.text.content}
+
+
+{/for}
+
+
+New Bookmarks
+=============
+
+{#for post in bookmarks}
+* {post.date.humanDate}  <https://matthias.benkard.de/posts/{post.id}>
+* {post.title}
+* <{post.uri}>
+
+{post.text.description}
+
+
+{/for}
+
+
+
+Your Subscription
+=================
+
+You are receiving this email because you are subscribed to the MulkCMS
+newsletter.  To unsubscribe, send an email to:
+
+  <mulkcms+unsubscribe@benkard.de>

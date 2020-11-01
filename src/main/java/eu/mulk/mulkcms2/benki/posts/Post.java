@@ -5,12 +5,14 @@ import static java.util.stream.Collectors.toList;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
+import eu.mulk.mulkcms2.benki.newsletter.Newsletter;
 import eu.mulk.mulkcms2.benki.users.User;
 import eu.mulk.mulkcms2.benki.users.User_;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +70,12 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   @Column(name = "date", nullable = true)
   @CheckForNull
   public OffsetDateTime date;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "newsletter", referencedColumnName = "id", nullable = true)
+  @CheckForNull
+  @JsonbTransient
+  public Newsletter newsletter;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner", referencedColumnName = "id")
@@ -340,18 +348,22 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     }
 
     // Fetch texts (to avoid n+1 selects).
-    var postIds = forwardResults.stream().map(x -> x.id).collect(toList());
+    fetchTexts(forwardResults);
+
+    return new PostPage<>(prevCursor, cursor, nextCursor, forwardResults);
+  }
+
+  public static <T extends Post<?>> void fetchTexts(Collection<T> posts) {
+    var postIds = posts.stream().map(x -> x.id).collect(toList());
 
     if (!postIds.isEmpty()) {
       find("SELECT p FROM Post p LEFT JOIN FETCH p.texts WHERE p.id IN (?1)", postIds).stream()
           .count();
     }
-
-    return new PostPage<>(prevCursor, cursor, nextCursor, forwardResults);
   }
 
   @CheckForNull
-  protected Text getText() {
+  public Text getText() {
     var texts = getTexts();
     if (texts.isEmpty()) {
       return null;
