@@ -50,7 +50,15 @@ public class NewsletterSender {
   void run() throws InterruptedException, TimeoutException, ExecutionException {
     var session = em.unwrap(Session.class);
 
-    List<Post<?>> posts = Post.list("newsletter IS NULL", Sort.ascending("date"));
+    List<Post<?>> posts =
+        Post.list(
+            ""
+                + "SELECT p FROM Post p"
+                + "  JOIN p.targets r"
+                + "  JOIN r.tags tag"
+                + " WHERE newsletter IS NULL"
+                + "   AND tag = 'world'",
+            Sort.ascending("date"));
     Post.fetchTexts(posts);
 
     if (posts.isEmpty()) {

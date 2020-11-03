@@ -16,8 +16,7 @@ public class NewsletterSubscriptionExpirer {
   void run() {
     var subscriptionsDeleted =
         NewsletterSubscription.delete(
-            "registrationKey IS NOT NULL AND startDate < ?1",
-            OffsetDateTime.now().minusWeeks(1));
+            "registrationKey IS NOT NULL AND startDate < ?1", OffsetDateTime.now().minusWeeks(1));
     if (subscriptionsDeleted > 0) {
       log.infof("%d expired newsletter subscriptions deleted.", subscriptionsDeleted);
     }
