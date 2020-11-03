@@ -1,0 +1,7 @@
+You have been unsubscribed from the MulkCMS newsletter because we
+received an unsubscription request from your email address.
+
+To register for the newsletter again, open the following page in
+your web browser:
+
+  https://matthias.benkard.de/newsletter

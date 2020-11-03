@@ -1,0 +1,32 @@
+{#include base.html}
+
+{#title}Newsletter &#8212; Benki{/title}
+{#siteSection}Newsletter{/siteSection}
+{#wikiClass}this-page{/wikiClass}
+
+{#nav}{#navbar siteSection="Newsletter" /}
+
+{#head}{/head}
+
+{#body}
+<article id="newsletter-registration">
+  <header>
+    <h1>Newsletter</h1>
+  </header>
+
+  <section>
+    <p>To get a weekly digest of all posted articles and bookmarks into your email inbox,
+      enter your email address and submit the form below.</p>
+
+    <p>Your registration is subject to the <a href="/privacy">privacy policy</a>.</p>
+
+    <form class="pure-form pure-form-aligned" action="/newsletter/register" method="post">
+      <label for="email-input">E-mail address: </label>
+      <input type="email" name="email" id="email-input" placeholder="E-mail address" required/>
+      <input class="pure-button pure-button-primary" type="submit" value="Subscribe"/>
+    </form>
+  </section>
+</article>
+{/body}
+
+{/include}

@@ -84,7 +84,7 @@ public class NewsletterSender {
     posts.forEach(post -> post.newsletter = newsletter);
 
     var subscriberEmails =
-        NewsletterSubscription.<NewsletterSubscription>streamAll()
+        NewsletterSubscription.<NewsletterSubscription>stream("registrationKey IS NULL")
             .map(x -> x.email)
             .toArray(String[]::new);
 

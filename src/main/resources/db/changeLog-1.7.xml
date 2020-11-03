@@ -52,4 +52,18 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="mulk" id="1.7-3">
+    <addColumn tableName="newsletter_subscriptions" schemaName="benki">
+      <column name="registration_key" type="VARCHAR">
+        <constraints unique="true" uniqueConstraintName="newsletter_subscriptions_registration_key_key"/>
+      </column>
+    </addColumn>
+
+    <createIndex tableName="newsletter_subscriptions"
+                 schemaName="benki"
+                 indexName="newsletter_subscriptions_registration_key_idx">
+      <column name="registration_key"/>
+    </createIndex>
+  </changeSet>
+
 </databaseChangeLog>

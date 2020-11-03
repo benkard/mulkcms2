@@ -1,0 +1,12 @@
+{@java.lang.String registrationKey}
+Hello!
+
+Someone (you, one would hope) entered your email address to subscribe to the MulkCMS
+benkard.de newsletter.  In order to complete your registration, open the following
+link in your web browser:
+
+    https://matthias.benkard.de/newsletter/finish-registration?key={registrationKey}
+
+If someone is playing a trick on you and you would not actually like to subscribe to
+the newsletter, you may ignore this email.  In this case, your registration record
+will be deleted within a week.
