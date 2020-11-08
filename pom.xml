@@ -16,8 +16,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+    <enforced.maven-version>3.6.2</enforced.maven-version>
+
     <antrun-plugin.version>3.0.0</antrun-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
+    <enforcer-plugin.version>3.0.0-M3</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
     <quarkus.version>1.9.2.Final</quarkus.version>
     <resources-plugin.version>3.2.0</resources-plugin.version>
@@ -256,6 +259,20 @@
 
   <build>
 
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <configuration>
+            <generateBackupPoms>false</generateBackupPoms>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
     <plugins>
 
       <plugin>
@@ -371,6 +388,27 @@
             <goals>
               <goal>run</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${enforcer-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>${enforced.maven-version}</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
           </execution>
         </executions>
       </plugin>
