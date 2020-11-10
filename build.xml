@@ -2,6 +2,11 @@
 
 <project default="package">
 
+  <tstamp>
+    <format property="version.date" pattern="yyyyMMddhhmmss"/>
+  </tstamp>
+
+  <property name="version.tag" value="1.${version.date}"/>
   <property name="web-dir" location="src/main/resources/META-INF/resources"/>
 
   <target name="yarn" depends="yarn.check" if="yarn.run">
@@ -88,13 +93,15 @@
   <target name="deploy" description="Deploy JAR to Kubernetes">
     <exec executable="./mvnw">
       <arg value="package"/>
+      <arg value="-Drevision=${version.tag}"/>
       <arg value="-Dquarkus.container-image.build=true"/>
       <arg value="-Dquarkus.container-image.push=true"/>
     </exec>
     <exec executable="kubectl">
-      <arg value="delete"/>
-      <arg value="pods"/>
-      <arg value="-lapp=mulkcms2"/>
+      <arg value="set"/>
+      <arg value="image"/>
+      <arg value="deployments/mulkcms2"/>
+      <arg value="mulkcms2=docker.benkard.de/mulk/mulkcms2:${version.tag}"/>
     </exec>
     <exec executable="kubectl">
       <arg value="get"/>
