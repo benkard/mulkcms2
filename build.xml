@@ -24,10 +24,10 @@
   </target>
 
   <target name="snowpack" depends="snowpack.check,yarn" if="snowpack.run">
+    <!-- Build for development -->
     <exec executable="yarn" dir="${web-dir}">
       <arg value="run"/>
       <arg value="snowpack"/>
-      <arg value="--optimize"/>
     </exec>
   </target>
 
@@ -35,6 +35,23 @@
     <condition property="snowpack.run">
       <not>
         <available file="${web-dir}/web_modules"/>
+      </not>
+    </condition>
+  </target>
+
+  <target name="snowpack-build" depends="snowpack-build.check,yarn" if="snowpack-build.run">
+    <!-- Build for distribution -->
+    <exec executable="yarn" dir="${web-dir}">
+      <arg value="run"/>
+      <arg value="snowpack"/>
+      <arg value="build"/>
+    </exec>
+  </target>
+
+  <target name="snowpack-build.check">
+    <condition property="snowpack-build.run">
+      <not>
+        <available file="${web-dir}/build/web_modules"/>
       </not>
     </condition>
   </target>
@@ -78,7 +95,7 @@
     </exec>
   </target>
 
-  <target name="web.resources" depends="snowpack" unless="skip-web"/>
+  <target name="web.resources" depends="snowpack,snowpack-build" unless="skip-web"/>
   <target name="web.check" unless="skip-web" depends="web.resources,flow,eslint"/>
   <target name="web.bundle" unless="skip-web" depends="web.resources,parcel"/>
   <target name="web" unless="skip-web" depends="web.resources,web.check,web.bundle" description="Generate web resources"/>
