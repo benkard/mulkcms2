@@ -32,13 +32,13 @@
     <basic-annotations.version>0.2.0</basic-annotations.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
     <flexmark.version>0.62.2</flexmark.version>
-    <google.java.format.version>1.8</google.java.format.version>
-    <hibernate.version>5.4.20.Final</hibernate.version>
+    <google.java.format.version>1.9</google.java.format.version>
+    <hibernate.version>5.4.24.Final</hibernate.version>
     <hibernate-types.version>2.10.0</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.6.0</jna.version>
     <jsoup.version>1.13.1</jsoup.version>
-    <kotlin-annotations.version>1.4.10</kotlin-annotations.version>
+    <kotlin-annotations.version>1.4.20</kotlin-annotations.version>
     <liquibase.version>3.9.0</liquibase.version>
     <postgresql.version>42.2.16</postgresql.version>
     <rome.version>1.15.0</rome.version>
