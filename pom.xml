@@ -22,7 +22,7 @@
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <enforcer-plugin.version>3.0.0-M3</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>1.9.2.Final</quarkus.version>
+    <quarkus.version>1.10.2.Final</quarkus.version>
     <resources-plugin.version>3.2.0</resources-plugin.version>
     <spotless-plugin.version>2.4.1</spotless-plugin.version>
 
@@ -291,6 +291,9 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
+        <configuration>
+          <parameters>true</parameters>
+        </configuration>
       </plugin>
 
       <!-- Resources -->
