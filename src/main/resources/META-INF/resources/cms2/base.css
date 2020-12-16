@@ -77,16 +77,12 @@ body {
     border-top: 1px solid lightgray
   }
 
-  .landscape-only, body > nav ol > li.landscape-only {
-    display: none;
-  }
-
-  .login-box > * {
-    display: inline;
+  .landscape-only {
+    display: none !important;
   }
 
   li.submenu > a {
-    display: inline !important;
+    display: inline-block !important;
     padding-left: 0.5em;
     padding-right: 0.5em;
   }
@@ -96,16 +92,21 @@ body {
     padding-right: 0.5em !important;
   }
 
+  body > nav ol.submenu > li {
+    text-indent: 0 !important;
+  }
+
   ol.submenu > li {
     display: inline;
   }
 
   ol.submenu > li > a {
-    display: inline;
+    display: inline-block;
     padding-left: 0.2em;
     padding-right: 0.2em;
     margin-left: 0.2em;
     margin-right: 0.2em;
+    z-index: 2 !important;
   }
 
   ol.submenu > li:first-child > a {
@@ -149,12 +150,17 @@ body {
         "footer footer";
   }
 
+  .portrait-only {
+    display: none !important;
+  }
+
   body > nav ol > li.this-page {
     width: calc(100% + 3px);
   }
 
   body > nav ol > li.this-page > a {
-    border-right: 1px solid var(--main-bg-color);
+    border-right: 1px solid var(--main-bg-color) !important;
+    margin-right: -1px;
   }
 }
 
@@ -198,8 +204,18 @@ body > nav ol > li {
   flex: auto;
 }
 
+body > nav > ol > li {
+  position: relative;
+}
+
 body > nav ol.submenu > li {
   text-indent: 1em;
+  z-index: 2;
+  position: relative;
+}
+
+body > nav > ol > li > a {
+  background: var(--nav-bg-color);
 }
 
 body > nav ol > li.this-page > a {
