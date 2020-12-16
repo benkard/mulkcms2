@@ -1,18 +1,22 @@
 {@java.lang.String siteSection}
 
 <ol>
-  <li class='{#if siteSection == "All Posts"}this-page{/}' data-site-section="All Posts"><a href="/posts">All Posts</a></li>
-  <li class='{#if siteSection == "Bookmarks"}this-page{/} indented' data-site-section="Bookmarks"><a href="/bookmarks">Bookmarks</a></li>
-  <li class='{#if siteSection == "Lazy Chat"}this-page{/} indented' data-site-section="Lazy Chat"><a href="/lazychat">Lazy Chat</a></li>
+  <li class='{#if siteSection == "All Posts"}this-page{/} submenu' data-site-section="All Posts">
+    <a href="/posts">Posts</a>
+    <ol class="submenu">
+      <li class='{#if siteSection == "Bookmarks"}this-page{/}' data-site-section="Bookmarks"><a href="/bookmarks">Bookmarks</a></li>
+      <li class='{#if siteSection == "Lazy Chat"}this-page{/}' data-site-section="Lazy Chat"><a href="/lazychat">Lazy&nbsp;Chat</a></li>
+    </ol>
+  </li>
 
   {#if inject:LoginStatus.loggedIn}
   <li class='{#if siteSection == "Wiki"}this-page{/}' data-site-section="Wiki"><a href="/wiki/Home">Wiki</a></li>
   {/if}
 
-  <li class='{#if siteSection == "Newsletter"}this-page{/}' data-site-section="Newsletter"><a href="/newsletter">Newsletter</a></li>
+  <li class='{#if siteSection == "Newsletter"}this-page{/} landscape-only' data-site-section="Newsletter"><a href="/newsletter">Newsletter</a></li>
 
-  <li class='{#if siteSection == "About"}this-page{/}' data-site-section="About"><a href="/about">Contact Info</a></li>
-  <li class='{#if siteSection == "Privacy"}this-page{/}' data-site-section="Privacy"><a href="/privacy">Privacy Policy</a></li>
+  <li class='{#if siteSection == "About"}this-page{/} landscape-only' data-site-section="About"><a href="/about">Contact Info</a></li>
+  <li class='{#if siteSection == "Privacy"}this-page{/} landscape-only' data-site-section="Privacy"><a href="/privacy">Privacy Policy</a></li>
 
   {#if inject:LoginStatus.loggedIn}
   <li class='{#if siteSection == "Login"}this-page{/} login-box logged-in' data-site-section="Login">

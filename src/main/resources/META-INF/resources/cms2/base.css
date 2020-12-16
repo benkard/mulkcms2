@@ -76,6 +76,65 @@ body {
   body > main {
     border-top: 1px solid lightgray
   }
+
+  .landscape-only, body > nav ol > li.landscape-only {
+    display: none;
+  }
+
+  .login-box > * {
+    display: inline;
+  }
+
+  li.submenu > a {
+    display: inline !important;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  body > nav ol > li > * {
+    padding-left: 0.5em !important;
+    padding-right: 0.5em !important;
+  }
+
+  ol.submenu > li {
+    display: inline;
+  }
+
+  ol.submenu > li > a {
+    display: inline;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+  }
+
+  ol.submenu > li:first-child > a {
+    margin-left: 0;
+  }
+
+  ol.submenu > li:last-child > a {
+    margin-right: 0;
+  }
+
+  ol.submenu > li::before {
+    content: '|';
+  }
+
+  ol.submenu > li:first-child::before {
+    content: none;
+  }
+
+  li.submenu {
+    display: block;
+  }
+
+  ol.submenu li:first-child::before {
+    content: '(';
+  }
+
+  ol.submenu li:last-child::after {
+    content: ')';
+  }
 }
 
 @media (min-width: 30em) {
@@ -90,8 +149,12 @@ body {
         "footer footer";
   }
 
-  body > nav > ol > li.this-page {
+  body > nav ol > li.this-page {
     width: calc(100% + 3px);
+  }
+
+  body > nav ol > li.this-page > a {
+    border-right: 1px solid var(--main-bg-color);
   }
 }
 
@@ -131,22 +194,21 @@ body > nav > ol {
   flex-direction: column;
 }
 
-body > nav > ol > li {
+body > nav ol > li {
   flex: auto;
 }
 
-body > nav > ol > li.indented {
+body > nav ol.submenu > li {
   text-indent: 1em;
 }
 
-body > nav > ol > li.this-page {
+body > nav ol > li.this-page > a {
   background-color: var(--main-bg-color);
   border: 1px solid lightgray;
-  border-right: 1px solid var(--main-bg-color);
   z-index: 1;
 }
 
-body > nav > ol > li > * {
+body > nav ol > li > * {
   text-decoration: none;
   display: block;
   padding: 5px;
@@ -159,6 +221,10 @@ body > nav a:hover {
 
 body > nav li[data-site-section="About"], body > nav li[data-site-section="Login"] {
   margin-top: 1em;
+}
+
+.submenu {
+    display: contents;
 }
 
 .login-text {
@@ -382,4 +448,25 @@ elix-expandable-section.editor-pane::part(header) {
 elix-expandable-section .expandable-section-title {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+
+/* Footer */
+.footer-nav {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.footer-nav li {
+    list-style: none;
+    flex: auto;
+    flex-grow: 0;
+}
+
+.footer-nav a {
+    text-decoration: none;
+    padding: 0.5em;
 }
