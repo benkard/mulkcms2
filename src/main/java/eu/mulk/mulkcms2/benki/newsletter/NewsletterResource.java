@@ -8,14 +8,12 @@ import io.quarkus.qute.api.CheckedTemplate;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.transaction.Transactional;
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response.Status;
 
 @Path("/newsletter")
 @Produces(TEXT_HTML)
@@ -66,11 +64,7 @@ public class NewsletterResource {
   public TemplateInstance finishRegistration(@QueryParam("key") String registrationKey) {
     NewsletterSubscription.<NewsletterSubscription>find("registrationKey = ?1", registrationKey)
         .singleResultOptional()
-        .ifPresentOrElse(
-            s -> s.registrationKey = null,
-            () -> {
-              throw new ClientErrorException(Status.BAD_REQUEST);
-            });
+        .ifPresent(s -> s.registrationKey = null);
 
     return Templates.registered();
   }
