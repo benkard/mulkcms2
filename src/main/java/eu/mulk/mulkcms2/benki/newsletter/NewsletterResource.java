@@ -40,14 +40,14 @@ public class NewsletterResource {
   @POST
   @Path("register")
   @Transactional
-  public CompletionStage<TemplateInstance> register(@FormParam("email") String email) {
+  public CompletionStage<String> register(@FormParam("email") String email) {
     var existingSubscription =
         NewsletterSubscription.<NewsletterSubscription>find("email = ?1", email)
             .singleResultOptional();
     if (existingSubscription.isPresent()) {
       // If a subscription already exists, act as if we had created it.  This provides better
       // privacy to users than an error message does.
-      return CompletableFuture.completedStage(Templates.completeRegistration());
+      return CompletableFuture.completedStage(Templates.completeRegistration().render());
     }
 
     var subscription = new NewsletterSubscription();
@@ -56,7 +56,8 @@ public class NewsletterResource {
 
     var mailText = Templates.registrationMail(subscription.registrationKey);
     var sendJob = mailText.subject("MulkCMS newsletter registration").to(email).send();
-    return sendJob.thenApply((x) -> Templates.completeRegistration());
+    var page = Templates.completeRegistration().render();
+    return sendJob.thenApply((x) -> page);
   }
 
   @GET
