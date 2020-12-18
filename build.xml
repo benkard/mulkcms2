@@ -115,16 +115,20 @@
       <arg value="-Dquarkus.container-image.push=true"/>
     </exec>
     <exec executable="kubectl">
+      <arg value="config"/>
+      <arg value="use-context"/>
+      <arg value="mulk"/>
+    </exec>
+    <exec executable="kubectl">
       <arg value="set"/>
       <arg value="image"/>
       <arg value="deployments/mulkcms2"/>
       <arg value="mulkcms2=docker.benkard.de/mulk/mulkcms2:${version.tag}"/>
     </exec>
     <exec executable="kubectl">
-      <arg value="get"/>
-      <arg value="pods"/>
-      <arg value="-lapp=mulkcms2"/>
-      <arg value="-w"/>
+      <arg value="rollout"/>
+      <arg value="status"/>
+      <arg value="deployments/mulkcms2"/>
     </exec>
   </target>
 
