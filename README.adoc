@@ -37,39 +37,39 @@ Matthias Andreas Benkard
 
 To run the application with live reloading enabled:
 
-[source,bash]
+[source,console]
 ----
-./mvnw quarkus:dev
+$ ./mvnw quarkus:dev
 ----
 
 == Packaging
 
 To bundle the web scripts and stylesheets:
 
-[source,bash]
+[source,console]
 ----
-ant web
+$ ant web
 ----
 
 To build JARs and a JVM-based Docker image and push the Docker image to https://docker.benkard.de/repositories/10[Portus]:
 
-[source,bash]
+[source,console]
 ----
-./mvnw package
+$ ./mvnw package
 ----
 
 To build a native image with https://graalvm.org[GraalVM] instead:
 
-[source,bash]
+[source,console]
 ----
-./mvnw package -Pnative
+$ ./mvnw package -Pnative
 ----
 
 == Deploying
 
 To deploy:
 
-[source,bash]
+[source,console]
 ----
-ant deploy
+$ ant deploy
 ----
