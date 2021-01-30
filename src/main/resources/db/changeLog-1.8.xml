@@ -1,0 +1,58 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+  <changeSet author="mulk" id="1.8-1">
+    <sql>
+      CREATE TYPE benki.post_scope AS ENUM ('top_level', 'comment');
+    </sql>
+  </changeSet>
+
+  <changeSet author="mulk" id="1.8-2">
+    <addColumn tableName="bookmarks" schemaName="benki">
+      <column name="scope" type="benki.post_scope" defaultValue="top_level">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+
+    <addColumn tableName="lazychat_messages" schemaName="benki">
+      <column name="scope" type="benki.post_scope" defaultValue="top_level">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+
+    <addColumn tableName="posts" schemaName="benki">
+      <column name="scope" type="benki.post_scope" defaultValue="top_level">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+
+    <createIndex tableName="posts"
+                 schemaName="benki"
+                 indexName="post_scope_id_idx">
+      <column name="scope"/>
+      <column name="id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet id="1.8-3" author="mulk">
+    <createIndex tableName="bookmarks"
+                 schemaName="benki"
+                 indexName="bookmarks_scope_id_idx">
+      <column name="scope"/>
+      <column name="id"/>
+    </createIndex>
+
+    <createIndex tableName="lazychat_messages"
+                 schemaName="benki"
+                 indexName="lazychat_messages_scope_id_idx">
+      <column name="scope"/>
+      <column name="id"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

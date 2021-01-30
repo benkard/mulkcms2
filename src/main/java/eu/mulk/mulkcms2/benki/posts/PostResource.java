@@ -310,6 +310,7 @@ public abstract class PostResource {
 
     feed.setEntries(
         posts.stream()
+            .filter(Post::isTopLevel)
             .map(
                 post -> {
                   var entry = new Entry();

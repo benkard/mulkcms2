@@ -2,6 +2,7 @@ package eu.mulk.mulkcms2.benki.posts;
 
 import static java.util.stream.Collectors.toList;
 
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
@@ -28,6 +29,8 @@ import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -48,14 +51,22 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import org.hibernate.Session;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jboss.logging.Logger;
 
 @Entity
 @Table(name = "posts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@TypeDef(name = "pg_enum", typeClass = PostgreSQLEnumType.class)
 public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
   private static final Logger log = Logger.getLogger(Post.class);
+
+  public enum Scope {
+    top_level,
+    comment
+  }
 
   @Id
   @SequenceGenerator(
@@ -70,6 +81,11 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   @Column(name = "date", nullable = true)
   @CheckForNull
   public OffsetDateTime date;
+
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  @Type(type = "pg_enum")
+  public Scope scope = Scope.top_level;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "newsletter", referencedColumnName = "id", nullable = true)
@@ -204,6 +220,8 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       conditions.add(cb.or(localizedSearches));
     }
 
+    conditions.add(cb.equal(post.get(Post_.scope), Scope.top_level));
+
     query.where(conditions.toArray(new Predicate[0]));
 
     return query;
@@ -221,6 +239,10 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       return null;
     }
     return text.getDescriptionHtml();
+  }
+
+  public final boolean isTopLevel() {
+    return scope == Scope.top_level;
   }
 
   public static class PostPage<T extends Post<? extends PostText>> {
