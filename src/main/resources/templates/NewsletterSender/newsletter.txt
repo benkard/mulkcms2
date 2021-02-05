@@ -35,4 +35,4 @@ Your Subscription
 You are receiving this email because you are subscribed to the MulkCMS
 newsletter.  To unsubscribe, send an email to:
 
-  <mulkcms+unsubscribe@benkard.de>
+  <mulkcms+unsubscribe@mail.benkard.de>
