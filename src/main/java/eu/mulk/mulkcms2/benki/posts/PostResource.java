@@ -202,7 +202,7 @@ public abstract class PostResource {
   @GET
   @Produces(APPLICATION_JSON)
   @Path("{id}")
-  public Post getPostJson(@PathParam("id") int id) {
+  public Post<?> getPostJson(@PathParam("id") int id) {
     return getPostIfVisible(id);
   }
 
@@ -443,7 +443,7 @@ public abstract class PostResource {
     return entityManager.unwrap(Session.class);
   }
 
-  protected static void assignPostTargets(Post.Visibility visibility, User user, Post post) {
+  protected static void assignPostTargets(Post.Visibility visibility, User user, Post<?> post) {
     switch (visibility) {
       case PUBLIC:
         post.targets = Set.of(Role.getWorld());
@@ -459,7 +459,7 @@ public abstract class PostResource {
     }
   }
 
-  protected final Post getPostIfVisible(int id) {
+  protected final Post<?> getPostIfVisible(int id) {
     @CheckForNull var user = getCurrentUser();
     var message = getSession().byId(Post.class).load(id);
 

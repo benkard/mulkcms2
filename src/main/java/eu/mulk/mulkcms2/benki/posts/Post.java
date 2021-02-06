@@ -413,7 +413,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     if (!(o instanceof Post)) {
       return false;
     }
-    Post post = (Post) o;
+    Post<?> post = (Post<?>) o;
     return Objects.equals(id, post.id);
   }
 
