@@ -37,6 +37,9 @@ public class NewsletterSender {
   @ConfigProperty(name = "mulkcms.newsletter.time-zone")
   ZoneId newsletterTimeZone;
 
+  @ConfigProperty(name = "quarkus.mailer.from")
+  String senderAddress;
+
   @PersistenceContext EntityManager em;
 
   @CheckedTemplate
@@ -100,6 +103,7 @@ public class NewsletterSender {
     var sendJob =
         mailText
             .subject(String.format("MulkCMS newsletter #%d", newsletterNumber))
+            .to(senderAddress)
             .bcc(subscriberEmails)
             .send();
     sendJob.toCompletableFuture().get(10000, TimeUnit.SECONDS);
