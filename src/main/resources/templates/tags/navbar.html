@@ -10,7 +10,7 @@
     </ol>
   </li>
 
-  {#if inject:LoginStatus.loggedIn}
+  {#if inject:LoginStatus.isEditor}
   <li class='{#if siteSection == "Wiki"}this-page{/}' data-site-section="Wiki"><a href="/wiki/Home">Wiki</a></li>
   {/if}
 

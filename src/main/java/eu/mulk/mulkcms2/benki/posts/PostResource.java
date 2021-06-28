@@ -14,6 +14,8 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
 import eu.mulk.mulkcms2.benki.accesscontrol.PageKey;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
+import eu.mulk.mulkcms2.benki.login.LoginRoles;
+import eu.mulk.mulkcms2.benki.login.LoginStatus;
 import eu.mulk.mulkcms2.benki.posts.Post.PostPage;
 import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.qute.Template;
@@ -419,7 +421,7 @@ public abstract class PostResource {
     switch (postFilter) {
       case ALL:
       case BOOKMARKS_ONLY:
-        return !identity.isAnonymous();
+        return identity.hasRole(LoginRoles.EDITOR);
       case LAZYCHAT_MESSAGES_ONLY:
         return false;
       default:
@@ -431,7 +433,7 @@ public abstract class PostResource {
     switch (postFilter) {
       case ALL:
       case LAZYCHAT_MESSAGES_ONLY:
-        return !identity.isAnonymous();
+        return identity.hasRole(LoginRoles.EDITOR);
       case BOOKMARKS_ONLY:
         return false;
       default:

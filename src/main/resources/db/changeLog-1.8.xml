@@ -55,4 +55,11 @@
     </createIndex>
   </changeSet>
 
+  <changeSet id="1.8-4" author="mulk">
+    <sql>
+      ALTER TABLE benki.role_tags DROP CONSTRAINT role_tags_tag_check;
+      ALTER TABLE benki.role_tags ADD CONSTRAINT role_tags_tag_check CHECK (tag = ANY(ARRAY['admin', 'everyone', 'world', 'editor']));
+    </sql>
+  </changeSet>
+
 </databaseChangeLog>

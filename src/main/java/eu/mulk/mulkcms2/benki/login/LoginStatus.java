@@ -17,6 +17,10 @@ public class LoginStatus {
     return !identity.isAnonymous();
   }
 
+  public boolean isEditor() {
+    return identity.hasRole(LoginRoles.EDITOR);
+  }
+
   public String getUserName() {
     return identity.getPrincipal().getName();
   }

@@ -22,6 +22,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 @Entity
 @Table(name = "roles", schema = "benki")
@@ -68,6 +70,7 @@ public class Role extends PanacheEntityBase {
   public Collection<UserRole> directUsers;
 
   @OneToOne(mappedBy = "ownedRole", fetch = FetchType.LAZY)
+  @LazyToOne(LazyToOneOption.NO_PROXY)
   public User owningUsers;
 
   @ManyToMany(mappedBy = "effectiveRoles", fetch = FetchType.LAZY)

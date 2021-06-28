@@ -150,6 +150,18 @@ public class User extends PanacheEntityBase {
     return User.find("from BenkiUser u join u.nicknames n where ?1 = n", nickname).singleResult();
   }
 
+  public static User findByNicknameWithRoles(String nickname) {
+    return User.find(
+            ""
+                + "from BenkiUser u "
+                + "join u.nicknames n "
+                + "left join fetch u.effectiveRoles r "
+                + "left join fetch r.tags "
+                + "where ?1 = n",
+            nickname)
+        .singleResult();
+  }
+
   public final boolean canSee(Post message) {
     return message.isVisibleTo(this);
   }
