@@ -47,7 +47,7 @@ public class NewsletterUnsubscriber implements Processor {
                       .subject("Unsubscribed from MulkCMS newsletter")
                       .to(address)
                       .send();
-              sendJob.toCompletableFuture().get(60, TimeUnit.SECONDS);
+              sendJob.subscribeAsCompletionStage().get(60, TimeUnit.SECONDS);
 
               s.delete();
 

@@ -106,7 +106,7 @@ public class NewsletterSender {
             .to(senderAddress)
             .bcc(subscriberEmails)
             .send();
-    sendJob.toCompletableFuture().get(10000, TimeUnit.SECONDS);
+    sendJob.subscribe().asCompletionStage().get(10000, TimeUnit.SECONDS);
   }
 
   @TemplateExtension

@@ -55,7 +55,7 @@ public class NewsletterResource {
     var mailText = Templates.registrationMail(subscription.registrationKey);
     var sendJob = mailText.subject("MulkCMS newsletter registration").to(email).send();
     var page = Templates.completeRegistration().render();
-    return sendJob.thenApply((x) -> page);
+    return sendJob.onItem().transform(x -> page).subscribeAsCompletionStage();
   }
 
   @GET
