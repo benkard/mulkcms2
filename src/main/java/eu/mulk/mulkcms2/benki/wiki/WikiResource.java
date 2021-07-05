@@ -5,10 +5,9 @@ import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
 import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.panache.common.Sort;
-import io.quarkus.qute.Template;
+import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
-import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import java.net.URI;
@@ -48,13 +47,13 @@ public class WikiResource {
 
   private static final JsonProvider jsonProvider = JsonProvider.provider();
 
-  @ResourcePath("benki/wiki/wikiPage.html")
-  @Inject
-  Template wikiPage;
+  @CheckedTemplate(basePath = "benki/wiki")
+  static class Templates {
 
-  @ResourcePath("benki/wiki/wikiPageRevisionList.html")
-  @Inject
-  Template wikiPageRevisionList;
+    public static native TemplateInstance wikiPage(WikiPageRevision page);
+
+    public static native TemplateInstance wikiPageRevisionList(WikiPage page, String title);
+  }
 
   @Inject SecurityIdentity identity;
 
@@ -78,7 +77,7 @@ public class WikiResource {
       throw new NotFoundException();
     }
     var page = maybePage.get();
-    return wikiPage.data("page", page);
+    return Templates.wikiPage(page);
   }
 
   @POST
@@ -160,7 +159,7 @@ public class WikiResource {
                 primaryRevision.page.id)
             .singleResult();
 
-    return wikiPageRevisionList.data("page", page).data("title", pageName);
+    return Templates.wikiPageRevisionList(page, pageName);
   }
 
   @TemplateExtension

@@ -1,7 +1,7 @@
 package eu.mulk.mulkcms2.benki.newsletter;
 
 import io.quarkus.mailer.MailTemplate.MailTemplateInstance;
-import io.quarkus.qute.api.CheckedTemplate;
+import io.quarkus.qute.CheckedTemplate;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;

@@ -1,6 +1,3 @@
-{@eu.mulk.mulkcms2.benki.wiki.WikiPage page}
-{@java.lang.String title}
-
 {#include base.html}
 
 {#title}Revisions &#8212; {title} &#8212; Benki Wiki{/title}
@@ -25,17 +22,13 @@
     </thead>
 
     <tbody>
-      {#with page}
-        {#for revision in revisions}
-        <tr>
-          {#with revision}
-            <td>{date.humanDateTime}</td>
-            <td>{title}</td>
-            <td>{author.firstName}</td>
-          {/with}
-        </tr>
-        {/for}
-      {/with}
+      {#for revision in page.revisions}
+      <tr>
+        <td>{revision.date.humanDateTime}</td>
+        <td>{revision.title}</td>
+        <td>{revision.author.firstName}</td>
+      </tr>
+      {/for}
     </tbody>
   </table>
 </main>

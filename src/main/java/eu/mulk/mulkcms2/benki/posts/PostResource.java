@@ -15,13 +15,11 @@ import com.rometools.rome.io.WireFeedOutput;
 import eu.mulk.mulkcms2.benki.accesscontrol.PageKey;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.login.LoginRoles;
-import eu.mulk.mulkcms2.benki.login.LoginStatus;
 import eu.mulk.mulkcms2.benki.posts.Post.PostPage;
 import eu.mulk.mulkcms2.benki.users.User;
-import io.quarkus.qute.Template;
+import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
-import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.identity.SecurityIdentity;
 import java.math.BigInteger;
 import java.net.URI;
@@ -88,9 +86,22 @@ public abstract class PostResource {
   @ConfigProperty(name = "mulkcms.posts.default-max-results")
   int defaultMaxResults;
 
-  @ResourcePath("benki/posts/postList.html")
-  @Inject
-  Template postList;
+  @CheckedTemplate(basePath = "benki/posts")
+  static class Templates {
+
+    public static native TemplateInstance postList(
+        List<Post.Day<Post<? extends PostText<?>>>> postDays,
+        @CheckForNull String feedUri,
+        String pageTitle,
+        Boolean showBookmarkForm,
+        Boolean showLazychatForm,
+        Boolean hasPreviousPage,
+        Boolean hasNextPage,
+        @CheckForNull Integer previousCursor,
+        @CheckForNull Integer nextCursor,
+        @CheckForNull Integer pageSize,
+        @CheckForNull String searchQuery);
+  }
 
   @Inject protected SecurityIdentity identity;
 
@@ -135,18 +146,18 @@ public abstract class PostResource {
       feedUri += "?page-key=" + pageKey.key.toString(36);
     }
 
-    return postList
-        .data("postDays", q.days())
-        .data("feedUri", feedUri)
-        .data("pageTitle", pageTitle)
-        .data("showBookmarkForm", showBookmarkForm())
-        .data("showLazychatForm", showLazychatForm())
-        .data("hasPreviousPage", q.prevCursor != null)
-        .data("hasNextPage", q.nextCursor != null)
-        .data("previousCursor", q.prevCursor)
-        .data("nextCursor", q.nextCursor)
-        .data("pageSize", maxResults)
-        .data("searchQuery", searchQuery);
+    return Templates.postList(
+        q.days(),
+        feedUri,
+        pageTitle,
+        showBookmarkForm(),
+        showLazychatForm(),
+        q.prevCursor != null,
+        q.nextCursor != null,
+        q.prevCursor,
+        q.nextCursor,
+        maxResults,
+        searchQuery);
   }
 
   @GET
@@ -173,17 +184,18 @@ public abstract class PostResource {
       feedUri += "?page-key=" + pageKey.key.toString(36);
     }
 
-    return postList
-        .data("postDays", q.days())
-        .data("feedUri", feedUri)
-        .data("pageTitle", pageTitle)
-        .data("showBookmarkForm", showBookmarkForm())
-        .data("showLazychatForm", showLazychatForm())
-        .data("hasPreviousPage", q.prevCursor != null)
-        .data("hasNextPage", q.nextCursor != null)
-        .data("previousCursor", q.prevCursor)
-        .data("nextCursor", q.nextCursor)
-        .data("pageSize", maxResults);
+    return Templates.postList(
+        q.days(),
+        feedUri,
+        pageTitle,
+        showBookmarkForm(),
+        showLazychatForm(),
+        q.prevCursor != null,
+        q.nextCursor != null,
+        q.prevCursor,
+        q.nextCursor,
+        maxResults,
+        null);
   }
 
   @Transactional
@@ -214,16 +226,18 @@ public abstract class PostResource {
   public TemplateInstance getPostHtml(@PathParam("id") int id) {
     var post = getPostIfVisible(id);
 
-    return postList
-        .data("postDays", new PostPage<>(null, null, null, List.of(post)).days())
-        .data("pageTitle", String.format("Post #%d", id))
-        .data("showBookmarkForm", false)
-        .data("showLazychatForm", false)
-        .data("hasPreviousPage", false)
-        .data("hasNextPage", false)
-        .data("previousCursor", null)
-        .data("nextCursor", null)
-        .data("pageSize", null);
+    return Templates.postList(
+        new PostPage<Post<? extends PostText<?>>>(null, null, null, List.of(post)).days(),
+        null,
+        String.format("Post #%d", id),
+        false,
+        false,
+        false,
+        false,
+        null,
+        null,
+        null,
+        null);
   }
 
   @GET

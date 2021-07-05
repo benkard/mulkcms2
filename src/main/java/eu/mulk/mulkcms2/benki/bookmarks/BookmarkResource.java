@@ -9,9 +9,8 @@ import static javax.ws.rs.core.MediaType.WILDCARD;
 import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.benki.posts.PostFilter;
 import eu.mulk.mulkcms2.benki.posts.PostResource;
-import io.quarkus.qute.Template;
+import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
-import io.quarkus.qute.api.ResourcePath;
 import io.quarkus.security.Authenticated;
 import java.io.IOException;
 import java.net.URI;
@@ -21,7 +20,6 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.CheckForNull;
-import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotEmpty;
@@ -42,9 +40,12 @@ import org.jsoup.Jsoup;
 @Path("/bookmarks")
 public class BookmarkResource extends PostResource {
 
-  @ResourcePath("benki/bookmarks/newBookmark.html")
-  @Inject
-  Template newBookmark;
+  @CheckedTemplate(basePath = "benki/bookmarks")
+  static class Templates {
+
+    public static native TemplateInstance newBookmark(
+        @CheckForNull String uri, @CheckForNull String title, @CheckForNull String description);
+  }
 
   public BookmarkResource() throws NoSuchAlgorithmException {
     super(PostFilter.BOOKMARKS_ONLY, "Bookmarks");
@@ -124,7 +125,7 @@ public class BookmarkResource extends PostResource {
       @QueryParam("uri") @CheckForNull String uri,
       @QueryParam("title") @CheckForNull String title,
       @QueryParam("description") @CheckForNull String description) {
-    return newBookmark.data("uri", uri).data("title", title).data("description", description);
+    return Templates.newBookmark(uri, title, description);
   }
 
   @GET

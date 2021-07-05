@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "lazychat_messages", schema = "benki")
@@ -17,13 +16,6 @@ public class LazychatMessage extends Post<LazychatMessageText> {
   @OneToMany(mappedBy = "referrer", fetch = FetchType.LAZY)
   @JsonbTransient
   public Collection<LazychatReference> references;
-
-  @Transient
-  @JsonbTransient
-  @CheckForNull
-  public String getContentHtml() {
-    return getDescriptionHtml();
-  }
 
   @CheckForNull
   @Override

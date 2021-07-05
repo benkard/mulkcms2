@@ -1,13 +1,3 @@
-{@java.util.List<eu.mulk.mulkcms2.benki.posts.Post.PostPage<eu.mulk.mulkcms2.benki.posts.Post>.Day>  postDays}
-{@java.lang.String pageTitle}
-{@java.lang.Boolean showBookmarkForm}
-{@java.lang.Boolean hasPreviousPage}
-{@java.lang.Boolean hasNextPage}
-{@java.lang.Integer previousCursor}
-{@java.lang.Integer nextCursor}
-{@java.lang.Integer pageSize}
-{@java.lang.String searchQuery}
-
 {#include base.html}
 
 {#title}Benki {pageTitle}{/title}
@@ -60,73 +50,71 @@
       </div>
 
       {#for post in day.posts}
-        {#with post}
-          {#if post.isBookmark}
-            <article class="bookmark {#if descriptionHtml != ""}post-with-nonempty-body{/if}">
-              <section class="bookmark-editor post-editor">
-                {#if showBookmarkForm}
-                <elix-expandable-panel class="bookmark-editor-pane editor-pane">
-                  <mlk-bookmark-submission-form edited-id="{post.id}"></mlk-bookmark-submission-form>
-                </elix-expandable-panel>
-                {/if}
-              </section>
+        {#if post.isBookmark}
+          <article class="bookmark {#if post.descriptionHtml != ""}post-with-nonempty-body{/if}">
+            <section class="bookmark-editor post-editor">
+              {#if showBookmarkForm}
+              <elix-expandable-panel class="bookmark-editor-pane editor-pane">
+                <mlk-bookmark-submission-form edited-id="{post.id}"></mlk-bookmark-submission-form>
+              </elix-expandable-panel>
+              {/if}
+            </section>
 
-              <header>
-                <div class="bookmark-info">
-                  <span class="bookmark-owner post-owner">{owner.firstName}</span>
-                  <a class="post-link" href="/posts/{post.id}">
-                    <span class="post-self-link">#</span>
-                  </a>
+            <header>
+              <div class="bookmark-info">
+                <span class="bookmark-owner post-owner">{post.owner.firstName}</span>
+                <a class="post-link" href="/posts/{post.id}">
+                  <span class="post-self-link">#</span>
+                </a>
 
-                  <a href="{uri}" class="bookmark-title">
-                    <h1 class="bookmark-title"><span class="bookmark-symbol">🔖 </span> {title}</h1>.
-                  </a>
-                </div>
-              </header>
-
-              <div class="bookmark-controls">
-                {#if showBookmarkForm}
-                <button class="pure-button bookmark-edit-button">Edit</button>
-                {/if}
+                <a href="{post.uri}" class="bookmark-title">
+                  <h1 class="bookmark-title"><span class="bookmark-symbol">🔖 </span> {post.title}</h1>.
+                </a>
               </div>
+            </header>
 
-              <section class="bookmark-description post-content">
-                {descriptionHtml.raw}
-              </section>
+            <div class="bookmark-controls">
+              {#if showBookmarkForm}
+              <button class="pure-button bookmark-edit-button">Edit</button>
+              {/if}
+            </div>
 
-              <section class="comment-box"></section>
-            </article>
-          {#else}
-            <article class="lazychat-message">
-              <section class="lazychat-editor post-editor">
-                {#if showLazychatForm}
-                <elix-expandable-panel class="lazychat-editor-pane editor-pane">
-                  <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>
-                </elix-expandable-panel>
-                {/if}
-              </section>
+            <section class="bookmark-description post-content">
+              {post.descriptionHtml.raw}
+            </section>
 
-              <header>
-                <div class="lazychat-message-info">
-                  <span class="lazychat-message-owner post-owner">{owner.firstName}</span>
-                  <a class="post-link" href="/posts/{post.id}">
-                    <span class="post-self-link">#</span>
-                  </a>
-                </div>
-              </header>
+            <section class="comment-box"></section>
+          </article>
+        {#else}
+          <article class="lazychat-message">
+            <section class="lazychat-editor post-editor">
+              {#if showLazychatForm}
+              <elix-expandable-panel class="lazychat-editor-pane editor-pane">
+                <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>
+              </elix-expandable-panel>
+              {/if}
+            </section>
 
-              <div class="lazychat-message-controls">
-                {#if showLazychatForm}
-                <button class="pure-button lazychat-edit-button">Edit</button>
-                {/if}
+            <header>
+              <div class="lazychat-message-info">
+                <span class="lazychat-message-owner post-owner">{post.owner.firstName}</span>
+                <a class="post-link" href="/posts/{post.id}">
+                  <span class="post-self-link">#</span>
+                </a>
               </div>
+            </header>
 
-              <section class="lazychat-message-content post-content">
-                {contentHtml.raw}
-              </section>
-            </article>
-          {/if}
-        {/with}
+            <div class="lazychat-message-controls">
+              {#if showLazychatForm}
+              <button class="pure-button lazychat-edit-button">Edit</button>
+              {/if}
+            </div>
+
+            <section class="lazychat-message-content post-content">
+              {post.descriptionHtml.raw}
+            </section>
+          </article>
+        {/if}
       {/for}
     </div>
   {/for}

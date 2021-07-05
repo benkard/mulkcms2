@@ -245,7 +245,23 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     return scope == Scope.top_level;
   }
 
-  public static class PostPage<T extends Post<? extends PostText>> {
+  public static class Day<T extends Post<? extends PostText<?>>> {
+    public final @CheckForNull LocalDate date;
+    public final List<T> posts;
+
+    private Day(LocalDate date, List<T> posts) {
+      this.date = date;
+      this.posts = posts;
+    }
+
+    public void cacheDescriptions() {
+      for (var post : posts) {
+        post.getTexts().values().forEach(PostText::getDescriptionHtml);
+      }
+    }
+  }
+
+  public static class PostPage<T extends Post<? extends PostText<?>>> {
     public @CheckForNull final Integer prevCursor;
     public @CheckForNull final Integer cursor;
     public @CheckForNull final Integer nextCursor;
@@ -268,39 +284,23 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       days().forEach(Day::cacheDescriptions);
     }
 
-    public class Day {
-      public final @CheckForNull LocalDate date;
-      public final List<T> posts;
-
-      private Day(LocalDate date, List<T> posts) {
-        this.date = date;
-        this.posts = posts;
-      }
-
-      public void cacheDescriptions() {
-        for (var post : posts) {
-          post.getTexts().values().forEach(PostText::getDescriptionHtml);
-        }
-      }
-    }
-
-    public List<Day> days() {
+    public List<Day<T>> days() {
       return posts.stream()
           .collect(Collectors.groupingBy(post -> post.date.toLocalDate()))
           .entrySet()
           .stream()
-          .map(x -> new Day(x.getKey(), x.getValue()))
-          .sorted(Comparator.comparing((Day day) -> day.date).reversed())
+          .map(x -> new Day<T>(x.getKey(), x.getValue()))
+          .sorted(Comparator.comparing((Day<T> day) -> day.date).reversed())
           .collect(Collectors.toUnmodifiableList());
     }
   }
 
-  public static PostPage<Post<? extends PostText>> findViewable(
+  public static PostPage<Post<? extends PostText<?>>> findViewable(
       PostFilter postFilter, Session session, @CheckForNull User viewer, @CheckForNull User owner) {
     return findViewable(postFilter, session, viewer, owner, null, null, null);
   }
 
-  public static PostPage<Post<? extends PostText>> findViewable(
+  public static PostPage<Post<? extends PostText<?>>> findViewable(
       PostFilter postFilter,
       Session session,
       @CheckForNull User viewer,
@@ -322,7 +322,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     return findViewable(entityClass, session, viewer, owner, cursor, count, searchQuery);
   }
 
-  protected static <T extends Post<? extends PostText>> PostPage<T> findViewable(
+  protected static <T extends Post<? extends PostText<?>>> PostPage<T> findViewable(
       Class<? extends T> entityClass,
       Session session,
       @CheckForNull User viewer,
