@@ -31,14 +31,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import org.jboss.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 @Path("/wiki")
 public class WikiResource {
-
-  private static final Logger log = Logger.getLogger(WikiResource.class);
 
   private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 

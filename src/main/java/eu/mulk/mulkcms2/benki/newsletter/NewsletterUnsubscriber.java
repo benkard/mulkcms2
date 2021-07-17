@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki.newsletter;
 
+import eu.mulk.mulkcms2.common.logging.Messages;
 import io.quarkus.mailer.MailTemplate.MailTemplateInstance;
 import io.quarkus.qute.CheckedTemplate;
 import java.util.concurrent.ExecutionException;
@@ -11,12 +12,9 @@ import javax.transaction.Transactional;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.mail.MailMessage;
-import org.jboss.logging.Logger;
 
 @Dependent
 public class NewsletterUnsubscriber implements Processor {
-
-  private static final Logger log = Logger.getLogger(NewsletterUnsubscriber.class);
 
   @CheckedTemplate
   static class Templates {
@@ -31,7 +29,7 @@ public class NewsletterUnsubscriber implements Processor {
 
     for (var sender : mail.getFrom()) {
       if (!(sender instanceof InternetAddress)) {
-        log.warnf("Tried to unsubscribe, but not an InternetAddress: %s", sender);
+        Messages.log.unsubscribeBadInternetAddress(sender);
         continue;
       }
 
@@ -51,13 +49,12 @@ public class NewsletterUnsubscriber implements Processor {
 
               s.delete();
 
-              log.infof("Unsubscribed: %s (#%d)", s.email, s.id);
+              Messages.log.unsubscribed(s.email, s.id);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
               throw new RuntimeException(e);
             }
           },
-          () ->
-              log.warnf("Tried to unsubscribe, but no subscription found: %s", sender.toString()));
+          () -> Messages.log.unsubscribeSubscriptionNotFound(sender));
     }
   }
 }

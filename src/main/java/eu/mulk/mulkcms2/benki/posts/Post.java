@@ -53,15 +53,12 @@ import javax.persistence.criteria.Predicate;
 import org.hibernate.Session;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jboss.logging.Logger;
 
 @Entity
 @Table(name = "posts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @TypeDef(name = "pg_enum", typeClass = PostgreSQLEnumType.class)
 public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
-
-  private static final Logger log = Logger.getLogger(Post.class);
 
   public enum Scope {
     top_level,
@@ -343,8 +340,6 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     if (count != null) {
       forwardQuery.setMaxResults(count + 1);
     }
-
-    log.debug(forwardQuery.unwrap(org.hibernate.query.Query.class).getQueryString());
 
     @CheckForNull Integer prevCursor = null;
     @CheckForNull Integer nextCursor = null;

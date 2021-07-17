@@ -59,12 +59,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.Session;
-import org.jboss.logging.Logger;
 import org.jsoup.Jsoup;
 
 public abstract class PostResource {
-
-  private static final Logger log = Logger.getLogger(PostResource.class);
 
   private static final DateTimeFormatter htmlDateTimeFormatter =
       DateTimeFormatter.ISO_OFFSET_DATE_TIME;
