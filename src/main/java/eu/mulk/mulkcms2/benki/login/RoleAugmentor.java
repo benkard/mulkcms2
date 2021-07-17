@@ -30,7 +30,6 @@ public class RoleAugmentor implements SecurityIdentityAugmentor {
     return augmentWithRoles(identity, context);
   }
 
-  @Transactional
   Uni<SecurityIdentity> augmentWithRoles(
       SecurityIdentity identity, AuthenticationRequestContext context) {
     return context.runBlocking(
@@ -41,6 +40,7 @@ public class RoleAugmentor implements SecurityIdentityAugmentor {
   }
 
   @CacheResult(cacheName = "login-role-cache")
+  @Transactional
   Set<String> getUserLoginRoles(String userNickname) {
     var user = User.findByNicknameWithRoles(userNickname);
     return user.effectiveRoles.stream()
