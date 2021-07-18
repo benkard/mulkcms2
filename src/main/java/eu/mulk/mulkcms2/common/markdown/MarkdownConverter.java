@@ -11,6 +11,8 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.util.Arrays;
 import javax.enterprise.context.ApplicationScoped;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 @ApplicationScoped
 public class MarkdownConverter {
@@ -41,6 +43,7 @@ public class MarkdownConverter {
 
   public String htmlify(String markdown) {
     var parsedDocument = parser.parse(markdown);
-    return renderer.render(parsedDocument);
+    var unsanitizedHtml = renderer.render(parsedDocument);
+    return Jsoup.clean(unsanitizedHtml, Whitelist.relaxed());
   }
 }
