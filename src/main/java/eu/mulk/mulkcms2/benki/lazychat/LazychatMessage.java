@@ -5,17 +5,27 @@ import java.util.Collection;
 import javax.annotation.CheckForNull;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "lazychat_messages", schema = "benki")
 public class LazychatMessage extends Post<LazychatMessageText> {
 
-  @OneToMany(mappedBy = "referrer", fetch = FetchType.LAZY)
+  @ManyToMany
+  @JoinTable(
+      name = "lazychat_references",
+      schema = "benki",
+      joinColumns = {@JoinColumn(name = "referrer")},
+      inverseJoinColumns = {@JoinColumn(name = "referee")})
   @JsonbTransient
-  public Collection<LazychatReference> references;
+  public Collection<LazychatMessage> referees;
+
+  @ManyToMany(mappedBy = "referees")
+  @JsonbTransient
+  public Collection<LazychatMessage> referrers;
 
   @CheckForNull
   @Override
