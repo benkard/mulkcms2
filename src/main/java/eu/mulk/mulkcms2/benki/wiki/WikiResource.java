@@ -32,7 +32,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 @Path("/wiki")
 public class WikiResource {
@@ -94,7 +94,7 @@ public class WikiResource {
 
     if (title != null) {
       // Remove markup.  Reject whitespace.
-      title = Jsoup.clean(title, Whitelist.none());
+      title = Jsoup.clean(title, Safelist.none());
       if (!title.matches("\\w+")) {
         throw new BadRequestException("title does not match \"\\w+\"");
       }

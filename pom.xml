@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -10,8 +12,8 @@
 
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -20,28 +22,28 @@
 
     <antrun-plugin.version>3.0.0</antrun-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
-    <enforcer-plugin.version>3.0.0-M3</enforcer-plugin.version>
+    <enforcer-plugin.version>3.0.0</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>2.0.2.Final</quarkus.version>
+    <quarkus.version>2.7.5.Final</quarkus.version>
     <resources-plugin.version>3.2.0</resources-plugin.version>
-    <spotless-plugin.version>2.11.0</spotless-plugin.version>
+    <spotless-plugin.version>2.19.0</spotless-plugin.version>
 
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
     <basic-annotations.version>0.2.0</basic-annotations.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
-    <flexmark.version>0.62.2</flexmark.version>
-    <google.java.format.version>1.10.0</google.java.format.version>
-    <hibernate.version>5.4.27.Final</hibernate.version>
-    <hibernate-types.version>2.12.0</hibernate-types.version>
+    <flexmark.version>0.64.0</flexmark.version>
+    <google.java.format.version>1.15.0</google.java.format.version>
+    <hibernate.version>5.6.5.Final</hibernate.version>
+    <hibernate-types.version>2.14.0</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
-    <jna.version>5.8.0</jna.version>
-    <jsoup.version>1.13.1</jsoup.version>
-    <kotlin-annotations.version>1.5.20</kotlin-annotations.version>
-    <liquibase.version>4.3.5</liquibase.version>
-    <postgresql.version>42.2.22</postgresql.version>
-    <rome.version>1.15.0</rome.version>
+    <jna.version>5.10.0</jna.version>
+    <jsoup.version>1.14.3</jsoup.version>
+    <kotlin-annotations.version>1.6.10</kotlin-annotations.version>
+    <liquibase.version>4.8.0</liquibase.version>
+    <postgresql.version>42.3.3</postgresql.version>
+    <rome.version>1.18.0</rome.version>
   </properties>
 
   <dependencyManagement>
@@ -58,7 +60,7 @@
       <!-- Hibernate PostgreSQL Extra Types -->
       <dependency>
         <groupId>com.vladmihalcea</groupId>
-        <artifactId>hibernate-types-52</artifactId>
+        <artifactId>hibernate-types-55</artifactId>
         <version>${hibernate-types.version}</version>
       </dependency>
 
@@ -214,7 +216,7 @@
     <!-- Hibernate PostgreSQL Extra Types -->
     <dependency>
       <groupId>com.vladmihalcea</groupId>
-      <artifactId>hibernate-types-52</artifactId>
+      <artifactId>hibernate-types-55</artifactId>
     </dependency>
 
     <!-- Annotations -->
@@ -393,7 +395,7 @@
             <phase>generate-resources</phase>
             <configuration>
               <target>
-                <ant target="web.resources" />
+                <ant target="web.resources"/>
               </target>
             </configuration>
             <goals>

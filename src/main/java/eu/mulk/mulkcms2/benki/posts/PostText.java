@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.benki.posts;
 
+import com.vladmihalcea.hibernate.type.search.PostgreSQLTSVectorType;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.annotation.CheckForNull;
 import javax.json.bind.annotation.JsonbTransient;
@@ -15,11 +16,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 @Entity
 @Table(name = "post_texts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @IdClass(PostTextPK.class)
+@TypeDef(name = "tsvector", typeClass = PostgreSQLTSVectorType.class)
 public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntityBase {
 
   private static final int DESCRIPTION_CACHE_VERSION = 1;
@@ -42,6 +46,7 @@ public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntity
 
   @Column(name = "search_terms")
   @Generated(GenerationTime.ALWAYS)
+  @Type(type = "tsvector")
   public String searchTerms;
 
   @ManyToOne(fetch = FetchType.LAZY, targetEntity = Post.class)

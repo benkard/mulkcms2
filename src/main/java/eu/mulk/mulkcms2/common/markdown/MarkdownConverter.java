@@ -12,7 +12,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.util.Arrays;
 import javax.enterprise.context.ApplicationScoped;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 @ApplicationScoped
 public class MarkdownConverter {
@@ -44,6 +44,6 @@ public class MarkdownConverter {
   public String htmlify(String markdown) {
     var parsedDocument = parser.parse(markdown);
     var unsanitizedHtml = renderer.render(parsedDocument);
-    return Jsoup.clean(unsanitizedHtml, Whitelist.relaxed());
+    return Jsoup.clean(unsanitizedHtml, Safelist.relaxed());
   }
 }
