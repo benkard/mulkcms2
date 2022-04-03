@@ -25,6 +25,11 @@ public class PostTarget extends PanacheEntityBase {
   public int targetId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "target", referencedColumnName = "id", nullable = false)
+  @JoinColumn(
+      name = "target",
+      referencedColumnName = "id",
+      nullable = false,
+      insertable = false,
+      updatable = false)
   public Role target;
 }

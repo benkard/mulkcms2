@@ -6,7 +6,10 @@ import javax.persistence.Id;
 
 public class PostTargetPK implements Serializable {
 
+  @Column(name = "message", nullable = false)
   private int message;
+
+  @Column(name = "target", nullable = false)
   private int targetId;
 
   @Column(name = "message", nullable = false)
