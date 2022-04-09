@@ -166,7 +166,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       if (entityClass.isAssignableFrom(Post.class)) {
         cb = cb.innerJoin("user.visiblePosts", "post");
       } else if (entityClass.isAssignableFrom(Bookmark.class)) {
-        cb = cb.innerJoin("user.visibleBookmark", "post");
+        cb = cb.innerJoin("user.visibleBookmarks", "post");
       } else if (entityClass.isAssignableFrom(LazychatMessage.class)) {
         cb = cb.innerJoin("user.visibleLazychatMessages", "post");
       } else {
