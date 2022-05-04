@@ -32,7 +32,8 @@ public class MarkdownConverter {
             AutolinkExtension.create(),
             DefinitionExtension.create(),
             TypographicExtension.create(),
-            FootnoteExtension.create()));
+            FootnoteExtension.create(),
+            AbbreviationExtension.create()));
     options.set(Parser.FENCED_CODE_BLOCK_PARSER, true);
     options.set(HtmlRenderer.SOFT_BREAK, "\n");
     options.set(HtmlRenderer.HARD_BREAK, "<br />\n");
