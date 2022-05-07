@@ -13,6 +13,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.util.Arrays;
 import javax.enterprise.context.ApplicationScoped;
 import org.jsoup.Jsoup;
+import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Safelist;
 
 @ApplicationScoped
@@ -47,7 +48,10 @@ public class MarkdownConverter {
 
   public String htmlify(String markdown) {
     var parsedDocument = parser.parse(markdown);
-    var unsanitizedHtml = renderer.render(parsedDocument);
-    return Jsoup.clean(unsanitizedHtml, Safelist.relaxed());
+    var uncleanHtml = renderer.render(parsedDocument);
+    var cleaner = new Cleaner(Safelist.relaxed().addTags("abbr", "acronym"));
+    var cleanedDocument = cleaner.clean(Jsoup.parseBodyFragment(uncleanHtml));
+    cleanedDocument.select("table").addClass("pure-table").addClass("pure-table-horizontal");
+    return cleanedDocument.body().html();
   }
 }
