@@ -49,7 +49,12 @@ public class MarkdownConverter {
   public String htmlify(String markdown) {
     var parsedDocument = parser.parse(markdown);
     var uncleanHtml = renderer.render(parsedDocument);
-    var cleaner = new Cleaner(Safelist.relaxed().addTags("abbr", "acronym"));
+    var cleaner =
+        new Cleaner(
+            Safelist.relaxed()
+                .addTags("abbr", "acronym")
+                .addAttributes("abbr", "title")
+                .addAttributes("acronym", "title"));
     var cleanedDocument = cleaner.clean(Jsoup.parseBodyFragment(uncleanHtml));
     cleanedDocument.select("table").addClass("pure-table").addClass("pure-table-horizontal");
     return cleanedDocument.body().html();
