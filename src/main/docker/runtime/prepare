@@ -1,0 +1,16 @@
+#! /bin/sh
+# SPDX-FileCopyrightText: © 2022 Matthias Andreas Benkard <code@mail.matthias.benkard.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set -euo pipefail
+
+cd "$(dirname $(readlink -e "$0"))"
+
+openjdk_package_info=$(curl "https://api.foojay.io/disco/v2.0/packages?package_type=jdk&latest=per_distro&directly_downloadable=true&release_status=ga&javafx_bundled=false&operating_system=linux&architecture=x64&archive_type=tar.gz&distro=oracle_open_jdk")
+
+openjdk_package_uri=$(jq -r '.result[0].links.pkg_download_redirect' <<<"${openjdk_package_info}")
+openjdk_package_filename=$(jq -r '.result[0].filename' <<<"${openjdk_package_info}")
+curl --fail --create-dirs -C - -o "jdk-dist/${openjdk_package_filename}" "${openjdk_package_uri}"
+
+ln -svf "${openjdk_package_filename}" "jdk-dist/latest.tar.gz"

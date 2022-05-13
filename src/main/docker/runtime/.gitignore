@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: © 2022 Matthias Andreas Benkard <code@mail.matthias.benkard.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+/cache
+/jdk-dist

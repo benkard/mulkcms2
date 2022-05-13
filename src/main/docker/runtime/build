@@ -1,0 +1,36 @@
+#! /bin/sh
+# SPDX-FileCopyrightText: © 2022 Matthias Andreas Benkard <code@mail.matthias.benkard.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set -euo pipefail
+
+cd "$(dirname $(readlink -e "$0"))"
+
+image=docker.benkard.de/mulk/openjdk-runtime:latest
+use_kaniko=no
+
+./prepare
+
+if [[ "${use_kaniko}" == yes ]]; then
+    docker run \
+        --mount type=bind,src="$PWD",target=/workspace \
+        gcr.io/kaniko-project/warmer:latest \
+        --cache-dir=/workspace/cache \
+        --image=registry.access.redhat.com/ubi8/ubi-micro:latest \
+        --image=registry.access.redhat.com/ubi8/ubi-minimal:latest
+
+    docker run \
+        --mount type=bind,src="$PWD",target=/workspace \
+        --mount type=bind,src="$HOME/.docker",target=/root/.docker,ro=true \
+        gcr.io/kaniko-project/executor:latest \
+        --dockerfile Dockerfile \
+        --destination "${image}" \
+        --context dir:///workspace/ \
+        --cache=true \
+        --cache-ttl=16800h0m0s \
+        --reproducible=true
+else
+    docker build -t "${image}" .
+    docker push "${image}"
+fi
