@@ -11,7 +11,7 @@ ADD jdk-dist/latest.tar.gz /jdk
 RUN microdnf --assumeyes --nodocs install binutils
 RUN /jdk/*/bin/jlink \
     -J-XX:MaxRAMPercentage=75 \
-    --add-modules ALL-MODULE-PATH \
+    --add-modules java.base,java.instrument,java.naming,java.rmi,java.scripting,java.security.jgss,java.security.sasl,java.sql,jdk.compiler,jdk.jconsole,jdk.unsupported \
     --compress=1 \
     --no-man-pages \
     --strip-debug \
