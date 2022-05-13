@@ -85,9 +85,6 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     }
 
     this.uriInput.addEventListener('blur', this.onUriBlur.bind(this));
-    this.uriInput.value = this.uri || "";
-    this.titleInput.value = this.titleText || "";
-    this.descriptionInput.innerText = this.description || "";
   }
 
   get editedId() /*:number | null*/ {
@@ -145,7 +142,6 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     this.uriSpinner.hidden = false;
     this.uriSpinner.playing = true;
     let searchParams = new URLSearchParams({'uri': this.uriInput.value});
-    console.log(`/bookmarks/page-info?${searchParams.toString()}`);
     let fetchUrl = new URL(`/bookmarks/page-info?${searchParams.toString()}`, document.URL);
     let r = await fetch(fetchUrl, {headers: {"accept": "application/json"}});
     this.uriSpinner.hidden = true;
@@ -176,7 +172,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     this.visibilityInput.value = post.visibility;
     if (post.texts['']) {
       this.titleInput.value = post.texts[''].title;
-      this.descriptionInput.innerText = post.texts[''].description;
+      this.descriptionInput.value = post.texts[''].description;
     }
 
     this.loaded = true;

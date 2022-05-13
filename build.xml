@@ -136,6 +136,7 @@
     <exec executable="./mvnw">
       <arg value="clean"/>
     </exec>
+    <delete dir="${web-dir}/.parcel-cache"/>
     <delete dir="${web-dir}/node_modules"/>
     <delete dir="${web-dir}/web_modules"/>
   </target>
