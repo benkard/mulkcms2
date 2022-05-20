@@ -85,6 +85,9 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     }
 
     this.uriInput.addEventListener('blur', this.onUriBlur.bind(this));
+    this.uriInput.value = this.uri || "";
+    this.titleInput.value = this.titleText || "";
+    this.descriptionInput.innerText = this.description || "";
   }
 
   get editedId() /*:number | null*/ {
