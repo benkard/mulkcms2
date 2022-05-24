@@ -18,18 +18,18 @@
 {#if showBookmarkForm}
   <elix-expandable-section id="bookmark-submission-pane">
     <h2 slot="header" class="small-title expandable-section-title"><button class="pure-button">Create New Bookmark</button></h2>
-    <section id="bookmark-submission">
+    <div id="bookmark-submission">
       <mlk-bookmark-submission-form id="bookmark-submission-form"></mlk-bookmark-submission-form>
-    </section>
+    </div>
   </elix-expandable-section>
 {/if}
 
 {#if showLazychatForm}
   <elix-expandable-section id="lazychat-submission-pane">
     <h2 slot="header" class="small-title expandable-section-title"><button class="pure-button">Post Message</button></h2>
-    <section id="lazychat-submission">
+    <div id="lazychat-submission">
       <mlk-lazychat-submission-form id="lazychat-submission-form"></mlk-lazychat-submission-form>
-    </section>
+    </div>
   </elix-expandable-section>
 {/if}
 
@@ -42,7 +42,7 @@
   {#if hasNextPage}<a href="?i={nextCursor}&n={pageSize}&search-query={searchQuery}" class="pure-button">next page ⇢</a>{/if}
 </div>
 
-<section id="main-content">
+<div id="main-content">
   {#for day in postDays}
     <div class="post-day">
       <div class="post-day-info">
@@ -52,13 +52,13 @@
       {#for post in day.posts}
         {#if post.isBookmark}
           <article class="bookmark {#if post.descriptionHtml != ""}post-with-nonempty-body{/if}">
-            <section class="bookmark-editor post-editor">
+            <div class="bookmark-editor post-editor">
               {#if showBookmarkForm}
               <elix-expandable-panel class="bookmark-editor-pane editor-pane">
                 <mlk-bookmark-submission-form edited-id="{post.id}"></mlk-bookmark-submission-form>
               </elix-expandable-panel>
               {/if}
-            </section>
+            </div>
 
             <header>
               <div class="bookmark-info">
@@ -68,7 +68,7 @@
                 </a>
 
                 <a href="{post.uri}" class="bookmark-title">
-                  <h1 class="bookmark-title"><span class="bookmark-symbol">🔖 </span> {post.title}</h1>.
+                  <h2 class="bookmark-title"><span class="bookmark-symbol">🔖 </span> {post.title}</h2>.
                 </a>
               </div>
             </header>
@@ -79,21 +79,21 @@
               {/if}
             </div>
 
-            <section class="bookmark-description post-content">
+            <div class="bookmark-description post-content">
               {post.descriptionHtml.raw}
-            </section>
+            </div>
 
-            <section class="comment-box"></section>
+            <div class="comment-box"></div>
           </article>
         {#else}
           <article class="lazychat-message">
-            <section class="lazychat-editor post-editor">
+            <div class="lazychat-editor post-editor">
               {#if showLazychatForm}
               <elix-expandable-panel class="lazychat-editor-pane editor-pane">
                 <mlk-lazychat-submission-form edited-id="{post.id}"></mlk-lazychat-submission-form>
               </elix-expandable-panel>
               {/if}
-            </section>
+            </div>
 
             <header>
               <div class="lazychat-message-info">
@@ -110,15 +110,15 @@
               {/if}
             </div>
 
-            <section class="lazychat-message-content post-content">
+            <div class="lazychat-message-content post-content">
               {post.descriptionHtml.raw}
-            </section>
+            </div>
           </article>
         {/if}
       {/for}
     </div>
   {/for}
-</section>
+</div>
 
 <div class="paging">
   {#if hasPreviousPage}<a href="?i={previousCursor}&n={pageSize}&search-query={searchQuery}" class="pure-button">⇠ previous page</a>{/if}
