@@ -137,6 +137,8 @@
       <arg value="clean"/>
     </exec>
     <delete dir="${web-dir}/.parcel-cache"/>
+    <delete dir="${web-dir}/build"/>
+    <delete dir="${web-dir}/dist"/>
     <delete dir="${web-dir}/node_modules"/>
     <delete dir="${web-dir}/web_modules"/>
   </target>
