@@ -1,0 +1,26 @@
+{@java.lang.Integer postId}
+
+<div class="comment-box">
+  <script type="module" src="/lib.js"></script>
+  <script type="module" src="/posts/commentBox.js"></script>
+
+  <hr/>
+
+  <form class="comment-form pure-form" method="post" action="/posts/{postId}/comments">
+    <fieldset>
+      <legend>Post Comment</legend>
+
+      <label for="comment-form-author-{postId}">Author (optional)</label>
+      <input name="author" id="comment-form-author-{postId}" type="text" placeholder="Anonymous Coward"/>
+
+      <label for="comment-form-message-{postId}">Message</label>
+      <textarea name="message" id="comment-form-message-{postId}" placeholder="Great article!" required></textarea>
+
+      <input name="hashcash-salt" id="comment-form-hashcash-salt-{postId}" type="hidden"/>
+
+      <div class="controls">
+        <input type="submit" class="pure-button"/>
+      </div>
+    </fieldset>
+  </form>
+</div>

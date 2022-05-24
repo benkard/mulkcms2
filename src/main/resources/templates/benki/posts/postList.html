@@ -83,7 +83,9 @@
               {post.descriptionHtml.raw}
             </div>
 
-            <div class="comment-box"></div>
+            {#if showCommentBox}
+              {#commentBox postId=post.id /}
+            {/if}
           </article>
         {#else}
           <article class="lazychat-message">
@@ -113,6 +115,10 @@
             <div class="lazychat-message-content post-content">
               {post.descriptionHtml.raw}
             </div>
+
+            {#if showCommentBox}
+              {#commentBox postId=post.id /}
+            {/if}
           </article>
         {/if}
       {/for}
