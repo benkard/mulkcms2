@@ -1,7 +1,6 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
 import eu.mulk.mulkcms2.benki.posts.PostText;
-import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import javax.annotation.CheckForNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,10 +21,7 @@ public class BookmarkText extends PostText<Bookmark> {
 
   @Transient
   @CheckForNull
-  protected String computeDescriptionHtml() {
-    if (description == null) {
-      return null;
-    }
-    return new MarkdownConverter().htmlify(description);
+  protected String getDescriptionMarkup() {
+    return description;
   }
 }

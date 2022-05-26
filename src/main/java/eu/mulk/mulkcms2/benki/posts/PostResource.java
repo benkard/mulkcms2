@@ -4,6 +4,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.ws.rs.core.MediaType.APPLICATION_ATOM_XML;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
 import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.rometools.rome.feed.atom.Content;
@@ -15,8 +16,10 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.WireFeedOutput;
 import eu.mulk.mulkcms2.benki.accesscontrol.PageKey;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
+import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.login.LoginRoles;
 import eu.mulk.mulkcms2.benki.posts.Post.PostPage;
+import eu.mulk.mulkcms2.benki.posts.Post.Scope;
 import eu.mulk.mulkcms2.benki.users.User;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateExtension;
@@ -25,6 +28,7 @@ import io.quarkus.security.identity.SecurityIdentity;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -49,14 +53,20 @@ import javax.json.spi.JsonProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.Session;
@@ -74,6 +84,8 @@ public abstract class PostResource {
 
   private static final DateTimeFormatter humanDateFormatter =
       DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+
+  private static final String hashcashDigestAlgorithm = "SHA-256";
 
   private static final int pageKeyBytes = 32;
 
@@ -281,6 +293,48 @@ public abstract class PostResource {
     var owner = User.findByNickname(ownerName);
     @CheckForNull var pageKey = pageKeyBase36 == null ? null : new BigInteger(pageKeyBase36, 36);
     return makeFeed(pageKey, ownerName, owner);
+  }
+
+  @POST
+  @Produces(TEXT_PLAIN)
+  @Path("{id}/comments")
+  @Transactional
+  public Response postComment(
+      @PathParam("id") int postId,
+      @FormParam("message") @NotEmpty String message,
+      @FormParam("hashcash-salt") long hashcashSalt)
+      throws NoSuchAlgorithmException {
+    var hashcashDigest = MessageDigest.getInstance(hashcashDigestAlgorithm);
+    hashcashDigest.update("Hashcash-Salt: ".getBytes(UTF_8));
+    hashcashDigest.update(String.valueOf(hashcashSalt).getBytes(UTF_8));
+    hashcashDigest.update("\n\n".getBytes(UTF_8));
+
+    for (byte b : message.getBytes(UTF_8)) {
+      if (b == '\r') {
+        // Skip CR characters.  The JavaScript side does not include them in its computation.
+        continue;
+      }
+      hashcashDigest.update(b);
+    }
+    var hashcash = hashcashDigest.digest();
+
+    if (hashcash[0] != 0 || hashcash[1] != 0) {
+      throw new BadRequestException(
+          "invalid hashcash",
+          Response.status(Status.BAD_REQUEST).entity("invalid hashcash").build());
+    }
+
+    Post<?> post = Post.findById(postId);
+
+    var comment = new LazychatMessage();
+    comment.date = OffsetDateTime.now();
+    comment.scope = Scope.comment;
+    comment.referees = List.of(post);
+    comment.setContent(message);
+    assignPostTargets(post.getVisibility(), post.owner, comment);
+    comment.persist();
+
+    return Response.seeOther(UriBuilder.fromUri("/posts/{id}").build(postId)).build();
   }
 
   private String makeFeed(

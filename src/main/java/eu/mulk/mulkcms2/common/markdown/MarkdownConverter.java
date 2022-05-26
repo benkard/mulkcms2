@@ -11,18 +11,22 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.util.Arrays;
-import javax.enterprise.context.ApplicationScoped;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Safelist;
 
-@ApplicationScoped
 public class MarkdownConverter {
+
+  public enum Mode {
+    POST,
+    COMMENT,
+  }
 
   private final Parser parser;
   private final HtmlRenderer renderer;
+  private final Mode mode;
 
-  public MarkdownConverter() {
+  public MarkdownConverter(Mode mode) {
     var options = new MutableDataSet();
     options.set(
         Parser.EXTENSIONS,
@@ -42,6 +46,7 @@ public class MarkdownConverter {
     options.set(TypographicExtension.ENABLE_QUOTES, true);
     options.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "");
 
+    this.mode = mode;
     this.parser = Parser.builder(options).build();
     this.renderer = HtmlRenderer.builder(options).build();
   }
@@ -49,14 +54,42 @@ public class MarkdownConverter {
   public String htmlify(String markdown) {
     var parsedDocument = parser.parse(markdown);
     var uncleanHtml = renderer.render(parsedDocument);
-    var cleaner =
-        new Cleaner(
-            Safelist.relaxed()
-                .addTags("abbr", "acronym")
-                .addAttributes("abbr", "title")
-                .addAttributes("acronym", "title"));
+    var cleaner = makeCleaner();
     var cleanedDocument = cleaner.clean(Jsoup.parseBodyFragment(uncleanHtml));
     cleanedDocument.select("table").addClass("pure-table").addClass("pure-table-horizontal");
     return cleanedDocument.body().html();
+  }
+
+  private Cleaner makeCleaner() {
+    var safelist =
+        switch (mode) {
+          case POST -> Safelist.relaxed()
+              .addTags("abbr", "acronym")
+              .addAttributes("abbr", "title")
+              .addAttributes("acronym", "title");
+          case COMMENT -> Safelist.simpleText()
+              .addTags(
+                  "p",
+                  "blockquote",
+                  "cite",
+                  "code",
+                  "pre",
+                  "dd",
+                  "dl",
+                  "dt",
+                  "s",
+                  "sub",
+                  "sup",
+                  "ol",
+                  "ul",
+                  "li",
+                  "abbr",
+                  "acronym",
+                  "ins",
+                  "del")
+              .addAttributes("abbr", "title")
+              .addAttributes("acronym", "title");
+        };
+    return new Cleaner(safelist);
   }
 }

@@ -1,4 +1,5 @@
 {@java.lang.Integer postId}
+{@java.util.List<eu.mulk.mulkcms2.benki.lazychat.LazychatMessage> comments}
 
 <div class="comment-box">
   <script type="module" src="/lib.js"></script>
@@ -10,9 +11,6 @@
     <fieldset>
       <legend>Post Comment</legend>
 
-      <label for="comment-form-author-{postId}">Author (optional)</label>
-      <input name="author" id="comment-form-author-{postId}" type="text" placeholder="Anonymous Coward"/>
-
       <label for="comment-form-message-{postId}">Message</label>
       <textarea name="message" id="comment-form-message-{postId}" placeholder="Great article!" required></textarea>
 
@@ -23,4 +21,20 @@
       </div>
     </fieldset>
   </form>
+
+  {#for comment in comments}
+  <div class="comment" id="comment-{comment.id}">
+    {#if comment.owner != null}<span class="comment-owner post-owner">{comment.owner.firstName}</span>{/if}
+
+    <div class="comment-info">
+      <a class="comment-link" href="/posts/{postId}#comment-{comment.id}">
+        <span class="comment-self-link">#</span>
+      </a>
+    </div>
+
+    <div class="comment-content post-content">
+      {comment.descriptionHtml.raw}
+    </div>
+  </div>
+  {/for}
 </div>

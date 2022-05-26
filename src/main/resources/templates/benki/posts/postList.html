@@ -84,7 +84,7 @@
             </div>
 
             {#if showCommentBox}
-              {#commentBox postId=post.id /}
+              {#commentBox postId=post.id comments=post.comments /}
             {/if}
           </article>
         {#else}
@@ -117,7 +117,7 @@
             </div>
 
             {#if showCommentBox}
-              {#commentBox postId=post.id /}
+              {#commentBox postId=post.id comments=post.comments /}
             {/if}
           </article>
         {/if}

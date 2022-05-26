@@ -21,11 +21,7 @@ public class LazychatMessage extends Post<LazychatMessageText> {
       joinColumns = {@JoinColumn(name = "referrer")},
       inverseJoinColumns = {@JoinColumn(name = "referee")})
   @JsonbTransient
-  public Collection<LazychatMessage> referees;
-
-  @ManyToMany(mappedBy = "referees")
-  @JsonbTransient
-  public Collection<LazychatMessage> referrers;
+  public Collection<Post<?>> referees;
 
   @CheckForNull
   @Override

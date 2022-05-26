@@ -109,6 +109,10 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   @JsonbTransient
   public Set<Role> targets;
 
+  @ManyToMany(mappedBy = "referees")
+  @JsonbTransient
+  public Collection<LazychatMessage> referrers;
+
   @OneToMany(
       mappedBy = "post",
       fetch = FetchType.LAZY,
@@ -387,6 +391,16 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     } else {
       return texts.values().stream().findAny().get();
     }
+  }
+
+  public Collection<LazychatMessage> getComments() {
+    return referrers.stream()
+        .filter(l -> l.scope == Scope.comment)
+        .sorted(
+            Comparator.comparing(
+                    (LazychatMessage l) -> Objects.requireNonNullElse(l.date, OffsetDateTime.MIN))
+                .reversed())
+        .toList();
   }
 
   public enum Visibility {

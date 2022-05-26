@@ -1,6 +1,9 @@
 package eu.mulk.mulkcms2.benki.posts;
 
 import com.vladmihalcea.hibernate.type.search.PostgreSQLTSVectorType;
+import eu.mulk.mulkcms2.benki.posts.Post.Scope;
+import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
+import eu.mulk.mulkcms2.common.markdown.MarkdownConverter.Mode;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.annotation.CheckForNull;
 import javax.json.bind.annotation.JsonbTransient;
@@ -69,5 +72,15 @@ public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntity
   }
 
   @CheckForNull
-  protected abstract String computeDescriptionHtml();
+  protected abstract String getDescriptionMarkup();
+
+  @CheckForNull
+  private String computeDescriptionHtml() {
+    var markup = getDescriptionMarkup();
+    if (markup == null) {
+      return null;
+    }
+    return new MarkdownConverter(post.scope == Scope.top_level ? Mode.POST : Mode.COMMENT)
+        .htmlify(markup);
+  }
 }
