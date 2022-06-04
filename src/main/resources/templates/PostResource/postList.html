@@ -66,6 +66,11 @@
                 <a class="post-link" href="/posts/{post.id}">
                   <span class="post-self-link">#</span>
                 </a>
+                {#if post.comments.size() > 0}
+                <a class="comment-box-link" href="/posts/{post.id}#comment-box-{post.id}">
+                  <span class="comment-box-self-link">({post.comments.size()})</span>
+                </a>
+                {/if}
 
                 <a href="{post.uri}" class="bookmark-title">
                   <h2 class="bookmark-title"><span class="bookmark-symbol">🔖 </span> {post.title}</h2>.
@@ -103,6 +108,11 @@
                 <a class="post-link" href="/posts/{post.id}">
                   <span class="post-self-link">#</span>
                 </a>
+                {#if post.comments.size() > 0}
+                <a class="comment-box-link" href="/posts/{post.id}#comment-box-{post.id}">
+                  <span class="comment-box-self-link">({post.comments.size()})</span>
+                </a>
+                {/if}
               </div>
             </header>
 

@@ -44,10 +44,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "posts", schema = "benki")
@@ -112,6 +114,12 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   @ManyToMany(mappedBy = "referees")
   @JsonbTransient
   public Collection<LazychatMessage> referrers;
+
+  @ManyToMany(mappedBy = "referees")
+  @OrderBy("date DESC")
+  @Where(clause = "scope = 'comment'")
+  @JsonbTransient
+  public Collection<LazychatMessage> comments;
 
   @OneToMany(
       mappedBy = "post",
@@ -215,6 +223,9 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     }
 
     cb = cb.where("post.scope").eq(Scope.top_level);
+
+    cb = cb.leftJoinFetch("post.comments", "comment");
+    cb = cb.fetch("comment.texts");
 
     return cb;
   }
@@ -391,16 +402,6 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     } else {
       return texts.values().stream().findAny().get();
     }
-  }
-
-  public Collection<LazychatMessage> getComments() {
-    return referrers.stream()
-        .filter(l -> l.scope == Scope.comment)
-        .sorted(
-            Comparator.comparing(
-                    (LazychatMessage l) -> Objects.requireNonNullElse(l.date, OffsetDateTime.MIN))
-                .reversed())
-        .toList();
   }
 
   public enum Visibility {
