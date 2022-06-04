@@ -1,0 +1,9 @@
+{@int postId}
+{@eu.mulk.mulkcms2.benki.lazychat.LazychatMessage comment}
+New Comment
+===========
+
+Link: <https://matthias.benkard.de/posts/{postId}#comment-{comment.id}>
+{#if comment.owner != null}Author: {comment.owner.firstName}{/if}
+
+{comment.text.content}

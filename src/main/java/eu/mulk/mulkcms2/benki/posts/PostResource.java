@@ -21,6 +21,7 @@ import eu.mulk.mulkcms2.benki.login.LoginRoles;
 import eu.mulk.mulkcms2.benki.posts.Post.PostPage;
 import eu.mulk.mulkcms2.benki.posts.Post.Scope;
 import eu.mulk.mulkcms2.benki.users.User;
+import io.quarkus.mailer.MailTemplate.MailTemplateInstance;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
@@ -45,6 +46,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
@@ -96,7 +100,10 @@ public abstract class PostResource {
   @ConfigProperty(name = "mulkcms.posts.default-max-results")
   int defaultMaxResults;
 
-  @CheckedTemplate(basePath = "benki/posts")
+  @ConfigProperty(name = "quarkus.mailer.from")
+  String mailSenderAddress;
+
+  @CheckedTemplate
   static class Templates {
 
     public static native TemplateInstance postList(
@@ -112,6 +119,9 @@ public abstract class PostResource {
         @CheckForNull Integer nextCursor,
         @CheckForNull Integer pageSize,
         @CheckForNull String searchQuery);
+
+    public static native MailTemplateInstance commentNotificationMail(
+        int postId, LazychatMessage comment);
   }
 
   @Inject protected SecurityIdentity identity;
@@ -303,7 +313,7 @@ public abstract class PostResource {
       @PathParam("id") int postId,
       @FormParam("message") @NotEmpty String message,
       @FormParam("hashcash-salt") long hashcashSalt)
-      throws NoSuchAlgorithmException {
+      throws NoSuchAlgorithmException, ExecutionException, InterruptedException, TimeoutException {
     var hashcashDigest = MessageDigest.getInstance(hashcashDigestAlgorithm);
     hashcashDigest.update("Hashcash-Salt: ".getBytes(UTF_8));
     hashcashDigest.update(String.valueOf(hashcashSalt).getBytes(UTF_8));
@@ -333,6 +343,17 @@ public abstract class PostResource {
     comment.setContent(message);
     assignPostTargets(post.getVisibility(), post.owner, comment);
     comment.persist();
+
+    var admins = User.findAdmins();
+
+    var mailText = Templates.commentNotificationMail(postId, comment);
+    var sendJob =
+        mailText
+            .subject(String.format("MulkCMS comment #%d", comment.id))
+            .to(mailSenderAddress)
+            .bcc(admins.stream().map(x -> x.email).toArray(String[]::new))
+            .send();
+    sendJob.subscribe().asCompletionStage().get(10000, TimeUnit.SECONDS);
 
     return Response.seeOther(UriBuilder.fromUri("/posts/{id}").build(postId)).build();
   }

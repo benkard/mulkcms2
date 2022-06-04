@@ -8,6 +8,7 @@ import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.benki.wiki.WikiPageRevision;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.CheckForNull;
@@ -160,6 +161,11 @@ public class User extends PanacheEntityBase {
                 + "where ?1 = n",
             nickname)
         .singleResult();
+  }
+
+  public static List<User> findAdmins() {
+    return find("select distinct u from BenkiUser u left join u.effectiveRoles r left join r.tags t where t = 'admin' or u.status = 'admin'")
+        .list();
   }
 
   public final boolean canSee(Post message) {
