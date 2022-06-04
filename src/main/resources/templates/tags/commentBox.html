@@ -24,9 +24,9 @@
 
   {#for comment in comments}
   <div class="comment" id="comment-{comment.id}">
-    {#if comment.owner != null}<span class="comment-owner post-owner">{comment.owner.firstName}</span>{/if}
-
     <div class="comment-info">
+      {#if comment.owner != null}<span class="comment-owner post-owner">{comment.owner.firstName}</span>{/if}
+
       <a class="comment-link" href="/posts/{postId}#comment-{comment.id}">
         <span class="comment-self-link">#</span>
       </a>

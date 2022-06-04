@@ -344,6 +344,11 @@ public abstract class PostResource {
     assignPostTargets(post.getVisibility(), post.owner, comment);
     comment.persist();
 
+    var currentUser = getCurrentUser();
+    if (currentUser != null) {
+      comment.owner = currentUser;
+    }
+
     var admins = User.findAdmins();
 
     var mailText = Templates.commentNotificationMail(postId, comment);
