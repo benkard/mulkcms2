@@ -94,7 +94,7 @@ module.exports = {
         "max-lines": "error",
         "max-lines-per-function": "error",
         "max-nested-callbacks": "error",
-        "max-params": "error",
+        "max-params": "off",
         "max-statements": "off",
         "max-statements-per-line": "error",
         "multiline-comment-style": [
@@ -145,7 +145,13 @@ module.exports = {
         "no-lone-blocks": "error",
         "no-lonely-if": "error",
         "no-loop-func": "error",
-        "no-magic-numbers": "error",
+        "no-magic-numbers": [
+          "error",
+          {
+            ignore: [0],
+            ignoreArrayIndexes: true
+          }
+        ],
         "no-mixed-operators": "error",
         "no-mixed-requires": "error",
         "no-multi-assign": "error",
@@ -164,7 +170,7 @@ module.exports = {
         "no-octal-escape": "error",
         "no-param-reassign": "error",
         "no-path-concat": "error",
-        "no-plusplus": "error",
+        "no-plusplus": "off",
         "no-process-env": "error",
         "no-process-exit": "error",
         "no-proto": "error",

@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const messageEncoder = new TextEncoder();
+  const hashcashAttemptBatchSize = 1000;
 
-  const acceptableHash = (hash) =>
-      hash[0] === 0 &&
-      hash[1] === 0;
+  const acceptableHash = (hash) => hash[0] === 0 && hash[1] === 0;
 
   const checkSalt = (message, salt, thenC, elseC) => {
     const saltedMessage = `Hashcash-Salt: ${salt}\n\n${message}`;
@@ -33,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
         commentForm.submit();
       }, () => {
         ++salt;
-        if (salt % 1000 === 0) {
-          console.log(`hashcash fail ${salt}, retrying`)
+        if (salt % hashcashAttemptBatchSize === 0) {
+          console.log(`hashcash fail ${salt}, retrying`);
         }
         setTimeout(tryHashcash, 0);
       });
