@@ -106,8 +106,8 @@ public abstract class PostResource {
   @CheckedTemplate
   static class Templates {
 
-    public static native TemplateInstance postList(
-        List<Post.Day<Post<? extends PostText<?>>>> postDays,
+    public static native <P extends Post<?>> TemplateInstance postList(
+        List<Post.Day<P>> postDays,
         @CheckForNull String feedUri,
         String pageTitle,
         Boolean showBookmarkForm,
