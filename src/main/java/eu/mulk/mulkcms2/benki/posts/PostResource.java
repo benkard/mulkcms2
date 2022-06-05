@@ -26,6 +26,7 @@ import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.identity.SecurityIdentity;
+import io.smallrye.mutiny.Uni;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -47,7 +48,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
@@ -309,7 +309,7 @@ public abstract class PostResource {
   @Produces(TEXT_PLAIN)
   @Path("{id}/comments")
   @Transactional
-  public Response postComment(
+  public Uni<Response> postComment(
       @PathParam("id") int postId,
       @FormParam("message") @NotEmpty String message,
       @FormParam("hashcash-salt") long hashcashSalt)
@@ -358,9 +358,10 @@ public abstract class PostResource {
             .to(mailSenderAddress)
             .bcc(admins.stream().map(x -> x.email).toArray(String[]::new))
             .send();
-    sendJob.subscribe().asCompletionStage().get(10000, TimeUnit.SECONDS);
-
-    return Response.seeOther(UriBuilder.fromUri("/posts/{id}").build(postId)).build();
+    return sendJob
+        .onItem()
+        .transform(
+            unused -> Response.seeOther(UriBuilder.fromUri("/posts/{id}").build(postId)).build());
   }
 
   private String makeFeed(
