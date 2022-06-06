@@ -116,7 +116,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   public Collection<LazychatMessage> referrers;
 
   @ManyToMany(mappedBy = "referees")
-  @OrderBy("date DESC")
+  @OrderBy("date ASC")
   @Where(clause = "scope = 'comment'")
   @JsonbTransient
   public Collection<LazychatMessage> comments;
