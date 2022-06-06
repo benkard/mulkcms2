@@ -55,12 +55,14 @@ public class NewsletterSender {
 
     List<Post<?>> posts =
         Post.list(
-            ""
-                + "SELECT p FROM Post p"
-                + "  JOIN p.targets r"
-                + "  JOIN r.tags tag"
-                + " WHERE newsletter IS NULL"
-                + "   AND tag = 'world'",
+            """
+            SELECT DISTINCT p FROM Post p
+              JOIN p.targets r
+              JOIN r.tags tag
+             WHERE p.newsletter IS NULL
+               AND p.scope = 'top_level'
+               AND tag = 'world'
+            """,
             Sort.ascending("date"));
     Post.fetchTexts(posts);
 
