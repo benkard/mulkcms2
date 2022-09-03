@@ -38,7 +38,7 @@
     <hibernate.version>5.6.5.Final</hibernate.version>
     <hibernate-types.version>2.14.0</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
-    <jna.version>5.10.0</jna.version>
+    <jna.version>5.12.1</jna.version>
     <jsoup.version>1.14.3</jsoup.version>
     <kotlin-annotations.version>1.6.20</kotlin-annotations.version>
     <liquibase.version>4.9.1</liquibase.version>
