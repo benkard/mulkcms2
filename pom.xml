@@ -40,7 +40,7 @@
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.10.0</jna.version>
     <jsoup.version>1.14.3</jsoup.version>
-    <kotlin-annotations.version>1.6.20</kotlin-annotations.version>
+    <kotlin-annotations.version>1.7.10</kotlin-annotations.version>
     <liquibase.version>4.9.1</liquibase.version>
     <postgresql.version>42.3.3</postgresql.version>
     <rome.version>1.18.0</rome.version>
