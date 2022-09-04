@@ -24,7 +24,7 @@
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <enforcer-plugin.version>3.0.0</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>2.9.2.Final</quarkus.version>
+    <quarkus.version>2.12.0.Final</quarkus.version>
     <resources-plugin.version>3.2.0</resources-plugin.version>
     <spotless-plugin.version>2.19.0</spotless-plugin.version>
 
@@ -36,13 +36,13 @@
     <flexmark.version>0.64.0</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
     <hibernate.version>5.6.5.Final</hibernate.version>
-    <hibernate-types.version>2.14.0</hibernate-types.version>
+    <hibernate-types.version>2.18.0</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
-    <jna.version>5.10.0</jna.version>
-    <jsoup.version>1.14.3</jsoup.version>
+    <jna.version>5.12.1</jna.version>
+    <jsoup.version>1.15.3</jsoup.version>
     <kotlin-annotations.version>1.6.20</kotlin-annotations.version>
     <liquibase.version>4.9.1</liquibase.version>
-    <postgresql.version>42.3.3</postgresql.version>
+    <postgresql.version>42.5.0</postgresql.version>
     <rome.version>1.18.0</rome.version>
   </properties>
 

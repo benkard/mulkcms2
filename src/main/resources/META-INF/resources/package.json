@@ -1,20 +1,22 @@
 {
   "dependencies": {
-    "ContentTools": "^1.6.10",
+    "ContentTools": "^1.6.16",
     "bosonic": "^1.0.0",
-    "elix": "^14.0.0",
+    "elix": "^15.0.1",
     "normalize-opentype.css": "^0.2.4",
     "normalize.css": "^8.0.1",
-    "prismjs": "^1.20.0",
-    "purecss": "^2.0.3",
-    "sanitize.css": "^11.0.1"
+    "prismjs": "^1.29.0",
+    "purecss": "^2.1.0",
+    "sanitize.css": "^13.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.2.0",
-    "flow-bin": "^0.127.0",
-    "snowpack": "^2.0.0",
-    "cssnano": "^4.1.10",
-    "parcel": "^2.0.0-alpha.3.2"
+    "@babel/core": "^7.12.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.0.0",
+    "cssnano": "^5.1.13",
+    "eslint": "^8.23.0",
+    "flow-bin": "^0.186.0",
+    "parcel": "^2.7.0",
+    "snowpack": "2.5.4"
   },
   "browserslist": [
     "last 1 Firefox version",
