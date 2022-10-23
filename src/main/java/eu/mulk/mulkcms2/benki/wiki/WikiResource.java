@@ -37,11 +37,6 @@ import org.jsoup.safety.Safelist;
 @Path("/wiki")
 public class WikiResource {
 
-  private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
-  private static final DateTimeFormatter humanDateFormatter =
-      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
-
   private static final JsonProvider jsonProvider = JsonProvider.provider();
 
   @CheckedTemplate(basePath = "benki/wiki")
@@ -157,23 +152,5 @@ public class WikiResource {
             .singleResult();
 
     return Templates.wikiPageRevisionList(page, pageName);
-  }
-
-  @TemplateExtension
-  @CheckForNull
-  static String humanDateTime(@CheckForNull TemporalAccessor x) {
-    if (x == null) {
-      return null;
-    }
-    return humanDateFormatter.format(x);
-  }
-
-  @TemplateExtension
-  @CheckForNull
-  static String htmlDateTime(@CheckForNull TemporalAccessor x) {
-    if (x == null) {
-      return null;
-    }
-    return htmlDateFormatter.format(x);
   }
 }

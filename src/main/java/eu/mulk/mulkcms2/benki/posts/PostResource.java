@@ -78,17 +78,6 @@ import org.jsoup.Jsoup;
 
 public abstract class PostResource {
 
-  private static final DateTimeFormatter htmlDateTimeFormatter =
-      DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
-  private static final DateTimeFormatter humanDateTimeFormatter =
-      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
-
-  private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
-
-  private static final DateTimeFormatter humanDateFormatter =
-      DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
-
   private static final String hashcashDigestAlgorithm = "SHA-256";
 
   private static final int pageKeyBytes = 32;
@@ -494,42 +483,6 @@ public abstract class PostResource {
 
     var wireFeedOutput = new WireFeedOutput();
     return wireFeedOutput.outputString(feed);
-  }
-
-  @TemplateExtension
-  @CheckForNull
-  static String humanDateTime(@CheckForNull TemporalAccessor x) {
-    if (x == null) {
-      return null;
-    }
-    return humanDateTimeFormatter.format(x);
-  }
-
-  @TemplateExtension
-  @CheckForNull
-  static String htmlDateTime(@CheckForNull TemporalAccessor x) {
-    if (x == null) {
-      return null;
-    }
-    return htmlDateTimeFormatter.format(x);
-  }
-
-  @TemplateExtension
-  @CheckForNull
-  static String humanDate(@CheckForNull TemporalAccessor x) {
-    if (x == null) {
-      return null;
-    }
-    return humanDateFormatter.format(x);
-  }
-
-  @TemplateExtension
-  @CheckForNull
-  static String htmlDate(@CheckForNull TemporalAccessor x) {
-    if (x == null) {
-      return null;
-    }
-    return htmlDateFormatter.format(x);
   }
 
   private boolean showBookmarkForm() {
