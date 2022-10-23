@@ -1,8 +1,10 @@
 package eu.mulk.mulkcms2.common.template;
 
 import io.quarkus.qute.TemplateExtension;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import javax.annotation.CheckForNull;
 
@@ -21,7 +23,7 @@ public class TemporalExtensions {
 
   @TemplateExtension
   @CheckForNull
-  static String humanDateTime(@CheckForNull TemporalAccessor x) {
+  static String humanDateTime(@CheckForNull Temporal x) {
     if (x == null) {
       return null;
     }
@@ -39,7 +41,7 @@ public class TemporalExtensions {
 
   @TemplateExtension
   @CheckForNull
-  static String humanDate(@CheckForNull TemporalAccessor x) {
+  static String humanDate(@CheckForNull Temporal x) {
     if (x == null) {
       return null;
     }
@@ -48,7 +50,7 @@ public class TemporalExtensions {
 
   @TemplateExtension
   @CheckForNull
-  static String htmlDate(@CheckForNull TemporalAccessor x) {
+  static String htmlDate(@CheckForNull LocalDate x) {
     if (x == null) {
       return null;
     }
