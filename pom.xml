@@ -12,21 +12,21 @@
 
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.compiler.source>18</maven.compiler.source>
-    <maven.compiler.target>18</maven.compiler.target>
+    <maven.compiler.source>19</maven.compiler.source>
+    <maven.compiler.target>19</maven.compiler.target>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <enforced.maven-version>3.6.2</enforced.maven-version>
 
-    <antrun-plugin.version>3.0.0</antrun-plugin.version>
-    <compiler-plugin.version>3.8.1</compiler-plugin.version>
-    <enforcer-plugin.version>3.0.0</enforcer-plugin.version>
+    <antrun-plugin.version>3.1.0</antrun-plugin.version>
+    <compiler-plugin.version>3.10.1</compiler-plugin.version>
+    <enforcer-plugin.version>3.1.0</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>2.12.0.Final</quarkus.version>
-    <resources-plugin.version>3.2.0</resources-plugin.version>
-    <spotless-plugin.version>2.19.0</spotless-plugin.version>
+    <quarkus.version>2.13.3.Final</quarkus.version>
+    <resources-plugin.version>3.3.0</resources-plugin.version>
+    <spotless-plugin.version>2.27.2</spotless-plugin.version>
 
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
@@ -35,13 +35,13 @@
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
     <flexmark.version>0.64.0</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
-    <hibernate.version>5.6.5.Final</hibernate.version>
-    <hibernate-types.version>2.18.0</hibernate-types.version>
+    <hibernate.version>5.6.12.Final</hibernate.version>
+    <hibernate-types.version>2.20.0</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.12.1</jna.version>
     <jsoup.version>1.15.3</jsoup.version>
-    <kotlin-annotations.version>1.6.20</kotlin-annotations.version>
-    <liquibase.version>4.9.1</liquibase.version>
+    <kotlin-annotations.version>1.7.20</kotlin-annotations.version>
+    <liquibase.version>4.17.0</liquibase.version>
     <postgresql.version>42.5.0</postgresql.version>
     <rome.version>1.18.0</rome.version>
   </properties>
