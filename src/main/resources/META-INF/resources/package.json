@@ -27,8 +27,8 @@
   "snowpack": {
     "plugins": [],
     "install": [
-      "ContentTools",
       "ContentTools/build/content-tools.min.css",
+      "ContentTools/build/content-tools.min.js",
       "ContentTools/build/images/*",
       "bosonic",
       "elix/define/*.js",

@@ -11,8 +11,11 @@
 /* Sanitize.css */
 @import "../web_modules/sanitize.css/forms.css";
 @import "../web_modules/sanitize.css/typography.css";
-/* */
 
+/* Content Tools */
+@import "../web_modules/ContentTools/build/content-tools.min.css";
+
+/* Fonts */
 @import "./fonts/fira.css";
 @import "./fonts/firacode.css";
 @import "./fonts/iosevka.css";

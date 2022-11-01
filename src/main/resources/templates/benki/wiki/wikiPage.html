@@ -7,7 +7,6 @@
 {#nav}{#navbar siteSection="Wiki" /}
 
 {#head}
-<link rel="stylesheet" type="text/css" href="/web_modules/ContentTools/build/content-tools.min.css" />
 <script type="module" src="/lib.js" defer></script>
 
 <style type="text/css">
@@ -16,62 +15,10 @@
     font-style: italic;
   }
 </style>
-
-<script type="module" defer>
-  import ContentTools from "/web_modules/ContentTools.js";
-
-  window.addEventListener('DOMContentLoaded', function() {
-    let editor = ContentTools.EditorApp.get();
-    editor.init('*[data-editable]', 'data-name');
-
-    editor.addEventListener('saved', async function (ev) {
-      document.getElementById("warning-panel").close();
-
-      let regions = ev.detail().regions;
-      if (Object.getOwnPropertyNames(regions).length === 0) {
-        // Nothing changed.
-        return;
-      }
-
-      this.busy(true);
-
-      let requestParams = new URLSearchParams();
-      for (let name of Object.getOwnPropertyNames(regions)) {
-        requestParams.append(name, regions[name]);
-      }
-
-      let response = await fetch("/wiki/{page.title}", {
-        method: 'POST',
-        body: requestParams
-      });
-
-      if (!response.ok) {
-        document.getElementById("warning-panel").open();
-        document.getElementById("warning-text").innerText = "Failed to save page: " + response.statusText;
-        this.busy(false);
-        return;
-      }
-
-      let status = await response.json();
-      if (status.status !== "ok") {
-        document.getElementById("warning-panel").open();
-        document.getElementById("warning-text").innerText = "Failed to save page: " + JSON.stringify(status);
-        this.busy(false);
-        return;
-      }
-
-      if (status.hasOwnProperty("content")) {
-        document.getElementById("wiki-content").innerHTML = status.content;
-      }
-
-      this.busy(false);
-    });
-  });
-</script>
 {/head}
 
 {#body}
-<article id="wiki-page">
+<article id="wiki-page" data-page-title="{page.title}">
   <header>
     <div data-editable data-name="wiki-title">
       <h1>{page.title}</h1>

@@ -62,8 +62,6 @@
       <arg value="build"/>
       <arg value="lib.css"/>
       <arg value="lib.js"/>
-      <arg value="web_modules/ContentTools.js"/>
-      <arg value="web_modules/ContentTools/build/content-tools.min.css"/>
     </exec>
   </target>
 
