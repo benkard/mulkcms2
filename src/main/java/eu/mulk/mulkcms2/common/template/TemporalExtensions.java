@@ -56,5 +56,4 @@ public class TemporalExtensions {
     }
     return htmlDateFormatter.format(x);
   }
-
 }
