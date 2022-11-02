@@ -13,6 +13,7 @@ import io.quarkus.security.identity.SecurityIdentity;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
@@ -59,16 +60,28 @@ public class WikiResource {
   @Produces(TEXT_HTML)
   @Authenticated
   public TemplateInstance getPage(@PathParam("pageName") String pageName) {
+    WikiPageRevision page;
+
     Optional<WikiPageRevision> maybePage =
         WikiPageRevision.find(
                 "from WikiPageRevision rev join fetch rev.author where rev.title = ?1",
                 Sort.by("date").descending(),
                 pageName)
             .firstResultOptional();
-    if (maybePage.isEmpty()) {
-      throw new NotFoundException();
+    if (maybePage.isPresent()) {
+      page = maybePage.get();
+    } else {
+      var userName = identity.getPrincipal().getName();
+      User user =
+          User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
+      page = new WikiPageRevision();
+      page.content = "";
+      page.title = pageName;
+      page.date = OffsetDateTime.now(ZoneOffset.UTC);
+      page.format = "html5";
+      page.author = user;
     }
-    var page = maybePage.get();
+
     return Templates.wikiPage(page);
   }
 
@@ -96,6 +109,8 @@ public class WikiResource {
     }
 
     var userName = identity.getPrincipal().getName();
+    User user =
+        User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
 
     Optional<WikiPageRevision> maybeCurrentRevision =
         WikiPageRevision.find(
@@ -103,26 +118,33 @@ public class WikiResource {
                 Sort.by("date").descending(),
                 pageName)
             .firstResultOptional();
-    if (maybeCurrentRevision.isEmpty()) {
-      throw new NotFoundException();
+
+    final WikiPage page;
+    if (maybeCurrentRevision.isPresent()) {
+      // Update the existing page.
+      var currentRevision = maybeCurrentRevision.get();
+      page = currentRevision.page;
+
+      title = title != null ? title : currentRevision.title;
+      content = content != null ? content : currentRevision.content;
+    } else {
+      // Create a new page.
+      page = new WikiPage();
+      page.persist();
+
+      title = title != null ? title : pageName;
+      content = content != null ? content : "";
     }
-    var currentRevision = maybeCurrentRevision.get();
 
     var pageRevision =
-        new WikiPageRevision(
-            OffsetDateTime.now(),
-            title != null ? title : currentRevision.title,
-            content != null ? content : currentRevision.content,
-            "html5",
-            currentRevision.page,
-            User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult());
-
-    pageRevision.persistAndFlush();
+        new WikiPageRevision(OffsetDateTime.now(), title, content, "html5", page, user);
+    pageRevision.persist();
 
     return jsonProvider
         .createObjectBuilder()
         .add("status", "ok")
         .add("content", pageRevision.enrichedContent())
+        .add("title", pageRevision.title)
         .build();
   }
 

@@ -89,6 +89,7 @@
       <arg value="cms2"/>
       <arg value="lazychat"/>
       <arg value="posts"/>
+      <arg value="wiki"/>
       <arg value="--color"/>
     </exec>
   </target>

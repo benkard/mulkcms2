@@ -4,6 +4,8 @@ window.addEventListener('DOMContentLoaded', () => {
   let editor = ContentTools.EditorApp.get();
   editor.init('*[data-editable]', 'data-name');
 
+  let {pageTitle} = document.getElementById('wiki-page').dataset;
+
   editor.addEventListener('saved', async function (ev) {
     document.getElementById("warning-panel").close();
 
@@ -20,8 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
       requestParams.append(name, regions[name]);
     }
 
-    let {pageTitle} = document.getElementById('wiki-page').dataset;
-
     let response = await fetch(`/wiki/${pageTitle}`, {
       method: 'POST',
       body: requestParams
@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById("warning-text").innerText = `Failed to save page: ${response.statusText}`;
       this.busy(false);
 
-return;
+      return;
     }
 
     let status = await response.json();
@@ -41,11 +41,15 @@ return;
       document.getElementById("warning-text").innerText = `Failed to save page: ${JSON.stringify(status)}`;
       this.busy(false);
 
-return;
+      return;
     }
 
     if (status.hasOwnProperty("content")) {
       document.getElementById("wiki-content").innerHTML = status.content;
+    }
+
+    if (status.hasOwnProperty("title")) {
+      pageTitle = status.title;
     }
 
     this.busy(false);
