@@ -27,6 +27,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.Session;
+import org.hibernate.annotations.QueryHints;
 
 @Dependent
 public class NewsletterSender {
@@ -54,16 +55,18 @@ public class NewsletterSender {
     var session = em.unwrap(Session.class);
 
     List<Post<?>> posts =
-        Post.list(
-            """
-            SELECT DISTINCT p FROM Post p
-              JOIN p.targets r
-              JOIN r.tags tag
-             WHERE p.newsletter IS NULL
-               AND p.scope = 'top_level'
-               AND tag = 'world'
-            """,
-            Sort.ascending("date"));
+        Post.find(
+                """
+                SELECT DISTINCT p FROM Post p
+                  JOIN p.targets r
+                  JOIN r.tags tag
+                 WHERE p.newsletter IS NULL
+                   AND p.scope = 'top_level'
+                   AND tag = 'world'
+                """,
+                Sort.ascending("date"))
+            .withHint(QueryHints.PASS_DISTINCT_THROUGH, false)
+            .list();
     Post.fetchTexts(posts);
 
     if (posts.isEmpty()) {
