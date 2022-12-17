@@ -14,7 +14,7 @@
     "@babel/plugin-transform-flow-strip-types": "^7.0.0",
     "cssnano": "^5.1.13",
     "eslint": "^8.23.0",
-    "flow-bin": "^0.186.0",
+    "flow-bin": "^0.196.0",
     "parcel": "^2.7.0",
     "snowpack": "2.8.0"
   },
