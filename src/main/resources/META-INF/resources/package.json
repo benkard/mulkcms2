@@ -6,7 +6,7 @@
     "normalize-opentype.css": "^0.2.4",
     "normalize.css": "^8.0.1",
     "prismjs": "^1.29.0",
-    "purecss": "^2.1.0",
+    "purecss": "^3.0.0",
     "sanitize.css": "^13.0.0"
   },
   "devDependencies": {
