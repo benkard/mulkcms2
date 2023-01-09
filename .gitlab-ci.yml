@@ -7,7 +7,7 @@ verify:
   stage: check
   script:
     - apt-get update
-    - apt-get -y --no-install-recommends yarn
+    - apt-get -y --no-install-recommends install yarn
     - mvn verify
 
 sast:
