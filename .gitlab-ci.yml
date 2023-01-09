@@ -6,6 +6,8 @@ image: maven:3-openjdk-17
 verify:
   stage: check
   script:
+    - apt-get update
+    - apt-get -y --no-install-recommends yarn
     - mvn verify
 
 sast:
