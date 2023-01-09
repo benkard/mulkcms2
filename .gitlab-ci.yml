@@ -1,13 +1,13 @@
 stages:
   - check
 
-image: docker.io/library/maven:3-eclipse-temurin-17
+image: docker.io/library/maven:3-eclipse-temurin-17-alpine
 
 verify:
   stage: check
   script:
-    - apt-get update
-    - apt-get -y --no-install-recommends install yarnpkg
+    - apk update
+    - apk add yarn
     - mvn verify
 
 sast:
