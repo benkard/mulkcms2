@@ -24,7 +24,7 @@
     <compiler-plugin.version>3.10.1</compiler-plugin.version>
     <enforcer-plugin.version>3.1.0</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>2.15.3.Final</quarkus.version>
+    <quarkus.version>2.16.0.Final</quarkus.version>
     <resources-plugin.version>3.3.0</resources-plugin.version>
     <spotless-plugin.version>2.30.0</spotless-plugin.version>
 
@@ -41,7 +41,7 @@
     <jna.version>5.13.0</jna.version>
     <jsoup.version>1.15.3</jsoup.version>
     <kotlin-annotations.version>1.8.0</kotlin-annotations.version>
-    <liquibase.version>4.18.0</liquibase.version>
+    <liquibase.version>4.19.0</liquibase.version>
     <postgresql.version>42.5.1</postgresql.version>
     <rome.version>1.18.0</rome.version>
   </properties>
