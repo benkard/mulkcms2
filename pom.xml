@@ -42,7 +42,7 @@
     <jsoup.version>1.15.3</jsoup.version>
     <kotlin-annotations.version>1.8.0</kotlin-annotations.version>
     <liquibase.version>4.19.0</liquibase.version>
-    <postgresql.version>42.5.2</postgresql.version>
+    <postgresql.version>42.5.3</postgresql.version>
     <rome.version>1.18.0</rome.version>
   </properties>
 
