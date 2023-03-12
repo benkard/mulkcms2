@@ -41,7 +41,7 @@
     <jna.version>5.13.0</jna.version>
     <jsoup.version>1.15.4</jsoup.version>
     <kotlin-annotations.version>1.8.10</kotlin-annotations.version>
-    <liquibase.version>4.19.1</liquibase.version>
+    <liquibase.version>4.20.0</liquibase.version>
     <postgresql.version>42.5.4</postgresql.version>
     <rome.version>2.0.0</rome.version>
   </properties>
