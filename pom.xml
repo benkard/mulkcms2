@@ -24,9 +24,9 @@
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
     <enforcer-plugin.version>3.2.1</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>2.16.4.Final</quarkus.version>
-    <resources-plugin.version>3.3.0</resources-plugin.version>
-    <spotless-plugin.version>2.34.0</spotless-plugin.version>
+    <quarkus.version>2.16.6.Final</quarkus.version>
+    <resources-plugin.version>3.3.1</resources-plugin.version>
+    <spotless-plugin.version>2.35.0</spotless-plugin.version>
 
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
@@ -42,8 +42,8 @@
     <jsoup.version>1.15.4</jsoup.version>
     <kotlin-annotations.version>1.8.20</kotlin-annotations.version>
     <liquibase.version>4.20.0</liquibase.version>
-    <postgresql.version>42.5.4</postgresql.version>
-    <rome.version>2.0.0</rome.version>
+    <postgresql.version>42.6.0</postgresql.version>
+    <rome.version>2.1.0</rome.version>
   </properties>
 
   <dependencyManagement>
