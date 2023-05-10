@@ -22,26 +22,26 @@
 
     <antrun-plugin.version>3.1.0</antrun-plugin.version>
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
-    <enforcer-plugin.version>3.2.1</enforcer-plugin.version>
+    <enforcer-plugin.version>3.3.0</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>2.16.6.Final</quarkus.version>
+    <quarkus.version>2.16.7.Final</quarkus.version>
     <resources-plugin.version>3.3.1</resources-plugin.version>
-    <spotless-plugin.version>2.35.0</spotless-plugin.version>
+    <spotless-plugin.version>2.36.0</spotless-plugin.version>
 
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
     <basic-annotations.version>0.2.0</basic-annotations.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
-    <flexmark.version>0.64.0</flexmark.version>
+    <flexmark.version>0.64.4</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
     <hibernate-types.version>2.21.1</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.13.0</jna.version>
-    <jsoup.version>1.15.4</jsoup.version>
+    <jsoup.version>1.16.1</jsoup.version>
     <kotlin-annotations.version>1.8.20</kotlin-annotations.version>
-    <liquibase.version>4.20.0</liquibase.version>
+    <liquibase.version>4.21.1</liquibase.version>
     <postgresql.version>42.6.0</postgresql.version>
     <rome.version>2.1.0</rome.version>
   </properties>
