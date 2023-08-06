@@ -11,6 +11,10 @@ import io.quarkus.panache.common.Sort;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.scheduler.Scheduled;
+import jakarta.enterprise.context.Dependent;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -21,13 +25,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.CheckForNull;
-import javax.enterprise.context.Dependent;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.Session;
-import org.hibernate.annotations.QueryHints;
 
 @Dependent
 public class NewsletterSender {
@@ -65,7 +64,6 @@ public class NewsletterSender {
                    AND tag = 'world'
                 """,
                 Sort.ascending("date"))
-            .withHint(QueryHints.PASS_DISTINCT_THROUGH, false)
             .list();
     Post.fetchTexts(posts);
 

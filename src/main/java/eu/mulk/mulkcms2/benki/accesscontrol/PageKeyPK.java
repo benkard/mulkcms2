@@ -1,10 +1,10 @@
 package eu.mulk.mulkcms2.benki.accesscontrol;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Id;
 
 public class PageKeyPK implements Serializable {
 

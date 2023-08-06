@@ -1,9 +1,9 @@
 package eu.mulk.mulkcms2.cms.journal;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Id;
 
 public class JournalEntryPK implements Serializable {
 

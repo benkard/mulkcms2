@@ -1,10 +1,10 @@
 package eu.mulk.mulkcms2.benki.posts;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_ATOM_XML;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.TEXT_HTML;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static javax.ws.rs.core.MediaType.APPLICATION_ATOM_XML;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.TEXT_HTML;
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
 import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.rometools.rome.feed.atom.Content;
@@ -26,6 +26,27 @@ import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.json.spi.JsonProvider;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -47,27 +68,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.json.spi.JsonProvider;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotEmpty;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.Session;
 import org.jsoup.Jsoup;
@@ -325,9 +325,11 @@ public abstract class PostResource {
     comment.date = OffsetDateTime.now();
     comment.scope = Scope.comment;
     comment.referees = List.of(post);
+
+    comment.persist();
+
     comment.setContent(message);
     assignPostTargets(post.getVisibility(), post.owner, comment);
-    comment.persist();
 
     var currentUser = getCurrentUser();
     if (currentUser != null) {

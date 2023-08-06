@@ -1,11 +1,11 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
 import eu.mulk.mulkcms2.benki.posts.PostText;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import javax.annotation.CheckForNull;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "bookmark_texts", schema = "benki")

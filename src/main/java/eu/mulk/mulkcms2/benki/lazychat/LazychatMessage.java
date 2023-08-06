@@ -1,14 +1,14 @@
 package eu.mulk.mulkcms2.benki.lazychat;
 
 import eu.mulk.mulkcms2.benki.posts.Post;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import java.util.Collection;
 import javax.annotation.CheckForNull;
-import javax.json.bind.annotation.JsonbTransient;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "lazychat_messages", schema = "benki")
@@ -50,6 +50,7 @@ public class LazychatMessage extends Post<LazychatMessageText> {
     if (text == null) {
       text = new LazychatMessageText();
       text.post = this;
+      text.postId = id;
       text.language = "";
       texts.put(text.language, text);
     }
