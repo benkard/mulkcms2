@@ -1,8 +1,8 @@
 package eu.mulk.mulkcms2.cms.pages;
 
+import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Id;
 
 public class ArticleRevisionCharacteristicPK implements Serializable {
   private String characteristic;

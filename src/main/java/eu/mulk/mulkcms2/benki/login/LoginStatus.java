@@ -2,9 +2,9 @@ package eu.mulk.mulkcms2.benki.login;
 
 import io.quarkus.qute.TemplateData;
 import io.quarkus.security.identity.SecurityIdentity;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 @Named("LoginStatus")
 @RequestScoped

@@ -1,10 +1,10 @@
 package eu.mulk.mulkcms2.benki.bookmarks;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static javax.ws.rs.core.MediaType.TEXT_HTML;
-import static javax.ws.rs.core.MediaType.WILDCARD;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static jakarta.ws.rs.core.MediaType.TEXT_HTML;
+import static jakarta.ws.rs.core.MediaType.WILDCARD;
 
 import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.benki.posts.PostFilter;
@@ -12,6 +12,21 @@ import eu.mulk.mulkcms2.benki.posts.PostResource;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
+import jakarta.json.JsonObject;
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,21 +35,6 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.CheckForNull;
-import javax.json.JsonObject;
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 import org.jsoup.Jsoup;
 
 @Path("/bookmarks")
@@ -68,14 +68,15 @@ public class BookmarkResource extends PostResource {
     var bookmark = new Bookmark();
     bookmark.uri = uri.toString();
     bookmark.tags = Set.of();
-    bookmark.setTitle(title);
-    bookmark.setDescription(description);
     bookmark.owner = user;
     bookmark.date = OffsetDateTime.now();
 
-    assignPostTargets(visibility, user, bookmark);
+    bookmark.persist();
 
-    bookmark.persistAndFlush();
+    bookmark.setTitle(title);
+    bookmark.setDescription(description);
+
+    assignPostTargets(visibility, user, bookmark);
 
     return Response.seeOther(new URI("/bookmarks")).build();
   }
