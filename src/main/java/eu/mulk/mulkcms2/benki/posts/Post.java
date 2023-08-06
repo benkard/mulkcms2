@@ -73,7 +73,7 @@ public abstract class Post extends PanacheEntityBase {
   @CheckForNull
   public OffsetDateTime date;
 
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "benki.post_scope")
   @Enumerated(EnumType.STRING)
   @Type(PostgreSQLEnumType.class)
   public Scope scope = Scope.top_level;

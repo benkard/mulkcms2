@@ -47,7 +47,7 @@ public abstract class PostText extends PanacheEntityBase {
   @CheckForNull
   public String cachedDescriptionHtml;
 
-  @Column(name = "search_terms")
+  @Column(name = "search_terms", columnDefinition = "tsvector")
   @Generated(event = {INSERT, UPDATE})
   @Type(value = PostgreSQLTSVectorType.class)
   public String searchTerms;

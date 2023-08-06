@@ -23,7 +23,7 @@ public class Newsletter extends PanacheEntityBase {
   @Column(name = "date", nullable = false)
   public OffsetDateTime date = OffsetDateTime.now();
 
-  @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "newsletter", fetch = FetchType.LAZY)
   @OrderBy("date")
   public Collection<Post> posts;
 }
