@@ -45,13 +45,13 @@ public class LazychatResource extends PostResource {
     var user = Objects.requireNonNull(getCurrentUser());
 
     var message = new LazychatMessage();
-    message.setContent(text);
     message.owner = user;
     message.date = OffsetDateTime.now();
 
-    assignPostTargets(visibility, user, message);
+    message.persist();
+    message.setContent(text);
 
-    message.persistAndFlush();
+    assignPostTargets(visibility, user, message);
 
     return Response.seeOther(new URI("/lazychat")).build();
   }

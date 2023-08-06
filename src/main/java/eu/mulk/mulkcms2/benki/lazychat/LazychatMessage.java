@@ -50,6 +50,7 @@ public class LazychatMessage extends Post<LazychatMessageText> {
     if (text == null) {
       text = new LazychatMessageText();
       text.post = this;
+      text.postId = id;
       text.language = "";
       texts.put(text.language, text);
     }

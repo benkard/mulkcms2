@@ -9,17 +9,17 @@ public class PostTextPK implements Serializable {
 
   @Id
   @Column(name = "post", nullable = false)
-  private int postId;
+  private Integer postId;
 
   @Id
   @Column(name = "language", nullable = false, length = -1)
   private String language;
 
-  public int getPostId() {
+  public Integer getPostId() {
     return postId;
   }
 
-  public void setPostId(int postId) {
+  public void setPostId(Integer postId) {
     this.postId = postId;
   }
 

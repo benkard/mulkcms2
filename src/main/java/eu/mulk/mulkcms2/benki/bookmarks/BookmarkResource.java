@@ -68,14 +68,15 @@ public class BookmarkResource extends PostResource {
     var bookmark = new Bookmark();
     bookmark.uri = uri.toString();
     bookmark.tags = Set.of();
-    bookmark.setTitle(title);
-    bookmark.setDescription(description);
     bookmark.owner = user;
     bookmark.date = OffsetDateTime.now();
 
-    assignPostTargets(visibility, user, bookmark);
+    bookmark.persist();
 
-    bookmark.persistAndFlush();
+    bookmark.setTitle(title);
+    bookmark.setDescription(description);
+
+    assignPostTargets(visibility, user, bookmark);
 
     return Response.seeOther(new URI("/bookmarks")).build();
   }

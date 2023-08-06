@@ -325,9 +325,11 @@ public abstract class PostResource {
     comment.date = OffsetDateTime.now();
     comment.scope = Scope.comment;
     comment.referees = List.of(post);
+
+    comment.persist();
+
     comment.setContent(message);
     assignPostTargets(post.getVisibility(), post.owner, comment);
-    comment.persist();
 
     var currentUser = getCurrentUser();
     if (currentUser != null) {

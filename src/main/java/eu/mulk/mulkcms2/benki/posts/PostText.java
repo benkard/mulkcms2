@@ -18,6 +18,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import javax.annotation.CheckForNull;
 import org.hibernate.annotations.Generated;
@@ -32,8 +33,8 @@ public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntity
   private static final int DESCRIPTION_CACHE_VERSION = 1;
 
   @Id
-  @Column(name = "post", nullable = false, insertable = false, updatable = false)
-  public int postId;
+  @Column(name = "post", nullable = false)
+  public Integer postId;
 
   @Id
   @Column(name = "language", nullable = false, length = -1)
@@ -54,6 +55,7 @@ public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntity
 
   @ManyToOne(fetch = FetchType.LAZY, targetEntity = Post.class)
   @JoinColumn(name = "post", referencedColumnName = "id", nullable = false)
+  @MapsId("postId")
   @JsonbTransient
   public OwningPost post;
 

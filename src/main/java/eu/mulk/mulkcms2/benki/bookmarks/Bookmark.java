@@ -60,6 +60,7 @@ public class Bookmark extends Post<BookmarkText> {
     if (text == null) {
       text = new BookmarkText();
       text.post = this;
+      text.postId = id;
       text.language = "";
       texts.put(text.language, text);
     }
@@ -72,6 +73,7 @@ public class Bookmark extends Post<BookmarkText> {
     if (text == null) {
       text = new BookmarkText();
       text.post = this;
+      text.postId = id;
       text.language = "";
       texts.put(text.language, text);
     }
