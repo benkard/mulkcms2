@@ -1,25 +1,24 @@
 package eu.mulk.mulkcms2.cms.comments;
 
-import com.vladmihalcea.hibernate.type.basic.Inet;
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLInetType;
 import eu.mulk.mulkcms2.cms.users.User;
+import io.hypersistence.utils.hibernate.type.basic.Inet;
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLInetType;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.sql.Timestamp;
 import javax.annotation.CheckForNull;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "comment_revisions", schema = "public")
-@TypeDef(name = "inet", typeClass = PostgreSQLInetType.class, defaultForType = Inet.class)
 public class CommentRevision extends PanacheEntityBase {
 
   @Id
@@ -45,6 +44,7 @@ public class CommentRevision extends PanacheEntityBase {
   public Integer articleRevision;
 
   @Column(name = "submitter_ip", nullable = true, columnDefinition = "inet")
+  @Type(PostgreSQLInetType.class)
   @CheckForNull
   public Inet submitterIp;
 

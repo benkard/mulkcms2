@@ -1,10 +1,10 @@
 package eu.mulk.mulkcms2.cms.users;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Id;
 
 public class LoginCertificatePK implements Serializable {
 

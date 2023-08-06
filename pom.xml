@@ -32,11 +32,12 @@
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 
     <basic-annotations.version>0.2.0</basic-annotations.version>
+    <blaze-persistence.version>1.6.9</blaze-persistence.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
     <flexmark.version>0.64.4</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
-    <hibernate.version>5.6.15.Final</hibernate.version>
-    <hibernate-types.version>2.21.1</hibernate-types.version>
+    <hibernate.version>6.2.7.Final</hibernate.version>
+    <hibernate-types.version>3.5.1</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.13.0</jna.version>
     <jsoup.version>1.16.1</jsoup.version>
@@ -57,10 +58,18 @@
         <scope>import</scope>
       </dependency>
 
+      <dependency>
+        <groupId>com.blazebit</groupId>
+        <artifactId>blaze-persistence-bom</artifactId>
+        <version>${blaze-persistence.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
       <!-- Hibernate PostgreSQL Extra Types -->
       <dependency>
-        <groupId>com.vladmihalcea</groupId>
-        <artifactId>hibernate-types-55</artifactId>
+        <groupId>io.hypersistence</groupId>
+        <artifactId>hypersistence-utils-hibernate-62</artifactId>
         <version>${hibernate-types.version}</version>
       </dependency>
 
@@ -203,11 +212,11 @@
     <!-- Quarkus universe -->
     <dependency>
       <groupId>com.blazebit</groupId>
-      <artifactId>blaze-persistence-integration-quarkus</artifactId>
+      <artifactId>blaze-persistence-integration-quarkus-3</artifactId>
     </dependency>
     <dependency>
       <groupId>com.blazebit</groupId>
-      <artifactId>blaze-persistence-integration-hibernate-5.6</artifactId>
+      <artifactId>blaze-persistence-integration-hibernate-6.2</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -234,8 +243,8 @@
 
     <!-- Hibernate PostgreSQL Extra Types -->
     <dependency>
-      <groupId>com.vladmihalcea</groupId>
-      <artifactId>hibernate-types-55</artifactId>
+      <groupId>io.hypersistence</groupId>
+      <artifactId>hypersistence-utils-hibernate-62</artifactId>
     </dependency>
 
     <!-- Annotations -->
@@ -277,9 +286,8 @@
 
     <!-- Hibernate -->
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-jpamodelgen</artifactId>
-      <version>${hibernate.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -345,17 +353,17 @@
             <version>${liquibase.version}</version>
           </dependency>
           <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
           </dependency>
           <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
           </dependency>
           <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-envers</artifactId>
             <version>${hibernate.version}</version>
           </dependency>

@@ -2,9 +2,9 @@ package eu.mulk.mulkcms2.benki.newsletter;
 
 import eu.mulk.mulkcms2.common.logging.Messages;
 import io.quarkus.scheduler.Scheduled;
+import jakarta.enterprise.context.Dependent;
+import jakarta.transaction.Transactional;
 import java.time.OffsetDateTime;
-import javax.enterprise.context.Dependent;
-import javax.transaction.Transactional;
 
 @Dependent
 public class NewsletterSubscriptionExpirer {

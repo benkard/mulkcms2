@@ -4,13 +4,36 @@ import static java.util.stream.Collectors.toList;
 
 import com.blazebit.persistence.CriteriaBuilder;
 import com.blazebit.persistence.CriteriaBuilderFactory;
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.newsletter.Newsletter;
 import eu.mulk.mulkcms2.benki.users.User;
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.annotation.Nullable;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapKey;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -24,37 +47,12 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
-import javax.json.bind.annotation.JsonbTransient;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "posts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@TypeDef(name = "pg_enum", typeClass = PostgreSQLEnumType.class)
 public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
   public enum Scope {
@@ -78,7 +76,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  @Type(type = "pg_enum")
+  @Type(PostgreSQLEnumType.class)
   public Scope scope = Scope.top_level;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -155,7 +153,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     }
   }
 
-  protected static <T extends Post> CriteriaBuilder<T> queryViewable(
+  protected static <T extends Post<?>> CriteriaBuilder<T> queryViewable(
       Class<T> entityClass,
       @CheckForNull User reader,
       @CheckForNull User owner,

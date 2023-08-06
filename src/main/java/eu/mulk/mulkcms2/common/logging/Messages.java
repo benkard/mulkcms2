@@ -1,6 +1,6 @@
 package eu.mulk.mulkcms2.common.logging;
 
-import javax.mail.Address;
+import jakarta.mail.Address;
 import org.jboss.logging.BasicLogger;
 import org.jboss.logging.Logger;
 import org.jboss.logging.Logger.Level;

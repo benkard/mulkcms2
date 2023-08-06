@@ -1,8 +1,8 @@
 package eu.mulk.mulkcms2.benki.users;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Id;
 
 public class UserRolePK implements Serializable {
 

@@ -1,32 +1,32 @@
 package eu.mulk.mulkcms2.benki.posts;
 
-import com.vladmihalcea.hibernate.type.search.PostgreSQLTSVectorType;
+import static org.hibernate.generator.EventType.INSERT;
+import static org.hibernate.generator.EventType.UPDATE;
+
 import eu.mulk.mulkcms2.benki.posts.Post.Scope;
 import eu.mulk.mulkcms2.common.markdown.MarkdownConverter;
 import eu.mulk.mulkcms2.common.markdown.MarkdownConverter.Mode;
+import io.hypersistence.utils.hibernate.type.search.PostgreSQLTSVectorType;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import javax.annotation.CheckForNull;
-import javax.json.bind.annotation.JsonbTransient;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 @Entity
 @Table(name = "post_texts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @IdClass(PostTextPK.class)
-@TypeDef(name = "tsvector", typeClass = PostgreSQLTSVectorType.class)
 public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntityBase {
 
   private static final int DESCRIPTION_CACHE_VERSION = 1;
@@ -48,8 +48,8 @@ public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntity
   public String cachedDescriptionHtml;
 
   @Column(name = "search_terms")
-  @Generated(GenerationTime.ALWAYS)
-  @Type(type = "tsvector")
+  @Generated(event = {INSERT, UPDATE})
+  @Type(value = PostgreSQLTSVectorType.class)
   public String searchTerms;
 
   @ManyToOne(fetch = FetchType.LAZY, targetEntity = Post.class)
