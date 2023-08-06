@@ -25,5 +25,5 @@ public class Newsletter extends PanacheEntityBase {
 
   @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
   @OrderBy("date")
-  public Collection<Post<?>> posts;
+  public Collection<Post> posts;
 }

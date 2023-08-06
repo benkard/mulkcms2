@@ -9,7 +9,7 @@ import javax.annotation.CheckForNull;
 
 @Entity
 @Table(name = "bookmark_texts", schema = "benki")
-public class BookmarkText extends PostText<Bookmark> {
+public class BookmarkText extends PostText {
 
   @Column(name = "title", nullable = true, length = -1)
   @CheckForNull
@@ -23,5 +23,10 @@ public class BookmarkText extends PostText<Bookmark> {
   @CheckForNull
   protected String getDescriptionMarkup() {
     return description;
+  }
+
+  @Override
+  public Bookmark getPost() {
+    return (Bookmark) super.getPost();
   }
 }

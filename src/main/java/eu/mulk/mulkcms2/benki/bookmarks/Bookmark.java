@@ -13,7 +13,7 @@ import javax.annotation.CheckForNull;
 
 @Entity
 @Table(name = "bookmarks", schema = "benki")
-public class Bookmark extends Post<BookmarkText> {
+public class Bookmark extends Post {
 
   @Column(name = "uri", nullable = false, length = -1)
   public String uri;
@@ -78,5 +78,10 @@ public class Bookmark extends Post<BookmarkText> {
 
     text.description = x;
     text.cachedDescriptionHtml = null;
+  }
+
+  @Override
+  public BookmarkText getText() {
+    return (BookmarkText) super.getText();
   }
 }

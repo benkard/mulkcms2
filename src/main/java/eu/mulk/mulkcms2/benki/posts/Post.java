@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import org.hibernate.annotations.Type;
@@ -53,7 +52,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "posts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
+public abstract class Post extends PanacheEntityBase {
 
   public enum Scope {
     top_level,
@@ -119,15 +118,11 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   @JsonbTransient
   public Collection<LazychatMessage> comments;
 
-  @OneToMany(
-      mappedBy = "post",
-      fetch = FetchType.LAZY,
-      cascade = CascadeType.ALL,
-      targetEntity = PostText.class)
+  @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @MapKey(name = "language")
-  public Map<String, Text> texts = new HashMap<>();
+  public Map<String, PostText> texts = new HashMap<>();
 
-  public Map<String, Text> getTexts() {
+  public Map<String, PostText> getTexts() {
     return texts;
   }
 
@@ -153,7 +148,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     }
   }
 
-  protected static <T extends Post<?>> CriteriaBuilder<T> queryViewable(
+  protected static <T extends Post> CriteriaBuilder<T> queryViewable(
       Class<T> entityClass,
       @CheckForNull User reader,
       @CheckForNull User owner,
@@ -246,7 +241,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     return scope == Scope.top_level;
   }
 
-  public static class Day<T extends Post<? extends PostText<?>>> {
+  public static class Day<T extends Post> {
     public final @CheckForNull LocalDate date;
     public final List<T> posts;
 
@@ -262,13 +257,11 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     }
   }
 
-  public static class PostPage<T extends Post<? extends PostText<?>>> {
+  public static class PostPage<T extends Post> {
     public @CheckForNull final Integer prevCursor;
     public @CheckForNull final Integer cursor;
     public @CheckForNull final Integer nextCursor;
     public final List<T> posts;
-
-    private static final TimeZone timeZone = TimeZone.getDefault();
 
     public PostPage(
         @CheckForNull Integer c0,
@@ -296,7 +289,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     }
   }
 
-  public static PostPage<Post<? extends PostText<?>>> findViewable(
+  public static PostPage<Post> findViewable(
       PostFilter postFilter,
       EntityManager em,
       CriteriaBuilderFactory cbf,
@@ -305,7 +298,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     return findViewable(postFilter, em, cbf, viewer, owner, null, null, null);
   }
 
-  public static PostPage<Post<? extends PostText<?>>> findViewable(
+  public static PostPage<Post> findViewable(
       PostFilter postFilter,
       EntityManager em,
       CriteriaBuilderFactory cbf,
@@ -328,7 +321,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     return findViewable(entityClass, em, cbf, viewer, owner, cursor, count, searchQuery);
   }
 
-  protected static <T extends Post<? extends PostText<?>>> PostPage<T> findViewable(
+  protected static <T extends Post> PostPage<T> findViewable(
       Class<? extends T> entityClass,
       EntityManager em,
       CriteriaBuilderFactory cbf,
@@ -379,7 +372,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     return new PostPage<>(prevCursor, cursor, nextCursor, forwardResults);
   }
 
-  public static <T extends Post<?>> void fetchTexts(Collection<T> posts) {
+  public static <T extends Post> void fetchTexts(Collection<T> posts) {
     var postIds = posts.stream().map(x -> x.id).collect(toList());
 
     if (!postIds.isEmpty()) {
@@ -389,7 +382,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   }
 
   @CheckForNull
-  public Text getText() {
+  public PostText getText() {
     var texts = getTexts();
     if (texts.isEmpty()) {
       return null;
@@ -417,7 +410,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     if (!(o instanceof Post)) {
       return false;
     }
-    Post<?> post = (Post<?>) o;
+    Post post = (Post) o;
     return Objects.equals(id, post.id);
   }
 

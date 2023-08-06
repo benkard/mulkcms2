@@ -91,7 +91,7 @@ public abstract class PostResource {
   @CheckedTemplate
   static class Templates {
 
-    public static native <P extends Post<?>> TemplateInstance postList(
+    public static native <P extends Post> TemplateInstance postList(
         List<Post.Day<P>> postDays,
         @CheckForNull String feedUri,
         String pageTitle,
@@ -242,7 +242,7 @@ public abstract class PostResource {
   @GET
   @Produces(APPLICATION_JSON)
   @Path("{id}")
-  public Post<?> getPostJson(@PathParam("id") int id) {
+  public Post getPostJson(@PathParam("id") int id) {
     return getPostIfVisible(id);
   }
 
@@ -253,7 +253,7 @@ public abstract class PostResource {
     var post = getPostIfVisible(id);
 
     return Templates.postList(
-        new PostPage<Post<? extends PostText<?>>>(null, null, null, List.of(post)).days(),
+        new PostPage<>(null, null, null, List.of(post)).days(),
         null,
         String.format("Post #%d", id),
         false,
@@ -319,7 +319,7 @@ public abstract class PostResource {
           Response.status(Status.BAD_REQUEST).entity("invalid hashcash").build());
     }
 
-    Post<?> post = Post.findById(postId);
+    Post post = Post.findById(postId);
 
     var comment = new LazychatMessage();
     comment.date = OffsetDateTime.now();
@@ -509,7 +509,7 @@ public abstract class PostResource {
     return entityManager.unwrap(Session.class);
   }
 
-  protected static void assignPostTargets(Post.Visibility visibility, User user, Post<?> post) {
+  protected static void assignPostTargets(Post.Visibility visibility, User user, Post post) {
     switch (visibility) {
       case PUBLIC:
         post.targets = Set.of(Role.getWorld());
@@ -525,7 +525,7 @@ public abstract class PostResource {
     }
   }
 
-  protected final Post<?> getPostIfVisible(int id) {
+  protected final Post getPostIfVisible(int id) {
     @CheckForNull var user = getCurrentUser();
     var message = getSession().byId(Post.class).load(id);
 

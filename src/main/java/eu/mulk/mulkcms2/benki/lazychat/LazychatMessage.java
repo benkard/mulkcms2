@@ -12,7 +12,7 @@ import javax.annotation.CheckForNull;
 
 @Entity
 @Table(name = "lazychat_messages", schema = "benki")
-public class LazychatMessage extends Post<LazychatMessageText> {
+public class LazychatMessage extends Post {
 
   @ManyToMany
   @JoinTable(
@@ -21,7 +21,7 @@ public class LazychatMessage extends Post<LazychatMessageText> {
       joinColumns = {@JoinColumn(name = "referrer")},
       inverseJoinColumns = {@JoinColumn(name = "referee")})
   @JsonbTransient
-  public Collection<Post<?>> referees;
+  public Collection<Post> referees;
 
   @CheckForNull
   @Override
@@ -56,5 +56,10 @@ public class LazychatMessage extends Post<LazychatMessageText> {
 
     text.cachedDescriptionHtml = null;
     text.content = x;
+  }
+
+  @Override
+  public LazychatMessageText getText() {
+    return (LazychatMessageText) super.getText();
   }
 }

@@ -14,13 +14,13 @@ public class PostTextPK implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post", referencedColumnName = "id", nullable = false)
-  public Post<?> post;
+  public Post post;
 
   @Id
   @Column(name = "language", nullable = false, length = -1)
   private String language;
 
-  public Post<?> getPost() {
+  public Post getPost() {
     return post;
   }
 
