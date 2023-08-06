@@ -27,7 +27,7 @@ import org.hibernate.annotations.Type;
 @Table(name = "post_texts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @IdClass(PostTextPK.class)
-public abstract class PostText extends PanacheEntityBase {
+public abstract class PostText<OwningPost extends Post<?>> extends PanacheEntityBase {
 
   private static final int DESCRIPTION_CACHE_VERSION = 1;
 
@@ -52,14 +52,10 @@ public abstract class PostText extends PanacheEntityBase {
   @Type(value = PostgreSQLTSVectorType.class)
   public String searchTerms;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, targetEntity = Post.class)
   @JoinColumn(name = "post", referencedColumnName = "id", nullable = false)
   @JsonbTransient
-  public Post post;
-
-  public Post getPost() {
-    return post;
-  }
+  public OwningPost post;
 
   @CheckForNull
   public final String getDescriptionHtml() {

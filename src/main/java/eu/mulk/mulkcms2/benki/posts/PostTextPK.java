@@ -1,10 +1,7 @@
 package eu.mulk.mulkcms2.benki.posts;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -43,7 +40,8 @@ public class PostTextPK implements Serializable {
       return false;
     }
     PostTextPK that = (PostTextPK) o;
-    return Objects.equals(getPostId(), that.getPostId()) && getLanguage().equals(that.getLanguage());
+    return Objects.equals(getPostId(), that.getPostId())
+        && getLanguage().equals(that.getLanguage());
   }
 
   @Override

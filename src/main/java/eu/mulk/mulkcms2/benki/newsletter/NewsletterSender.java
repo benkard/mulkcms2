@@ -53,7 +53,7 @@ public class NewsletterSender {
   void run() throws InterruptedException, TimeoutException, ExecutionException {
     var session = em.unwrap(Session.class);
 
-    List<Post> posts =
+    List<Post<?>> posts =
         Post.find(
                 """
                 SELECT DISTINCT p FROM Post p
