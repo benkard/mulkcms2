@@ -1,5 +1,6 @@
 package eu.mulk.mulkcms2.common.hibernate;
 
+import static org.hibernate.query.sqm.produce.function.FunctionParameterType.ANY;
 import static org.hibernate.query.sqm.produce.function.FunctionParameterType.STRING;
 import static org.hibernate.sql.ast.SqlAstNodeRenderingMode.DEFAULT;
 import static org.hibernate.type.StandardBasicTypes.BOOLEAN;
@@ -22,7 +23,7 @@ public final class HibernateFunctionContributor implements FunctionContributor {
         .setExactArgumentCount(3)
         .setArgumentListSignature("(STRING searchTerms, STRING language, STRING queryText)")
         .setArgumentRenderingMode(DEFAULT)
-        .setParameterTypes(STRING, STRING, STRING)
+        .setParameterTypes(ANY, STRING, STRING)
         .register();
   }
 }
