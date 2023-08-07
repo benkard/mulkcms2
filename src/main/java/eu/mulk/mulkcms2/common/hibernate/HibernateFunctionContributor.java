@@ -17,8 +17,7 @@ public final class HibernateFunctionContributor implements FunctionContributor {
     var functionRegistry = functionContributions.getFunctionRegistry();
 
     functionRegistry
-        .patternDescriptorBuilder(
-            "post_matches_websearch", "(?1 @@ websearch_to_tsquery(language_regconfig(?2), ?3))")
+        .namedDescriptorBuilder("post_matches_websearch")
         .setInvariantType(typeRegistry.resolve(BOOLEAN))
         .setExactArgumentCount(3)
         .setArgumentListSignature("(STRING searchTerms, STRING language, STRING queryText)")
