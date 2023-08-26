@@ -37,7 +37,7 @@
     <flexmark.version>0.64.8</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
     <hibernate.version>6.2.7.Final</hibernate.version>
-    <hibernate-types.version>3.5.1</hibernate-types.version>
+    <hibernate-types.version>3.5.2</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.13.0</jna.version>
     <jsoup.version>1.16.1</jsoup.version>
