@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import org.hibernate.annotations.Type;
@@ -54,6 +55,8 @@ import org.hibernate.annotations.Where;
 @Table(name = "posts", schema = "benki")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
+
+  private static Pattern sentenceEnderRegex = Pattern.compile("^.*[?.]$");
 
   public enum Scope {
     top_level,
@@ -140,6 +143,20 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
   @CheckForNull
   public abstract String getUri();
+
+  @CheckForNull
+  public final String titleWithSentenceEnder() {
+    var title = getTitle();
+    if (title == null) {
+      return null;
+    }
+
+    if (sentenceEnderRegex.matcher(title).matches()) {
+      return title;
+    }
+
+    return title + ".";
+  }
 
   public Visibility getVisibility() {
     if (targets.isEmpty()) {
