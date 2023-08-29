@@ -222,9 +222,6 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
     cb = cb.where("post.scope").eq(Scope.top_level);
 
-    cb = cb.leftJoinFetch("post.comments", "comment");
-    cb = cb.fetch("comment.texts");
-
     return cb;
   }
 
@@ -373,8 +370,9 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       }
     }
 
-    // Fetch texts (to avoid n+1 selects).
+    // Fetch texts and comments (to avoid n+1 selects).
     fetchTexts(forwardResults);
+    fetchComments(forwardResults);
 
     return new PostPage<>(prevCursor, cursor, nextCursor, forwardResults);
   }
@@ -384,6 +382,15 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
     if (!postIds.isEmpty()) {
       find("SELECT p FROM Post p LEFT JOIN FETCH p.texts WHERE p.id IN (?1)", postIds).stream()
+          .count();
+    }
+  }
+
+  public static <T extends Post<?>> void fetchComments(Collection<T> posts) {
+    var postIds = posts.stream().map(x -> x.id).collect(toList());
+
+    if (!postIds.isEmpty()) {
+      find("SELECT p FROM Post p LEFT JOIN FETCH p.comments WHERE p.id IN (?1)", postIds).stream()
           .count();
     }
   }
