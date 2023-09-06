@@ -8,6 +8,7 @@ import eu.mulk.mulkcms2.benki.posts.Post;
 import eu.mulk.mulkcms2.benki.posts.PostFilter;
 import eu.mulk.mulkcms2.benki.posts.PostResource;
 import io.quarkus.security.Authenticated;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
@@ -26,6 +27,7 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @Path("/lazychat")
+@Blocking
 public class LazychatResource extends PostResource {
 
   public LazychatResource() throws NoSuchAlgorithmException {

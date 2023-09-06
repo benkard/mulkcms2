@@ -12,6 +12,7 @@ import eu.mulk.mulkcms2.benki.posts.PostResource;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.json.JsonObject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotEmpty;
@@ -38,6 +39,7 @@ import javax.annotation.CheckForNull;
 import org.jsoup.Jsoup;
 
 @Path("/bookmarks")
+@Blocking
 public class BookmarkResource extends PostResource {
 
   @CheckedTemplate(basePath = "benki/bookmarks")

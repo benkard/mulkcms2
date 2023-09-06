@@ -25,6 +25,7 @@ import io.quarkus.mailer.MailTemplate.MailTemplateInstance;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.identity.SecurityIdentity;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -72,6 +73,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.Session;
 import org.jsoup.Jsoup;
 
+@Blocking
 public abstract class PostResource {
 
   private static final String hashcashDigestAlgorithm = "SHA-256";

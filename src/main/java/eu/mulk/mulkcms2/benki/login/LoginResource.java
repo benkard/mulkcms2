@@ -1,6 +1,7 @@
 package eu.mulk.mulkcms2.benki.login;
 
 import io.quarkus.security.Authenticated;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Path("/login")
+@Blocking
 public class LoginResource {
 
   @GET

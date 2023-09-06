@@ -9,6 +9,7 @@ import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.inject.Inject;
 import jakarta.json.JsonObject;
 import jakarta.json.spi.JsonProvider;
@@ -32,6 +33,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
 @Path("/wiki")
+@Blocking
 public class WikiResource {
 
   private static final JsonProvider jsonProvider = JsonProvider.provider();

@@ -5,6 +5,7 @@ import static jakarta.ws.rs.core.MediaType.TEXT_HTML;
 import io.quarkus.mailer.MailTemplate.MailTemplateInstance;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
@@ -17,6 +18,7 @@ import java.util.concurrent.CompletionStage;
 
 @Path("/newsletter")
 @Produces(TEXT_HTML)
+@Blocking
 public class NewsletterResource {
 
   @CheckedTemplate
