@@ -24,7 +24,7 @@
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
     <enforcer-plugin.version>3.4.0</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>3.3.1</quarkus.version>
+    <quarkus.version>3.3.2</quarkus.version>
     <resources-plugin.version>3.3.1</resources-plugin.version>
     <spotless-plugin.version>2.39.0</spotless-plugin.version>
 
