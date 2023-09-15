@@ -22,9 +22,9 @@
 
     <antrun-plugin.version>3.1.0</antrun-plugin.version>
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
-    <enforcer-plugin.version>3.4.0</enforcer-plugin.version>
+    <enforcer-plugin.version>3.4.1</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>3.3.2</quarkus.version>
+    <quarkus.version>3.3.3</quarkus.version>
     <resources-plugin.version>3.3.1</resources-plugin.version>
     <spotless-plugin.version>2.39.0</spotless-plugin.version>
 
@@ -42,7 +42,7 @@
     <jna.version>5.13.0</jna.version>
     <jsoup.version>1.16.1</jsoup.version>
     <kotlin-annotations.version>1.9.10</kotlin-annotations.version>
-    <liquibase.version>4.23.1</liquibase.version>
+    <liquibase.version>4.23.2</liquibase.version>
     <postgresql.version>42.6.0</postgresql.version>
     <rome.version>2.1.0</rome.version>
   </properties>
