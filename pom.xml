@@ -24,7 +24,7 @@
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
     <enforcer-plugin.version>3.4.1</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>3.3.3</quarkus.version>
+    <quarkus.version>3.4.1</quarkus.version>
     <resources-plugin.version>3.3.1</resources-plugin.version>
     <spotless-plugin.version>2.39.0</spotless-plugin.version>
 
@@ -36,8 +36,8 @@
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
     <flexmark.version>0.64.8</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
-    <hibernate.version>6.3.0.Final</hibernate.version>
-    <hibernate-types.version>3.5.2</hibernate-types.version>
+    <hibernate.version>6.3.1.Final</hibernate.version>
+    <hibernate-types.version>3.5.3</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.13.0</jna.version>
     <jsoup.version>1.16.1</jsoup.version>
