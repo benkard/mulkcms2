@@ -502,6 +502,7 @@
   </changeSet>
 
   <changeSet author="mulk (generated)" id="1592058325319-37" runOnChange="false">
+    <validCheckSum>8:d3297cb8b06a3c8e0c2df40bb21ba4d3</validCheckSum>
     <validCheckSum>9:1ddb31e4daad9a3e759f908348d585df</validCheckSum>
     <createIndex indexName="article_revisions_english_ts_idx" tableName="article_revisions">
       <column computed="true"
@@ -510,6 +511,7 @@
   </changeSet>
 
   <changeSet author="mulk (generated)" id="1592058325319-38" runOnChange="false">
+    <validCheckSum>8:4916246f4404e8621541c84fbc770427</validCheckSum>
     <validCheckSum>9:8e65575f838c89b5963c00deb9d41ca9</validCheckSum>
     <createIndex indexName="article_revisions_french_ts_idx" tableName="article_revisions">
       <column computed="true"
@@ -518,6 +520,7 @@
   </changeSet>
 
   <changeSet author="mulk (generated)" id="1592058325319-39" runOnChange="false">
+    <validCheckSum>8:8193d6d6df241e604e3cd54cd7584229</validCheckSum>
     <validCheckSum>9:b388ba620250e303e711546b7e8c79a7</validCheckSum>
     <createIndex indexName="article_revisions_german_ts_idx" tableName="article_revisions">
       <column computed="true"
@@ -655,9 +658,9 @@
       startValue="1"/>
   </changeSet>
 
-  <changeSet author="mulk" id="1592059602097-0">
+  <changeSet author="mulk" id="1592059602097-0" runOnChange="true">
     <sql dbms="postgresql" endDelimiter=";">
-      CREATE SCHEMA benki
+      CREATE SCHEMA IF NOT EXISTS benki
     </sql>
   </changeSet>
 
