@@ -428,8 +428,8 @@
       referencedTableName="users" validate="true"/>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592058325319-30">
-    <createView fullDefinition="false" viewName="article_comment_counts">SELECT a.id AS article,
+  <changeSet author="mulk (generated)" id="1592058325319-30" runOnChange="true">
+    <createView replaceIfExists="true" fullDefinition="false" viewName="article_comment_counts">SELECT a.id AS article,
       count(c.*) AS comment_count
       FROM (articles a
       LEFT JOIN comments c ON (((c.article = a.id) AND (EXISTS ( SELECT comment_revisions.id,
@@ -463,8 +463,8 @@
       referencedTableName="articles" validate="true"/>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592058325319-33">
-    <createView fullDefinition="false" viewName="article_branch_tips">SELECT
+  <changeSet author="mulk (generated)" id="1592058325319-33" runOnChange="true">
+    <createView replaceIfExists="true" fullDefinition="false" viewName="article_branch_tips">SELECT
       article_revisions.article,
       article_revisions.id AS revision
       FROM (( SELECT article_revisions_1.id
@@ -476,8 +476,8 @@
     </createView>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592058325319-34">
-    <createView fullDefinition="false" viewName="article_publishing_dates">SELECT
+  <changeSet author="mulk (generated)" id="1592058325319-34" runOnChange="true">
+    <createView replaceIfExists="true" fullDefinition="false" viewName="article_publishing_dates">SELECT
       article_revisions.article,
       min(article_revisions.date) AS publishing_date
       FROM article_revisions
@@ -501,24 +501,27 @@
       referencedTableName="users" validate="true"/>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592058325319-37">
+  <changeSet author="mulk (generated)" id="1592058325319-37" runOnChange="false">
+    <validCheckSum>9:1ddb31e4daad9a3e759f908348d585df</validCheckSum>
     <createIndex indexName="article_revisions_english_ts_idx" tableName="article_revisions">
       <column computed="true"
-        name="((setweight(to_tsvector('english'::regconfig, (title)::text), 'A'::char) || setweight(to_tsvector('english'::regconfig, (content)::text), 'D'::char)))"/>
+        name="((setweight(to_tsvector('english'::regconfig, (title)::text), 'A'::&quot;char&quot;) || setweight(to_tsvector('english'::regconfig, (content)::text), 'D'::&quot;char&quot;)))"/>
     </createIndex>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592058325319-38">
+  <changeSet author="mulk (generated)" id="1592058325319-38" runOnChange="false">
+    <validCheckSum>9:8e65575f838c89b5963c00deb9d41ca9</validCheckSum>
     <createIndex indexName="article_revisions_french_ts_idx" tableName="article_revisions">
       <column computed="true"
-        name="((setweight(to_tsvector('french'::regconfig, (title)::text), 'A'::char) || setweight(to_tsvector('french'::regconfig, (content)::text), 'D'::char)))"/>
+        name="((setweight(to_tsvector('french'::regconfig, (title)::text), 'A'::&quot;char&quot;) || setweight(to_tsvector('french'::regconfig, (content)::text), 'D'::&quot;char&quot;)))"/>
     </createIndex>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592058325319-39">
+  <changeSet author="mulk (generated)" id="1592058325319-39" runOnChange="false">
+    <validCheckSum>9:b388ba620250e303e711546b7e8c79a7</validCheckSum>
     <createIndex indexName="article_revisions_german_ts_idx" tableName="article_revisions">
       <column computed="true"
-        name="((setweight(to_tsvector('german'::regconfig, (title)::text), 'A'::char) || setweight(to_tsvector('german'::regconfig, (content)::text), 'D'::char)))"/>
+        name="((setweight(to_tsvector('german'::regconfig, (title)::text), 'A'::&quot;char&quot;) || setweight(to_tsvector('german'::regconfig, (content)::text), 'D'::&quot;char&quot;)))"/>
     </createIndex>
   </changeSet>
 
@@ -650,6 +653,12 @@
     <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1"
       maxValue="9223372036854775807" minValue="1" sequenceName="transaction_key_seq"
       startValue="1"/>
+  </changeSet>
+
+  <changeSet author="mulk" id="1592059602097-0">
+    <sql dbms="postgresql" endDelimiter=";">
+      CREATE SCHEMA benki
+    </sql>
   </changeSet>
 
   <changeSet author="mulk (generated)" id="1592059602097-1">
@@ -968,17 +977,17 @@
       referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592059602097-31">
-    <createView fullDefinition="false" schemaName="benki" viewName="effective_role_subroles">WITH
+  <changeSet author="mulk (generated)" id="1592059602097-31" runOnChange="true">
+    <createView replaceIfExists="true" fullDefinition="false" schemaName="benki" viewName="effective_role_subroles">WITH
       RECURSIVE t(superrole, subrole) AS (
       SELECT roles.id,
       roles.id
-      FROM roles
+      FROM benki.roles roles
       UNION
       SELECT t_1.superrole,
       rs.subrole
       FROM (t t_1
-      JOIN role_subroles rs ON ((rs.superrole = t_1.subrole)))
+      JOIN benki.role_subroles rs ON ((rs.superrole = t_1.subrole)))
       )
       SELECT t.superrole,
       t.subrole
@@ -1036,23 +1045,23 @@
       referencedTableName="wiki_pages" referencedTableSchemaName="benki" validate="true"/>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592059602097-39">
-    <createView fullDefinition="false" schemaName="benki" viewName="effective_user_roles">SELECT
+  <changeSet author="mulk (generated)" id="1592059602097-39" runOnChange="true">
+    <createView replaceIfExists="true" fullDefinition="false" schemaName="benki" viewName="effective_user_roles">SELECT
       ur."user",
       er.subrole AS role
-      FROM (user_roles ur
-      JOIN effective_role_subroles er ON ((er.superrole = ur.role)))
+      FROM (benki.user_roles ur
+      JOIN benki.effective_role_subroles er ON ((er.superrole = ur.role)))
       UNION
       SELECT u.id AS "user",
       rt.role
-      FROM users u,
-      role_tags rt
+      FROM benki.users u,
+      benki.role_tags rt
       WHERE ((rt.tag)::text = ANY (ARRAY[('everyone'::character varying)::text, ('world'::character
       varying)::text]))
       UNION
       SELECT NULL::integer AS "user",
       rt.role
-      FROM role_tags rt
+      FROM benki.role_tags rt
       WHERE ((rt.tag)::text = 'world'::text);
     </createView>
   </changeSet>
@@ -1071,17 +1080,17 @@
       referencedTableName="roles" referencedTableSchemaName="benki" validate="true"/>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592059602097-42">
-    <createView fullDefinition="false" schemaName="benki" viewName="user_visible_posts">SELECT
+  <changeSet author="mulk (generated)" id="1592059602097-42" runOnChange="true">
+    <createView replaceIfExists="true" fullDefinition="false" schemaName="benki" viewName="user_visible_posts">SELECT
       eur."user",
       t.message
-      FROM effective_user_roles eur,
-      post_targets t
+      FROM benki.effective_user_roles eur,
+      benki.post_targets t
       WHERE (t.target = eur.role)
       UNION
       SELECT m.owner AS "user",
       m.id AS message
-      FROM posts m;
+      FROM benki.posts m;
     </createView>
   </changeSet>
 
@@ -1099,12 +1108,12 @@
       referencedTableName="users" referencedTableSchemaName="benki" validate="true"/>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592059602097-45">
-    <createView fullDefinition="false" schemaName="benki" viewName="user_visible_bookmarks">SELECT
+  <changeSet author="mulk (generated)" id="1592059602097-45" runOnChange="true">
+    <createView replaceIfExists="true" fullDefinition="false" schemaName="benki" viewName="user_visible_bookmarks">SELECT
       uvp."user",
       uvp.message
-      FROM (user_visible_posts uvp
-      JOIN bookmarks bm ON ((bm.id = uvp.message)));
+      FROM (benki.user_visible_posts uvp
+      JOIN benki.bookmarks bm ON ((bm.id = uvp.message)));
     </createView>
   </changeSet>
 
@@ -1123,12 +1132,12 @@
       referencedTableSchemaName="benki" validate="true"/>
   </changeSet>
 
-  <changeSet author="mulk (generated)" id="1592059602097-48">
-    <createView fullDefinition="false" schemaName="benki" viewName="user_visible_lazychat_messages">
+  <changeSet author="mulk (generated)" id="1592059602097-48" runOnChange="true">
+    <createView replaceIfExists="true" fullDefinition="false" schemaName="benki" viewName="user_visible_lazychat_messages">
       SELECT uvp."user",
       uvp.message
-      FROM (user_visible_posts uvp
-      JOIN lazychat_messages lm ON ((lm.id = uvp.message)));
+      FROM (benki.user_visible_posts uvp
+      JOIN benki.lazychat_messages lm ON ((lm.id = uvp.message)));
     </createView>
   </changeSet>
 
