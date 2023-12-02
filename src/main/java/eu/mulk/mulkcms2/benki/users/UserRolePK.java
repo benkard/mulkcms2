@@ -6,11 +6,14 @@ import java.io.Serializable;
 
 public class UserRolePK implements Serializable {
 
-  private int userId;
-  private int roleId;
-
   @Column(name = "user", nullable = false)
   @Id
+  private int userId;
+
+  @Column(name = "role", nullable = false)
+  @Id
+  private int roleId;
+
   public int getUserId() {
     return userId;
   }
@@ -19,8 +22,6 @@ public class UserRolePK implements Serializable {
     this.userId = userId;
   }
 
-  @Column(name = "role", nullable = false)
-  @Id
   public int getRoleId() {
     return roleId;
   }
