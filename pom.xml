@@ -21,26 +21,26 @@
     <enforced.maven-version>3.6.2</enforced.maven-version>
 
     <antrun-plugin.version>3.1.0</antrun-plugin.version>
-    <compiler-plugin.version>3.12.1</compiler-plugin.version>
+    <compiler-plugin.version>3.13.0</compiler-plugin.version>
     <enforcer-plugin.version>3.4.1</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>3.6.4</quarkus.version>
+    <quarkus.version>3.9.2</quarkus.version>
     <resources-plugin.version>3.3.1</resources-plugin.version>
-    <spotless-plugin.version>2.41.1</spotless-plugin.version>
+    <spotless-plugin.version>2.43.0</spotless-plugin.version>
 
     <basic-annotations.version>0.2.0</basic-annotations.version>
-    <blaze-persistence.version>1.6.10</blaze-persistence.version>
+    <blaze-persistence.version>1.6.11</blaze-persistence.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
     <flexmark.version>0.64.8</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
-    <hibernate.version>6.4.1.Final</hibernate.version>
-    <hibernate-types.version>3.7.0</hibernate-types.version>
+    <hibernate.version>6.4.4.Final</hibernate.version>
+    <hibernate-types.version>3.7.3</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.14.0</jna.version>
     <jsoup.version>1.17.2</jsoup.version>
     <kotlin-annotations.version>1.9.22</kotlin-annotations.version>
-    <liquibase.version>4.25.1</liquibase.version>
-    <postgresql.version>42.7.1</postgresql.version>
+    <liquibase.version>4.27.0</liquibase.version>
+    <postgresql.version>42.7.3</postgresql.version>
     <rome.version>2.1.0</rome.version>
   </properties>
 
