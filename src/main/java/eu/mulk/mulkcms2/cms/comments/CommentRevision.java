@@ -1,8 +1,7 @@
 package eu.mulk.mulkcms2.cms.comments;
 
 import eu.mulk.mulkcms2.cms.users.User;
-import io.hypersistence.utils.hibernate.type.basic.Inet;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLInetType;
+import java.net.InetAddress;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,9 +43,8 @@ public class CommentRevision extends PanacheEntityBase {
   public Integer articleRevision;
 
   @Column(name = "submitter_ip", nullable = true, columnDefinition = "inet")
-  @Type(PostgreSQLInetType.class)
   @CheckForNull
-  public Inet submitterIp;
+  public InetAddress submitterIp;
 
   @Column(name = "submitter_user_agent", nullable = true, length = -1)
   @CheckForNull

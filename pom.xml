@@ -12,8 +12,8 @@
 
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.compiler.source>19</maven.compiler.source>
-    <maven.compiler.target>19</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -24,7 +24,7 @@
     <compiler-plugin.version>3.13.0</compiler-plugin.version>
     <enforcer-plugin.version>3.5.0</enforcer-plugin.version>
     <processor-plugin.version>4.2</processor-plugin.version>
-    <quarkus.version>3.15.1</quarkus.version>
+    <quarkus.version>3.24.2</quarkus.version>
     <resources-plugin.version>3.3.1</resources-plugin.version>
     <spotless-plugin.version>2.43.0</spotless-plugin.version>
 
@@ -34,7 +34,7 @@
     <flexmark.version>0.64.8</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
     <hibernate.version>6.6.1.Final</hibernate.version>
-    <hibernate-types.version>3.8.2</hibernate-types.version>
+    <hibernate-types.version>3.10.0</hibernate-types.version>
     <jakarta-jacc-api.version>1.6.1</jakarta-jacc-api.version>
     <jna.version>5.15.0</jna.version>
     <jsoup.version>1.18.1</jsoup.version>
@@ -66,7 +66,7 @@
       <!-- Hibernate PostgreSQL Extra Types -->
       <dependency>
         <groupId>io.hypersistence</groupId>
-        <artifactId>hypersistence-utils-hibernate-62</artifactId>
+        <artifactId>hypersistence-utils-hibernate-70</artifactId>
         <version>${hibernate-types.version}</version>
       </dependency>
 
@@ -171,15 +171,15 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive</artifactId>
+      <artifactId>quarkus-rest</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
+      <artifactId>quarkus-rest-jsonb</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-qute</artifactId>
+      <artifactId>quarkus-rest-qute</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -237,7 +237,7 @@
     <!-- Hibernate PostgreSQL Extra Types -->
     <dependency>
       <groupId>io.hypersistence</groupId>
-      <artifactId>hypersistence-utils-hibernate-62</artifactId>
+      <artifactId>hypersistence-utils-hibernate-70</artifactId>
     </dependency>
 
     <!-- Annotations -->
@@ -276,11 +276,21 @@
       <artifactId>kotlin-annotations-jvm</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- Hibernate -->
     <dependency>
       <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-jpamodelgen</artifactId>
+      <artifactId>hibernate-processor</artifactId>
       <scope>provided</scope>
     </dependency>
 

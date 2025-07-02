@@ -9,7 +9,8 @@ import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.newsletter.Newsletter;
 import eu.mulk.mulkcms2.benki.users.User;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.annotation.Nullable;
 import jakarta.json.bind.annotation.JsonbTransient;
@@ -49,7 +50,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "posts", schema = "benki")
@@ -79,7 +80,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
   @Column(nullable = false, columnDefinition = "benki.post_scope")
   @Enumerated(EnumType.STRING)
-  @Type(PostgreSQLEnumType.class)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
   public Scope scope = Scope.top_level;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -118,7 +119,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
 
   @ManyToMany(mappedBy = "referees")
   @OrderBy("date ASC")
-  @Where(clause = "scope = 'comment'")
+  @SQLRestriction("scope = 'comment'")
   @JsonbTransient
   public Collection<LazychatMessage> comments;
 
