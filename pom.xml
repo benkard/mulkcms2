@@ -29,7 +29,6 @@
     <spotless-plugin.version>2.43.0</spotless-plugin.version>
 
     <basic-annotations.version>0.2.0</basic-annotations.version>
-    <blaze-persistence.version>1.6.12</blaze-persistence.version>
     <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
     <flexmark.version>0.64.8</flexmark.version>
     <google.java.format.version>1.15.0</google.java.format.version>
@@ -51,14 +50,6 @@
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-universe-bom</artifactId>
         <version>${quarkus.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>com.blazebit</groupId>
-        <artifactId>blaze-persistence-bom</artifactId>
-        <version>${blaze-persistence.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -202,21 +193,8 @@
       <artifactId>quarkus-container-image-jib</artifactId>
     </dependency>
 
+
     <!-- Quarkus universe -->
-    <dependency>
-      <groupId>com.blazebit</groupId>
-      <artifactId>blaze-persistence-integration-quarkus-3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.blazebit</groupId>
-      <artifactId>blaze-persistence-integration-hibernate-6.2</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.blazebit</groupId>
-      <artifactId>blaze-persistence-entity-view-processor</artifactId>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.apache.camel.quarkus</groupId>
       <artifactId>camel-quarkus-mail</artifactId>

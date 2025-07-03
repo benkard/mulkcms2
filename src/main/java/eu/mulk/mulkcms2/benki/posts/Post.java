@@ -2,22 +2,18 @@ package eu.mulk.mulkcms2.benki.posts;
 
 import static java.util.stream.Collectors.toList;
 
-import com.blazebit.persistence.CriteriaBuilder;
-import com.blazebit.persistence.CriteriaBuilderFactory;
 import eu.mulk.mulkcms2.benki.accesscontrol.Role;
 import eu.mulk.mulkcms2.benki.bookmarks.Bookmark;
 import eu.mulk.mulkcms2.benki.lazychat.LazychatMessage;
 import eu.mulk.mulkcms2.benki.newsletter.Newsletter;
 import eu.mulk.mulkcms2.benki.users.User;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import eu.mulk.mulkcms2.benki.users.User_;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.annotation.Nullable;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -35,6 +31,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -48,9 +49,12 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
-import org.hibernate.annotations.Type;
+import org.hibernate.Session;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "posts", schema = "benki")
@@ -171,76 +175,80 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     }
   }
 
-  protected static <T extends Post<?>> CriteriaBuilder<T> queryViewable(
+  protected static <T extends Post> CriteriaQuery<T> queryViewable(
       Class<T> entityClass,
       @CheckForNull User reader,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
-      EntityManager em,
-      CriteriaBuilderFactory cbf,
+      CriteriaBuilder cb,
       boolean forward,
       @CheckForNull String searchQuery) {
+    CriteriaQuery<T> query = cb.createQuery(entityClass);
 
-    CriteriaBuilder<T> cb = cbf.create(em, entityClass).select("post");
+    var conditions = new ArrayList<Predicate>();
 
+    From<?, T> post;
     if (reader == null) {
-      cb =
-          cb.from(entityClass, "post")
-              .innerJoin("post.targets", "role")
-              .where("'world'")
-              .isMemberOf("role.tags");
+      post = query.from(entityClass);
+      var target = post.join(Post_.targets);
+      conditions.add(cb.equal(target, Role.getWorld()));
     } else {
-      cb = cb.from(User.class, "user").where("user").eq(reader);
+      var root = query.from(User.class);
+      conditions.add(cb.equal(root, reader));
       if (entityClass.isAssignableFrom(Post.class)) {
-        cb = cb.innerJoin("user.visiblePosts", "post");
+        post = (From<?, T>) root.join(User_.visiblePosts);
       } else if (entityClass.isAssignableFrom(Bookmark.class)) {
-        cb = cb.innerJoin("user.visibleBookmarks", "post");
+        post = (From<?, T>) root.join(User_.visibleBookmarks);
       } else if (entityClass.isAssignableFrom(LazychatMessage.class)) {
-        cb = cb.innerJoin("user.visibleLazychatMessages", "post");
+        post = (From<?, T>) root.join(User_.visibleLazychatMessages);
       } else {
         throw new IllegalArgumentException();
       }
     }
 
-    cb = cb.fetch("post.owner");
+    query.select(post);
+    post.fetch(Post_.owner, JoinType.LEFT);
 
     if (owner != null) {
-      cb = cb.where("post.owner").eq(owner);
+      conditions.add(cb.equal(post.get(Post_.owner), owner));
     }
 
     if (forward) {
-      cb = cb.orderByDesc("post.id");
+      query.orderBy(cb.desc(post.get(Post_.id)));
     } else {
-      cb = cb.orderByAsc("post.id");
+      query.orderBy(cb.asc(post.get(Post_.id)));
     }
 
     if (cursor != null) {
       if (forward) {
-        cb = cb.where("post.id").le(cursor);
+        conditions.add(cb.le(post.get(Post_.id), cursor));
       } else {
-        cb = cb.where("post.id").gt(cursor);
+        conditions.add(cb.gt(post.get(Post_.id), cursor));
       }
     }
 
     if (searchQuery != null && !searchQuery.isBlank()) {
-      cb =
-          cb.whereExists()
-              .from(PostText.class, "postText")
-              .where("postText.post")
-              .eqExpression("post")
-              .whereOr()
-              .whereExpression(
-                  "post_matches_websearch(postText.searchTerms, 'de', :searchQueryText) = true")
-              .whereExpression(
-                  "post_matches_websearch(postText.searchTerms, 'en', :searchQueryText) = true")
-              .endOr()
-              .end()
-              .setParameter("searchQueryText", searchQuery);
+      var postTexts = post.join(Post_.texts);
+      var localizedSearches =
+          Stream.of("de", "en")
+              .map(
+                  language ->
+                      cb.isTrue(
+                          cb.function(
+                              "post_matches_websearch",
+                              Boolean.class,
+                              postTexts.get(PostText_.searchTerms),
+                              cb.literal(language),
+                              cb.literal(searchQuery))))
+              .toArray(n -> new Predicate[n]);
+      conditions.add(cb.or(localizedSearches));
     }
 
-    cb = cb.where("post.scope").eq(Scope.top_level);
+    conditions.add(cb.equal(post.get(Post_.scope), Scope.top_level));
 
-    return cb;
+    query.where(conditions.toArray(new Predicate[0]));
+
+    return query;
   }
 
   public final boolean isVisibleTo(@Nullable User user) {
@@ -312,18 +320,13 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   }
 
   public static PostPage<Post<? extends PostText<?>>> findViewable(
-      PostFilter postFilter,
-      EntityManager em,
-      CriteriaBuilderFactory cbf,
-      @CheckForNull User viewer,
-      @CheckForNull User owner) {
-    return findViewable(postFilter, em, cbf, viewer, owner, null, null, null);
+      PostFilter postFilter, Session session, @CheckForNull User viewer, @CheckForNull User owner) {
+    return findViewable(postFilter, session, viewer, owner, null, null, null);
   }
 
   public static PostPage<Post<? extends PostText<?>>> findViewable(
       PostFilter postFilter,
-      EntityManager em,
-      CriteriaBuilderFactory cbf,
+      Session session,
       @CheckForNull User viewer,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
@@ -340,13 +343,12 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       default:
         entityClass = Post.class;
     }
-    return findViewable(entityClass, em, cbf, viewer, owner, cursor, count, searchQuery);
+    return findViewable(entityClass, session, viewer, owner, cursor, count, searchQuery);
   }
 
   protected static <T extends Post<? extends PostText<?>>> PostPage<T> findViewable(
       Class<? extends T> entityClass,
-      EntityManager em,
-      CriteriaBuilderFactory cbf,
+      Session session,
       @CheckForNull User viewer,
       @CheckForNull User owner,
       @CheckForNull Integer cursor,
@@ -357,9 +359,10 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       Objects.requireNonNull(count);
     }
 
-    var forwardCriteria =
-        queryViewable(entityClass, viewer, owner, cursor, em, cbf, true, searchQuery);
-    var forwardQuery = forwardCriteria.getQuery();
+    var cb = session.getCriteriaBuilder();
+
+    var forwardCriteria = queryViewable(entityClass, viewer, owner, cursor, cb, true, searchQuery);
+    var forwardQuery = session.createQuery(forwardCriteria);
 
     if (count != null) {
       forwardQuery.setMaxResults(count + 1);
@@ -371,8 +374,8 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
     if (cursor != null) {
       // Look backwards as well so we can find the prevCursor.
       var backwardCriteria =
-          queryViewable(entityClass, viewer, owner, cursor, em, cbf, false, searchQuery);
-      var backwardQuery = backwardCriteria.getQuery();
+          queryViewable(entityClass, viewer, owner, cursor, cb, false, searchQuery);
+      var backwardQuery = session.createQuery(backwardCriteria);
       backwardQuery.setMaxResults(count);
       var backwardResults = backwardQuery.getResultList();
       if (!backwardResults.isEmpty()) {
@@ -380,7 +383,7 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
       }
     }
 
-    var forwardResults = new ArrayList<T>(forwardQuery.getResultList());
+    var forwardResults = (List<T>) forwardQuery.getResultList();
     if (count != null) {
       if (forwardResults.size() == count + 1) {
         nextCursor = forwardResults.get(count).id;

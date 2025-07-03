@@ -6,7 +6,6 @@ import static jakarta.ws.rs.core.MediaType.TEXT_HTML;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.rometools.rome.feed.atom.Content;
 import com.rometools.rome.feed.atom.Entry;
 import com.rometools.rome.feed.atom.Feed;
@@ -121,8 +120,6 @@ public abstract class PostResource {
 
   @PersistenceContext protected EntityManager entityManager;
 
-  @Inject protected CriteriaBuilderFactory criteriaBuilderFactory;
-
   private final SecureRandom secureRandom;
 
   private final PostFilter postFilter;
@@ -145,16 +142,8 @@ public abstract class PostResource {
     maxResults = maxResults == null ? defaultMaxResults : maxResults;
 
     @CheckForNull var reader = getCurrentUser();
-    var q =
-        Post.findViewable(
-            postFilter,
-            entityManager,
-            criteriaBuilderFactory,
-            reader,
-            null,
-            cursor,
-            maxResults,
-            searchQuery);
+    var session = entityManager.unwrap(Session.class);
+    var q = Post.findViewable(postFilter, session, reader, null, cursor, maxResults, searchQuery);
 
     q.cacheDescriptions();
 
@@ -192,16 +181,8 @@ public abstract class PostResource {
 
     @CheckForNull var reader = getCurrentUser();
     var owner = User.findByNickname(ownerName);
-    var q =
-        Post.findViewable(
-            postFilter,
-            entityManager,
-            criteriaBuilderFactory,
-            reader,
-            owner,
-            cursor,
-            maxResults,
-            null);
+    var session = entityManager.unwrap(Session.class);
+    var q = Post.findViewable(postFilter, session, reader, owner, cursor, maxResults, null);
 
     q.cacheDescriptions();
 
@@ -373,7 +354,7 @@ public abstract class PostResource {
   private String makeFeed(
       @CheckForNull User reader, @Nullable User owner, @Nullable String ownerName)
       throws FeedException {
-    var q = Post.findViewable(postFilter, entityManager, criteriaBuilderFactory, reader, owner);
+    var q = Post.findViewable(postFilter, entityManager.unwrap(Session.class), reader, owner);
     q.cacheDescriptions();
     var posts = q.posts;
 
