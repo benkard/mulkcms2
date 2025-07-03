@@ -79,7 +79,7 @@ public class Role extends PanacheEntityBase {
   public Set<String> tags;
 
   public static Role getWorld() {
-    return find("from Role r join r.tags tag where tag = 'world'").singleResult();
+    return find("select r from Role r join r.tags tag where tag = 'world'").singleResult();
   }
 
   @Override

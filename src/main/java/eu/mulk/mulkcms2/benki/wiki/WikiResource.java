@@ -62,7 +62,7 @@ public class WikiResource {
 
     Optional<WikiPageRevision> maybePage =
         WikiPageRevision.find(
-                "from WikiPageRevision rev join fetch rev.author where rev.title = ?1",
+                "select rev from WikiPageRevision rev join fetch rev.author where rev.title = ?1",
                 Sort.by("date").descending(),
                 pageName)
             .firstResultOptional();
@@ -71,7 +71,7 @@ public class WikiResource {
     } else {
       var userName = identity.getPrincipal().getName();
       User user =
-          User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
+          User.find("select u from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
       page = new WikiPageRevision();
       page.content = "";
       page.title = pageName;
@@ -108,11 +108,11 @@ public class WikiResource {
 
     var userName = identity.getPrincipal().getName();
     User user =
-        User.find("from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
+        User.find("select u from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
 
     Optional<WikiPageRevision> maybeCurrentRevision =
         WikiPageRevision.find(
-                "from WikiPageRevision rev join fetch rev.author where rev.title = ?1",
+                "select rev from WikiPageRevision rev join fetch rev.author where rev.title = ?1",
                 Sort.by("date").descending(),
                 pageName)
             .firstResultOptional();
@@ -153,7 +153,7 @@ public class WikiResource {
   public TemplateInstance getPageRevisions(@PathParam("pageName") String pageName) {
     Optional<WikiPageRevision> maybePrimaryRevision =
         WikiPageRevision.find(
-                "from WikiPageRevision rev join fetch rev.author where rev.title = ?1",
+                "select rev from WikiPageRevision rev join fetch rev.author where rev.title = ?1",
                 Sort.by("date").descending(),
                 pageName)
             .firstResultOptional();
@@ -164,7 +164,7 @@ public class WikiResource {
 
     WikiPage page =
         WikiPageRevision.find(
-                "from WikiPage p"
+                "select p from WikiPage p"
                     + " join fetch p.revisions rev"
                     + " join fetch rev.author"
                     + " where p.id = ?1",
