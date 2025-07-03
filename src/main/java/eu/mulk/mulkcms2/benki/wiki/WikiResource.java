@@ -71,7 +71,8 @@ public class WikiResource {
     } else {
       var userName = identity.getPrincipal().getName();
       User user =
-          User.find("select u from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
+          User.find("select u from BenkiUser u join u.nicknames n where ?1 = n", userName)
+              .singleResult();
       page = new WikiPageRevision();
       page.content = "";
       page.title = pageName;
@@ -108,7 +109,8 @@ public class WikiResource {
 
     var userName = identity.getPrincipal().getName();
     User user =
-        User.find("select u from BenkiUser u join u.nicknames n where ?1 = n", userName).singleResult();
+        User.find("select u from BenkiUser u join u.nicknames n where ?1 = n", userName)
+            .singleResult();
 
     Optional<WikiPageRevision> maybeCurrentRevision =
         WikiPageRevision.find(

@@ -1,7 +1,6 @@
 package eu.mulk.mulkcms2.cms.comments;
 
 import eu.mulk.mulkcms2.cms.users.User;
-import java.net.InetAddress;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,9 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.net.InetAddress;
 import java.sql.Timestamp;
 import javax.annotation.CheckForNull;
-import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "comment_revisions", schema = "public")

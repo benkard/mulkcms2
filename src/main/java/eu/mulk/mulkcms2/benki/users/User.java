@@ -148,7 +148,8 @@ public class User extends PanacheEntityBase {
   }
 
   public static User findByNickname(String nickname) {
-    return User.find("select u from BenkiUser u join u.nicknames n where ?1 = n", nickname).singleResult();
+    return User.find("select u from BenkiUser u join u.nicknames n where ?1 = n", nickname)
+        .singleResult();
   }
 
   public static User findByNicknameWithRoles(String nickname) {
