@@ -18,6 +18,10 @@ public class Bookmark extends Post<BookmarkText> {
   @Column(name = "uri", nullable = false, length = -1)
   public String uri;
 
+  @CheckForNull
+  @Column(name = "via", length = -1)
+  public String via;
+
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(
       name = "bookmark_tags",
