@@ -150,6 +150,9 @@ public abstract class Post<Text extends PostText<?>> extends PanacheEntityBase {
   public abstract String getUri();
 
   @CheckForNull
+  public abstract String getVia();
+
+  @CheckForNull
   public final String titleWithSentenceEnder() {
     var title = getTitle();
     if (title == null) {

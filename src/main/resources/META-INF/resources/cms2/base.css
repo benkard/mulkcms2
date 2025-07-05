@@ -326,7 +326,7 @@ a.bookmark-title {
   color: #555;
 }
 
-.post-self-link, .comment-self-link, .comment-box-self-link {
+.post-self-link, .comment-self-link, .comment-box-self-link, .via-self-link {
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -382,7 +382,7 @@ article.lazychat-message > header, .comment-info {
   line-height: 1em;
 }
 
-a.post-link, a.comment-link, a.comment-box-link {
+a.post-link, a.comment-link, a.comment-box-link, a.via-link {
   text-decoration: none;
 }
 

@@ -84,7 +84,11 @@
                   <span class="comment-box-self-link">({post.comments.size()})</span>
                 </a>
                 {/if}
-
+                {#if post.via}
+                <a class="via-link" href="{post.via}">
+                  <span class="via-self-link">(via)</span>
+                </a>
+                {/if}
                 <a href="{post.uri}" class="bookmark-title">
                   <h2 class="bookmark-title"><span class="bookmark-symbol">🔖 </span> {post.titleWithSentenceEnder}</h2>
                 </a>

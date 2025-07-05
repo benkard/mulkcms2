@@ -31,6 +31,12 @@ public class LazychatMessage extends Post<LazychatMessageText> {
 
   @CheckForNull
   @Override
+  public String getVia() {
+    return null;
+  }
+
+  @CheckForNull
+  @Override
   public String getTitle() {
     return null;
   }

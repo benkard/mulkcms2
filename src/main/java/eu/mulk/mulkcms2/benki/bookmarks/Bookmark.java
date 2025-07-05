@@ -44,6 +44,12 @@ public class Bookmark extends Post<BookmarkText> {
 
   @CheckForNull
   @Override
+  public String getVia() {
+    return via;
+  }
+
+  @CheckForNull
+  @Override
   public String getTitle() {
     var text = getText();
     return text == null ? null : text.title;
