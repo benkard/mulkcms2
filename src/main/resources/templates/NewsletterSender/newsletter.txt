@@ -19,6 +19,9 @@ New Bookmarks
 
 {#for post in bookmarks}
 * {post.date.humanDate}  <https://matthias.benkard.de/posts/{post.id}>
+{#if post.via}
+* Via: <{post.via}>
+{/if}
 * {post.title}
 * <{post.uri}>
 
