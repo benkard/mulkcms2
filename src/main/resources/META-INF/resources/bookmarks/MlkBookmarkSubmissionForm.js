@@ -21,6 +21,9 @@ template.innerHTML = `
       <label for="description-input">Description:</label>
       <textarea name="description" id="description-input" placeholder="Description"></textarea>
 
+      <label for="via-input">Via:</label>
+      <input name="via" id="via-input" type="text" placeholder="Source URI" />
+
       <label for="visibility-input">Visibility:</label>
       <select id="visibility-input" name="visibility" required>
         <option value="PUBLIC" selected>Public</option>
@@ -41,6 +44,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
   titleInput: HTMLInputElement;
   uriInput: HTMLInputElement;
   uriSpinner: ProgressSpinner;
+  viaInput: HTMLInputElement;
   visibilityInput: HTMLInputElement;
   loaded: boolean;
   */
@@ -50,7 +54,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     this.loaded = false;
   }
 
-  static get observedAttributes() {
+  static get observedAttributes() /*: Array<string>*/ {
     return [];
   }
 
@@ -76,6 +80,8 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
         cast(shadow.getElementById('uri-input'));
     this.uriSpinner =
         cast(shadow.getElementById('uri-spinner'));
+    this.viaInput =
+        cast(shadow.getElementById('via-input'));
     this.visibilityInput =
         cast(shadow.getElementById('visibility-input'));
 
@@ -88,6 +94,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     this.uriInput.value = this.uri || "";
     this.titleInput.value = this.titleText || "";
     this.descriptionInput.innerText = this.description || "";
+    this.viaInput.value = this.via || "";
   }
 
   get editedId() /*:number | null*/ {
@@ -99,7 +106,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
     return parseInt(attr, 10);
   }
 
-  get isEditor() {
+  get isEditor() /*: boolean*/ {
     return this.editedId !== null;
   }
 
@@ -112,16 +119,20 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
   attributeChangedCallback(name /*:string*/, oldValue /*:string*/, newValue /*:string*/) {
   }
 
-  get uri() {
+  get uri() /*: ?string*/ {
     return this.getAttribute("uri");
   }
 
-  get titleText() {
+  get titleText() /*: ?string*/ {
     return this.getAttribute("title");
   }
 
-  get description() {
+  get description() /*: ?string*/ {
     return this.getAttribute("description");
+  }
+
+  get via() /*: ?string*/ {
+    return this.getAttribute("via");
   }
 
   focus() {
@@ -172,6 +183,7 @@ export class MlkBookmarkSubmissionForm extends HTMLElement {
 
     let post = await r.json();
     this.uriInput.value = post.uri;
+    this.viaInput.value = post.via || "";
     this.visibilityInput.value = post.visibility;
     if (post.texts['']) {
       this.titleInput.value = post.texts[''].title;

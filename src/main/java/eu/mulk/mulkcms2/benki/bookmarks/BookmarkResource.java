@@ -62,6 +62,7 @@ public class BookmarkResource extends PostResource {
       @FormParam("uri") @NotNull URI uri,
       @FormParam("title") @NotEmpty String title,
       @FormParam("description") @CheckForNull String description,
+      @FormParam("via") @CheckForNull String via,
       @FormParam("visibility") @NotNull Post.Visibility visibility)
       throws URISyntaxException {
 
@@ -69,6 +70,7 @@ public class BookmarkResource extends PostResource {
 
     var bookmark = new Bookmark();
     bookmark.uri = uri.toString();
+    bookmark.via = (via != null && !via.trim().isEmpty()) ? via : null;
     bookmark.tags = Set.of();
     bookmark.owner = user;
     bookmark.date = OffsetDateTime.now();
@@ -94,6 +96,7 @@ public class BookmarkResource extends PostResource {
       @FormParam("uri") @NotNull URI uri,
       @FormParam("title") @NotEmpty String title,
       @FormParam("description") @CheckForNull String description,
+      @FormParam("via") @CheckForNull String via,
       @FormParam("visibility") Post.Visibility visibility)
       throws URISyntaxException {
 
@@ -110,6 +113,7 @@ public class BookmarkResource extends PostResource {
     }
 
     bookmark.uri = uri.toString();
+    bookmark.via = (via != null && !via.trim().isEmpty()) ? via : null;
     bookmark.tags = Set.of();
     bookmark.setTitle(title);
     bookmark.setDescription(description);
